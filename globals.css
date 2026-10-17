@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&display=swap');
+
+:root{--paper:#f4f0e9;--ink:#201f1c;--muted:#77736c;--line:#d9d3c9;--accent:#b4a28b;--serif:'Playfair Display',Georgia,serif;--sans:'DM Sans',Arial,sans-serif}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit}
+.siteHeader{height:82px;padding:0 5.5%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);gap:24px}
+.wordmark{font-size:20px;letter-spacing:-1.2px;font-weight:700;white-space:nowrap}.wordmark span{font-weight:400;color:#8b7b67}
+.siteHeader nav{display:flex;gap:32px;color:#615d56;font-size:11px}
+.siteHeader nav a:hover,.textLink:hover{color:#9a8061}
+.headerCta{display:flex;align-items:center;gap:8px;font-size:10px;letter-spacing:1.2px;border-bottom:1px solid var(--ink);padding-bottom:8px}
+.hero{min-height:670px;padding:70px 9% 66px;display:grid;grid-template-columns:1fr .83fr;gap:8%;align-items:center;position:relative}
+.heroCopy{padding:20px 0}.eyebrow{font-size:9px;letter-spacing:1.8px;color:#81776a;font-weight:600;margin:0 0 25px;display:flex;align-items:center;gap:9px}.eyebrowDot{width:6px;height:6px;border-radius:50%;background:#a18c72}
+h1,h2,h3,p{margin-top:0}h1,h2{font-weight:400;letter-spacing:-1.8px}h1{font-size:clamp(52px,6vw,86px);line-height:1.02;margin-bottom:26px}h1 em,h2 em{font-family:var(--serif);font-weight:400}
+.heroIntro{max-width:365px;line-height:1.8;color:#68635c;font-size:13px}
+.heroActions{display:flex;align-items:center;gap:25px;margin-top:34px}.button{display:inline-flex;align-items:center;justify-content:center;gap:18px;padding:15px 19px;font-size:10px;letter-spacing:.2px;border:1px solid transparent;cursor:pointer;transition:transform .2s,background .2s}.button:hover{transform:translateY(-2px)}.buttonDark{background:var(--ink);color:#f8f4ed}.buttonOutline{border-color:#a8a094}.textLink{display:inline-flex;align-items:center;gap:9px;font-size:11px;border-bottom:1px solid #b8b0a5;padding-bottom:7px}
+.heroFootnote{display:flex;gap:18px;flex-wrap:wrap;margin-top:65px;color:#8b857c;font-size:8px;letter-spacing:1px}.heroVisual{position:relative;padding:0 10px 27px 0}.heroPhoto{height:450px;background:linear-gradient(0deg,rgba(37,32,27,.12),rgba(37,32,27,0)),url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1100&q=85') center 35%/cover;filter:saturate(.7)}
+.photoLabel{position:absolute;bottom:0;left:0;right:10px;display:flex;justify-content:space-between;padding-top:12px;border-top:1px solid var(--line);font-size:8px;letter-spacing:1.2px;color:#7b746b}
+.floatingNote{position:absolute;left:-45px;bottom:66px;background:#e6ded1;padding:16px 20px;display:flex;gap:12px;align-items:center;font-family:var(--serif);font-size:13px;line-height:1.4;box-shadow:0 8px 24px #30271a0c}.heroIndex{position:absolute;bottom:23px;right:5.5%;font-size:9px;color:#918a80;letter-spacing:1px}
+.proofBar{background:#e9e3d9;padding:32px 9%;display:grid;grid-template-columns:repeat(3,1fr) 1.1fr;gap:25px;align-items:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.proofBar div{display:flex;flex-direction:column;gap:8px}.proofBar strong{font-size:24px;font-weight:400;letter-spacing:-.8px}.proofBar span{font-size:8px;letter-spacing:1.1px;color:#827a70}.proofBar>p{font-family:var(--serif);font-style:italic;line-height:1.6;font-size:15px;margin:0;color:#696055}
+.sectionPad{padding:105px 9%}.sectionHeading{display:flex;justify-content:space-between;align-items:end;gap:40px;margin-bottom:48px}.sectionHeading h2,.aboutCopy h2,.servicesSection h2,.bookingIntro h2{font-size:clamp(37px,4.4vw,58px);line-height:1.1;margin:0}.sectionAside{max-width:270px;font-size:11px;line-height:1.8;color:#777169;margin-bottom:4px}
+.projectGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}.projectImage{height:350px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}.beauty{background:linear-gradient(145deg,#c4a995,#e5d8c8 50%,#9a7b69)}.fashion{background:linear-gradient(145deg,#a39b8e,#d4c9b8 48%,#655b52)}.travel{background:linear-gradient(145deg,#9caa9b,#d7d1bf 50%,#837a68)}.projectImage:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#17130e35,transparent 45%)}.projectNumber{position:absolute;top:15px;left:15px;color:white;font-size:9px;z-index:1}.imagePlaceholder{font-size:9px;letter-spacing:1.6px;color:#fff9;z-index:1;border:1px solid #ffffff65;padding:10px 12px}.projectArrow{position:absolute;right:13px;bottom:13px;z-index:2;width:35px;height:35px;border-radius:50%;background:var(--paper);display:grid;place-items:center}.projectCategory{font-size:8px;letter-spacing:1.1px;color:#8a7e6e;margin:18px 0 8px}.projectCard h3{font-family:var(--serif);font-weight:400;font-size:22px;margin:0 0 7px}.projectType{font-size:8px;letter-spacing:1px;color:#8b857b}.centerLink{text-align:center;margin-top:45px}
+.aboutSection{background:#e8e1d7;display:grid;grid-template-columns:.9fr 1fr;gap:11%;align-items:center}.aboutImage{min-height:470px;background:linear-gradient(0deg,#4a40352b,#4a403500),url('https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1000&q=85') center/cover;display:flex;align-items:end;justify-content:center;padding:18px}.aboutImage span{font-size:8px;letter-spacing:1.4px;color:white;background:#26211d66;padding:9px 12px}.aboutCopy h2{margin-bottom:25px}.aboutCopy>p:not(.eyebrow){font-size:12px;line-height:1.9;color:#6d665d;max-width:450px}.signature{font-family:var(--serif);font-style:italic;font-size:28px;margin:28px 0}.signature span{font-family:var(--sans);font-style:normal;font-size:8px;letter-spacing:1px;color:#81786d}
+.servicesSection{padding-bottom:115px}.servicesSection h2{margin-bottom:48px}.serviceList{border-top:1px solid var(--line)}.serviceList>div{display:grid;grid-template-columns:55px 1.05fr 1fr 20px;gap:20px;align-items:center;padding:24px 0;border-bottom:1px solid var(--line)}.serviceList>div>span{font-size:9px;color:#948778}.serviceList h3{font-family:var(--serif);font-weight:400;font-size:21px;margin:0}.serviceList p{font-size:11px;line-height:1.7;color:#777169;margin:0;max-width:300px}
+.bookingSection{background:#e9e3d9;display:grid;grid-template-columns:.85fr 1fr;gap:12%;align-items:start}.bookingIntro h2{margin-bottom:25px}.bookingIntro>p:not(.eyebrow){font-size:12px;line-height:1.9;color:#70695f;max-width:350px}.bookingEmail,.socialLink{display:flex;align-items:center;gap:10px;font-size:11px;margin-top:25px}.socialLink{margin-top:17px;color:#766b5e}.inquiryForm{background:var(--paper);padding:30px;display:flex;flex-direction:column}.formNote{display:flex;justify-content:space-between;font-size:8px;letter-spacing:1.3px;color:#897e70;margin-bottom:27px}.inquiryForm label{font-size:10px;margin:14px 0 8px}.inquiryForm input,.inquiryForm select,.inquiryForm textarea{border:0;border-bottom:1px solid #d7d0c5;background:transparent;padding:11px 0;font-size:11px;color:var(--ink);outline:none;border-radius:0}.inquiryForm input:focus,.inquiryForm select:focus,.inquiryForm textarea:focus{border-color:#7d6a55}.inquiryForm textarea{resize:vertical}.submitButton{margin-top:25px;align-self:flex-start}.privacyNote{font-size:9px;line-height:1.6;color:#898177;margin:15px 0 0}
+.siteFooter{padding:30px 5.5%;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}.siteFooter>p{font-size:9px;color:#80786e;margin:0}.siteFooter>div{display:flex;gap:18px}.siteFooter>div a{font-size:8px;letter-spacing:1px;display:flex;align-items:center;gap:4px}.copyright{font-size:8px;color:#91897e}
+@media(max-width:800px){.siteHeader{height:70px;padding:0 5%}.siteHeader nav{gap:15px}.siteHeader nav a{font-size:10px}.headerCta{display:none}.hero{padding:50px 7% 55px;grid-template-columns:1fr;gap:35px}.heroCopy{padding:0}.heroVisual{max-width:520px;width:100%;margin:auto}.heroPhoto{height:450px}.heroFootnote{margin-top:38px}.heroIndex{right:7%}.proofBar{padding:28px 7%;grid-template-columns:repeat(3,1fr)}.proofBar>p{grid-column:1/-1;border-top:1px solid var(--line);padding-top:17px}.sectionPad{padding:75px 7%}.sectionHeading{display:block}.sectionAside{margin-top:20px}.projectGrid{gap:14px}.projectImage{height:270px}.projectCard h3{font-size:18px}.aboutSection{gap:7%}.aboutImage{min-height:400px}.bookingSection{gap:7%}}
+@media(max-width:560px){.siteHeader nav a:nth-child(2){display:none}.wordmark{font-size:18px}.hero{padding-top:42px}.heroPhoto{height:390px}.floatingNote{left:-5px;bottom:58px}.heroActions{gap:17px;flex-wrap:wrap}.proofBar{grid-template-columns:1fr 1fr;gap:24px}.proofBar>p{grid-column:1/-1}.sectionPad{padding:65px 6%}.sectionHeading h2,.aboutCopy h2,.servicesSection h2,.bookingIntro h2{font-size:42px}.projectGrid{grid-template-columns:1fr;gap:34px}.projectImage{height:390px}.projectCard h3{font-size:23px}.aboutSection{grid-template-columns:1fr;gap:35px}.aboutImage{min-height:430px}.serviceList>div{grid-template-columns:28px 1fr 18px;gap:12px}.serviceList h3{font-size:18px}.serviceList p{grid-column:2;grid-row:2}.serviceList>div>svg{grid-column:3;grid-row:1}.bookingSection{grid-template-columns:1fr;gap:35px}.inquiryForm{padding:23px}.siteFooter{justify-content:center;text-align:center}.siteFooter>p{width:100%;order:3}.siteFooter>div{order:2}.copyright{order:4;width:100%}}
+
+/* Booking calendar integration */
+.bookingActions{grid-column:1/-1;margin-top:42px}
+.calendarPanel{background:#f4f0e9;border:1px solid #d9d3c9;padding:26px}
+.calendarPanelHeading{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.calendarIcon{width:42px;height:42px;border:1px solid #d9d3c9;display:grid;place-items:center;color:#82715d}
+.calendarPanel .eyebrow{margin:0 0 7px}
+.calendarPanel h3{font-family:var(--serif);font-weight:400;font-size:25px;margin:0}
+.calendarSetupNotice{background:#ebe5db;padding:22px;font-size:11px;line-height:1.8;color:#6e665c}
+.calendarSetupNotice p{margin:0 0 12px}
+.calendarSetupNotice ol{padding-left:19px;margin:0 0 15px}
+.calendarSetupNotice code{background:#ded6ca;padding:2px 4px;font-size:10px}
+.calendarSetupNotice a{display:inline-flex;align-items:center;gap:7px;border-bottom:1px solid #a89b89;padding-bottom:5px;color:#29251f}
+.calendlyFrame{display:block;width:100%;height:720px;border:0;background:var(--paper)}
+@media(max-width:560px){.bookingActions{margin-top:28px}.calendarPanel{padding:17px}.calendlyFrame{height:760px}}
+
+
+/* MAARCH_27 portfolio v2 — editorial, concise, responsive */
+.floatingStar{font-size:21px;color:#8c775d}
+.workGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:34px 20px}
+.workCard{min-width:0}
+.workMedia{height:310px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.workBeauty{background:linear-gradient(145deg,#c6aa9a,#e6d9cb 48%,#9c7c69)}
+.workTech{background:linear-gradient(145deg,#aab2ad,#dce0d7 48%,#68746d)}
+.workFashion{background:linear-gradient(145deg,#a39b8e,#d4c9b8 48%,#655b52)}
+.workLifestyle{background:linear-gradient(145deg,#b5a48f,#e0d2be 48%,#807364)}
+.workTravel{background:linear-gradient(145deg,#9caa9b,#d7d1bf 50%,#837a68)}
+.workSkincare{background:linear-gradient(145deg,#d5c4b2,#eee5d9 48%,#b49a83)}
+.workMedia:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#17130e38,transparent 46%)}
+.workNumber,.mediaTag,.mediaPlaceholder,.workArrow{position:absolute;z-index:1}
+.workNumber{top:14px;left:14px;color:white;font-size:9px}
+.mediaTag{top:12px;right:12px;color:white;font-size:8px;letter-spacing:1px;border:1px solid #ffffff88;padding:6px 8px}
+.mediaPlaceholder{font-size:8px;letter-spacing:1px;color:#fffde0b8;text-align:center;padding:0 10px}
+.workArrow{right:12px;bottom:12px;width:34px;height:34px;border-radius:50%;background:var(--paper);display:grid;place-items:center}
+.workMeta{display:flex;justify-content:space-between;gap:10px;margin-top:15px;color:#8a7e6e;font-size:8px;letter-spacing:1.1px}
+.workCard h3{font-family:var(--serif);font-size:22px;font-weight:400;margin:9px 0 6px}
+.workCard>p{font-size:10px;color:#777169;line-height:1.6;margin-bottom:9px}
+.workMetric{font-size:9px;color:#8b7b67;border-top:1px solid var(--line);padding-top:9px}
+.sectionFootnote{font-size:9px;color:#8b8378;line-height:1.7;margin-top:24px}
+.insightsSection{background:#eee8de}
+.insightGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.insightCard{min-height:175px;border:1px solid #d6cec2;padding:22px;display:flex;flex-direction:column;align-items:flex-start}
+.insightCard span{font-size:8px;letter-spacing:1.4px;color:#8b7b67}
+.insightCard strong{font-family:var(--serif);font-size:25px;font-weight:400;margin:20px 0 8px}
+.insightCard p{font-size:10px;line-height:1.7;color:#777169;margin:0}
+.whySection{padding-top:95px;padding-bottom:100px}
+.whySection>h2,.testimonialIntro h2{font-size:clamp(38px,4.4vw,58px);line-height:1.1;font-weight:400;letter-spacing:-1.8px;margin:0 0 45px}
+.reasonGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.reasonCard{border-top:1px solid var(--line);padding:20px 10px 0 0;position:relative}
+.reasonNumber{display:block;font-size:8px;color:#9a8c7b;letter-spacing:1px;margin-bottom:24px}
+.reasonCard h3{font-family:var(--serif);font-size:19px;font-weight:400;line-height:1.3;margin:14px 0 9px}
+.reasonCard p{font-size:10px;line-height:1.8;color:#777169;margin:0}
+.testimonialsSection{background:#e8e1d7;display:grid;grid-template-columns:1fr .85fr;gap:10%;align-items:center}
+.testimonialIntro h2{margin-bottom:18px}
+.testimonialIntro>p:last-child{font-size:11px;line-height:1.8;color:#746c62;max-width:300px}
+.testimonialPlaceholder{padding:30px;border:1px solid #cfc5b8}
+.testimonialPlaceholder p{font-family:var(--serif);font-style:italic;font-size:21px;line-height:1.5;margin:22px 0}
+.testimonialPlaceholder span{font-size:8px;letter-spacing:1px;color:#8b7b67}
+.bookingCallout{margin-top:28px;padding:16px;border-left:2px solid #aa957a;background:#e2d9cd;display:flex;flex-direction:column;gap:7px}
+.bookingCallout strong{font-family:var(--serif);font-size:17px;font-weight:400}
+.bookingCallout span{font-size:10px;line-height:1.7;color:#766d62}
+.bookingIntro .calendlyBooking,.bookingIntro .calendlyWrap{margin-top:15px}
+@media(max-width:800px){.workGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 16px}.workMedia{height:280px}.reasonGrid{grid-template-columns:repeat(2,1fr);gap:25px 18px}.testimonialsSection{gap:6%}.insightGrid{gap:10px}.insightCard{padding:16px}}
+@media(max-width:560px){.workGrid{grid-template-columns:1fr;gap:30px}.workMedia{height:390px}.insightGrid{grid-template-columns:1fr}.insightCard{min-height:130px}.insightCard strong{margin:13px 0 6px}.reasonGrid{grid-template-columns:1fr 1fr;gap:26px 14px}.reasonCard h3{font-size:17px}.testimonialsSection{grid-template-columns:1fr;gap:15px}.testimonialPlaceholder{padding:22px}.testimonialPlaceholder p{font-size:19px}.bookingCallout{margin-top:22px}}
