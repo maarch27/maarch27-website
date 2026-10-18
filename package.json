@@ -9,7 +9,8 @@
     "lint": "eslint",
     "images": "node scripts/gen-images.mjs",
     "predev": "node scripts/gen-images.mjs",
-    "prebuild": "node scripts/gen-images.mjs"
+    "prebuild": "node scripts/gen-images.mjs",
+    "covers": "node scripts/fetch-reel-covers.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",

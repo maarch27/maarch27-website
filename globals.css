@@ -53,6 +53,7 @@ html.js .rv.in{opacity:1;transform:none}
 .top{position:fixed;inset:0 0 auto 0;z-index:30;display:flex;align-items:center;justify-content:space-between;padding:16px var(--gutter);background:linear-gradient(var(--ivory) 55%,rgba(252,248,239,0))}
 .logo{font-family:var(--serif);font-size:1.7rem;font-weight:500;color:var(--bur-d)}
 .logo .gold{font-style:normal}
+.logo .sub{font-size:.72em;font-weight:500;position:relative;top:.38em;margin-left:.06em;letter-spacing:.04em}
 .top nav{display:flex;gap:30px;font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;font-weight:400}
 .top nav a{color:var(--bur)}.top nav a:hover{color:var(--gold-d)}
 .pill{padding:10px 24px;background:var(--bur);color:#fbf1de;font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;border-radius:40px;border:1px solid var(--gold)}
@@ -310,3 +311,14 @@ form .btn{justify-self:start;cursor:pointer}
 .me-list h3{font-family:var(--serif);font-weight:500;font-size:1.5rem;color:var(--bur-d);margin-bottom:6px}
 .me-list p{color:#5d3a3d}
 @media(max-width:960px){.me-in{grid-template-columns:1fr}.me-intro{max-width:none}}
+
+.vs-wrap{display:grid;grid-template-columns:minmax(0,.55fr) minmax(0,1.45fr);gap:clamp(20px,3vw,44px);align-items:center}
+.vs-photos{display:grid;gap:16px}
+.vs-photos img{width:100%;object-fit:cover;display:block}
+.vs-photos>:first-child{clip-path:url(#sh-arch);aspect-ratio:3/4}
+.vs-photos>:last-child{clip-path:url(#sh-squircle);aspect-ratio:1}
+@media(max-width:960px){.vs-wrap{grid-template-columns:1fr}.vs-photos{grid-template-columns:1fr 1fr}.vs-photos>:first-child,.vs-photos>:last-child{aspect-ratio:3/4}}
+
+.avail{max-width:none;white-space:nowrap;display:inline-flex;align-items:center;gap:8px;margin:14px 0 0;padding:8px 16px;border:1px solid var(--gold-l);border-radius:40px;background:rgba(252,248,239,.7);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--bur);backdrop-filter:blur(4px)}
+.avail i{color:var(--gold);font-style:normal}.avail span{color:var(--gold)}
+@media(max-width:560px){.avail{white-space:normal;font-size:.62rem;letter-spacing:.1em;line-height:1.5}}

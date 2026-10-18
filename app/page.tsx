@@ -33,10 +33,10 @@ const ABOUT = ["facial-gua-sha.jpg", "glasses-selfie.jpg", "autumn-bench.jpg"];
 type Cat = "Beauty" | "Fashion" | "Tech" | "Lifestyle" | "Travel";
 const cats: Cat[] = ["Beauty", "Fashion", "Tech", "Lifestyle", "Travel"];
 const worldPhotos: Record<Cat, string[]> = {
-  Beauty: ["IMG_1701.JPG", "IMG_5214.jpg", "green-mask.jpg"],
+  Beauty: ["green-mask.jpg"],
   Fashion: ["IMG_4554.JPG", "IMG_4816.JPG", "street-brown.jpg"],
   Tech: ["IMG_2092.JPG", "IMG_8716.jpg"],
-  Lifestyle: ["facial-gua-sha.jpg","filming-setup.jpg", "IMG_4830.JPG"],
+  Lifestyle: ["filming-setup.jpg", "IMG_4830.JPG"],
   Travel: ["IMG_5216.JPG"],
 };
 const filmPhotos: Record<Cat, string[]> = {
@@ -46,7 +46,7 @@ const filmPhotos: Record<Cat, string[]> = {
   Lifestyle: ["IMG_6704.jpg", "mask-blue-towel.jpg"],
   Travel: ["Tezza-8005.JPG"],
 };
-const KNOWN = ["IMG_1434.JPG","IMG_1701.JPG","IMG_2092.JPG","IMG_2319.jpg","IMG_4554.JPG","IMG_4560.JPG","IMG_4562.JPG","IMG_4616.JPG","IMG_4816.JPG","IMG_4830.JPG","IMG_5214.jpg","IMG_5216.JPG","IMG_6559.JPG","IMG_6704.jpg","IMG_8716.jpg","Tezza-8005.JPG","armani-gallery.jpg","armani-violins.jpg","autumn-bench-wide.jpg","autumn-bench.jpg","bowling-polka.jpg","exmiloo-brow.jpg","facial-gua-sha.jpg","filming-setup.jpg","glasses-selfie.jpg","green-mask.jpg","mask-blue-towel.jpg","paris-bag-1.jpg","paris-bag-2.jpg","paris-bag-3.jpg","paris-bag-4.jpg","street-brown.jpg"];
+const KNOWN = ["IMG_1434.JPG","IMG_1701.JPG","IMG_2092.JPG","IMG_2319.jpg","IMG_4554.JPG","IMG_4560.JPG","IMG_4562.JPG","IMG_4616.JPG","IMG_4816.JPG","IMG_4830.JPG","IMG_5214.jpg","IMG_5216.JPG","IMG_6559.JPG","IMG_6704.jpg","IMG_8716.jpg","Tezza-8005.JPG","armani-gallery.jpg","armani-violins.jpg","autumn-bench-wide.jpg","autumn-bench.jpg","bowling-polka.jpg","exmiloo-brow.jpg","facial-gua-sha.jpg","filming-setup.jpg","glasses-selfie.jpg","camera-pool.jpg","swimwear-edit.jpg","tripod-bags.jpg","watch-hand.jpg","shoes-italo.jpg","cerave.jpg","camera-orange.jpg","dossier-lying.jpg","dossier-flatlay.jpg","mirror-room.jpg","travel-grid.jpg","clarins.jpg","green-mask.jpg","mask-blue-towel.jpg","paris-bag-1.jpg","paris-bag-2.jpg","paris-bag-3.jpg","paris-bag-4.jpg","street-brown.jpg"];
 const USED = new Set<string>([HERO, ...HERO4, ...ABOUT, ...Object.values(worldPhotos).flat(), ...Object.values(filmPhotos).flat()]);
 // gallery order: portrait / landscape mixed for a balanced wall
 const GALLERY_FIRST = ["mask-blue-towel.jpg", "IMG_6704.jpg", "armani-gallery.jpg", "IMG_4562.JPG", "IMG_6559.JPG", "IMG_4560.JPG"];
@@ -78,9 +78,9 @@ const reels: Reel[] = [
 // Cover photos for reels (real Instagram covers in public/reels/<id>.jpg win when present)
 const coverPool: Record<Cat, string[]> = {
   Beauty: ["IMG_4562.JPG", "mask-blue-towel.jpg", "IMG_6559.JPG", "armani-gallery.jpg", "glasses-selfie.jpg", "IMG_4560.JPG"],
-  Fashion: ["paris-bag-1.jpg", "paris-bag-2.jpg", "paris-bag-3.jpg", "paris-bag-4.jpg", "autumn-bench-wide.jpg", "IMG_5216.JPG"],
+  Fashion: ["autumn-bench-wide.jpg", "IMG_5216.JPG", "glasses-selfie.jpg", "IMG_4560.JPG", "armani-gallery.jpg", "IMG_4562.JPG"],
   Tech: ["filming-setup.jpg", "IMG_6704.jpg", "IMG_4830.JPG", "IMG_1434.JPG", "armani-gallery.jpg", "IMG_4554.JPG"],
-  Lifestyle: ["autumn-bench-wide.jpg", "glasses-selfie.jpg", "paris-bag-2.jpg"],
+  Lifestyle: ["autumn-bench-wide.jpg", "glasses-selfie.jpg", "IMG_4562.JPG"],
   Travel: ["IMG_5216.JPG"],
 };
 // "More about me": edit these lines freely, they are only text.
@@ -91,6 +91,8 @@ const meFacets: [string, string][] = [
   ["Genuine over perfect", "I only make content that feels like a real recommendation from a friend with great taste, never a stiff ad. That is what keeps people watching and buying."],
   ["Easy to work with", "Clear briefs, quick replies, honest ideas and delivery on time. Brands come back because the process feels as good as the result."],
 ];
+// Known cover matches (reel id -> photo of that exact video). Add more as you confirm them.
+const reelCover: Record<string, string> = { "Dc1Z3PEx-yz": "IMG_1701.JPG", "DV_nhb5CP56": "IMG_5214.jpg" };
 const igUrl = (r: { id: string; type?: "p" }) => `https://www.instagram.com/${r.type === "p" ? "p" : "reel"}/${r.id}/`;
 
 const palettes: Record<Cat, { note: string; c: [string, string, string, string] }> = {
@@ -230,7 +232,7 @@ function ReelCover({ r }: { r: Reel }) {
   const pool = coverPool[r.cat];
   return (
     <span className="rcover" style={{ ["--a" as string]: pal[0], ["--b" as string]: pal[1], ["--c" as string]: pal[2] }}>
-      <Img src={P(pool[idx % pool.length])} alt="" className="rimg" pos="center 25%" />
+      <Img src={P(reelCover[r.id] ?? pool[idx % pool.length])} alt="" className="rimg" pos="center 22%" />
       <Img src={`/reels/${r.id}.jpg`} alt="" className="rimg" />
       <span className="rtag">Reel</span>
       <span className="rtitle">{r.title}</span>
@@ -302,7 +304,7 @@ export default function Home() {
     <main className="site">
       <Shapes />
       <header className="top">
-        <a href="#home" className="logo">Maarch<span className="gold">27</span></a>
+        <a href="#home" className="logo">Maarch<span className="gold sub">27</span></a>
         <nav aria-label="Main"><a href="#about">About</a><a href="#why">Why me</a><a href="#worlds">Work</a><a href="#services">Services</a><a href="#contact">Contact</a></nav>
         <a className="pill" href="#book">Book me</a>
       </header>
@@ -310,13 +312,14 @@ export default function Home() {
       {/* HERO */}
       <section className="hero" id="home">
         <div className="hero-copy">
-          <p className="eyebrow">Luxury UGC creator · USA &amp; France · Booked worldwide</p>
+          <p className="eyebrow">UGC creator · Booked worldwide</p>
+          <p className="avail"><i aria-hidden="true">✦</i> Limited monthly availability <span>·</span> A brand favorite</p>
           <h1><span className="spark s1">✦</span><span className="spark s2">✦</span>Mariam <em className="gold">Ch</em></h1>
           <span className="rot" aria-hidden="true"><span>Beauty</span><span>Fashion</span><span>Tech</span><span>Lifestyle</span><span>Travel</span></span>
           <p className="lede">Films that make people stop, feel and buy. Made for 500+ brands, with a limited number of spots each month.</p>
           <div className="actions"><a className="btn" href="#book">Work with me</a><a className="btn line" href="#worlds">See my work</a></div>
         </div>
-        <div className="hero-img"><Img src={P(HERO)} alt="Mariam, luxury UGC creator" pos={HERO_POS} eager /></div>
+        <div className="hero-img"><Img src={P(HERO)} alt="Mariam, UGC creator" pos={HERO_POS} eager /></div>
         <div className="chip a"><b className="gold">153K</b><span>Instagram followers</span></div>
         <div className="chip b"><b className="gold">500+</b><span>brands trusted me</span></div>
       </section>
@@ -373,9 +376,12 @@ export default function Home() {
 
         <div className="versus rv">
           <h3>Why not just <em className="gold">any creator?</em></h3>
+          <div className="vs-wrap">
+          <div className="vs-photos" aria-hidden="true"><Img src={P("dossier-lying.jpg")} alt="" pos="center 30%" /><Img src={P("camera-orange.jpg")} alt="" pos="center 70%" /></div>
           <div className="vs">
             <div className="vs-h">Often</div><div className="vs-h me">With me</div>
             {versus.map(([a, b]) => (<div className="vs-row" key={a}><p className="x">{a}</p><p className="y">{b}</p></div>))}
+          </div>
           </div>
         </div>
 
@@ -508,7 +514,7 @@ export default function Home() {
       </section>
 
       <footer className="foot">
-        <a href="#home" className="logo">Maarch<span className="gold">27</span></a>
+        <a href="#home" className="logo">Maarch<span className="gold sub">27</span></a>
         <ul className="icons">{social.map((s) => <li key={s.name}><a href={s.url} target={s.icon === "mail" ? undefined : "_blank"} rel="noreferrer" aria-label={s.name}><Icon name={s.icon} /><span>{s.name}</span></a></li>)}</ul>
         <small>© {new Date().getFullYear()} Maarch27</small>
       </footer>
