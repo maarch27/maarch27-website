@@ -310,3 +310,10 @@ form .btn{justify-self:start;cursor:pointer}
 .me-list h3{font-family:var(--serif);font-weight:500;font-size:1.5rem;color:var(--bur-d);margin-bottom:6px}
 .me-list p{color:#5d3a3d}
 @media(max-width:960px){.me-in{grid-template-columns:1fr}.me-intro{max-width:none}}
+
+.vs-wrap{display:grid;grid-template-columns:minmax(0,.55fr) minmax(0,1.45fr);gap:clamp(20px,3vw,44px);align-items:center}
+.vs-photos{display:grid;gap:16px}
+.vs-photos img{width:100%;object-fit:cover;display:block}
+.vs-photos>:first-child{clip-path:url(#sh-arch);aspect-ratio:3/4}
+.vs-photos>:last-child{clip-path:url(#sh-squircle);aspect-ratio:1}
+@media(max-width:960px){.vs-wrap{grid-template-columns:1fr}.vs-photos{grid-template-columns:1fr 1fr}.vs-photos>:first-child,.vs-photos>:last-child{aspect-ratio:3/4}}
