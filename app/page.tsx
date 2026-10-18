@@ -33,20 +33,20 @@ const ABOUT = ["facial-gua-sha.jpg", "glasses-selfie.jpg", "autumn-bench.jpg"];
 type Cat = "Beauty" | "Fashion" | "Tech" | "Lifestyle" | "Travel";
 const cats: Cat[] = ["Beauty", "Fashion", "Tech", "Lifestyle", "Travel"];
 const worldPhotos: Record<Cat, string[]> = {
-  Beauty: ["IMG_1701.JPG", "IMG_5214.jpg", "green-mask.jpg"],
-  Fashion: ["IMG_4554.JPG", "IMG_4816.JPG", "street-brown.jpg"],
-  Tech: ["IMG_2092.JPG", "IMG_8716.jpg"],
+  Beauty: ["IMG_1701.JPG", "IMG_5214.jpg", "green-mask.jpg", "cerave.jpg"],
+  Fashion: ["IMG_4554.JPG", "IMG_4816.JPG", "street-brown.jpg", "swimwear-edit.jpg", "watch-hand.jpg"],
+  Tech: ["IMG_2092.JPG", "IMG_8716.jpg", "tripod-bags.jpg"],
   Lifestyle: ["facial-gua-sha.jpg","filming-setup.jpg", "IMG_4830.JPG"],
-  Travel: ["IMG_5216.JPG"],
+  Travel: ["travel-grid.jpg", "camera-pool.jpg", "IMG_5216.JPG"],
 };
 const filmPhotos: Record<Cat, string[]> = {
-  Beauty: ["IMG_2319.jpg", "exmiloo-brow.jpg", "armani-violins.jpg"],
-  Fashion: ["IMG_4616.JPG", "bowling-polka.jpg", "IMG_1434.JPG"],
+  Beauty: ["IMG_2319.jpg", "exmiloo-brow.jpg", "armani-violins.jpg", "clarins.jpg", "dossier-lying.jpg", "dossier-flatlay.jpg"],
+  Fashion: ["IMG_4616.JPG", "bowling-polka.jpg", "IMG_1434.JPG", "shoes-italo.jpg", "camera-orange.jpg"],
   Tech: [],
   Lifestyle: ["IMG_6704.jpg", "mask-blue-towel.jpg"],
   Travel: ["Tezza-8005.JPG"],
 };
-const KNOWN = ["IMG_1434.JPG","IMG_1701.JPG","IMG_2092.JPG","IMG_2319.jpg","IMG_4554.JPG","IMG_4560.JPG","IMG_4562.JPG","IMG_4616.JPG","IMG_4816.JPG","IMG_4830.JPG","IMG_5214.jpg","IMG_5216.JPG","IMG_6559.JPG","IMG_6704.jpg","IMG_8716.jpg","Tezza-8005.JPG","armani-gallery.jpg","armani-violins.jpg","autumn-bench-wide.jpg","autumn-bench.jpg","bowling-polka.jpg","exmiloo-brow.jpg","facial-gua-sha.jpg","filming-setup.jpg","glasses-selfie.jpg","green-mask.jpg","mask-blue-towel.jpg","paris-bag-1.jpg","paris-bag-2.jpg","paris-bag-3.jpg","paris-bag-4.jpg","street-brown.jpg"];
+const KNOWN = ["IMG_1434.JPG","IMG_1701.JPG","IMG_2092.JPG","IMG_2319.jpg","IMG_4554.JPG","IMG_4560.JPG","IMG_4562.JPG","IMG_4616.JPG","IMG_4816.JPG","IMG_4830.JPG","IMG_5214.jpg","IMG_5216.JPG","IMG_6559.JPG","IMG_6704.jpg","IMG_8716.jpg","Tezza-8005.JPG","armani-gallery.jpg","armani-violins.jpg","autumn-bench-wide.jpg","autumn-bench.jpg","bowling-polka.jpg","exmiloo-brow.jpg","facial-gua-sha.jpg","filming-setup.jpg","glasses-selfie.jpg","camera-pool.jpg","swimwear-edit.jpg","tripod-bags.jpg","watch-hand.jpg","shoes-italo.jpg","cerave.jpg","camera-orange.jpg","dossier-lying.jpg","dossier-flatlay.jpg","mirror-room.jpg","travel-grid.jpg","clarins.jpg","green-mask.jpg","mask-blue-towel.jpg","paris-bag-1.jpg","paris-bag-2.jpg","paris-bag-3.jpg","paris-bag-4.jpg","street-brown.jpg"];
 const USED = new Set<string>([HERO, ...HERO4, ...ABOUT, ...Object.values(worldPhotos).flat(), ...Object.values(filmPhotos).flat()]);
 // gallery order: portrait / landscape mixed for a balanced wall
 const GALLERY_FIRST = ["mask-blue-towel.jpg", "IMG_6704.jpg", "armani-gallery.jpg", "IMG_4562.JPG", "IMG_6559.JPG", "IMG_4560.JPG"];
