@@ -9,6 +9,32 @@ const categories = [
   { id: "05", label: "TRAVEL & PLACES", title: "Make somewhere feel like a story.", kind: "travel", note: "Visual diaries · Destination content · Guides", tiles: ["POSTCARD", "A LITTLE ESCAPE", "THE PLACE", "TRAVEL DIARY", "SAVE THIS SPOT"] },
 ];
 
+
+const portfolioItems = [
+{title:"ANUA Skin Glow",type:"beauty",format:"Skincare",url:"https://www.instagram.com/reel/Dc1Z3PEx-yz/"},
+{title:"Jewelry Bracelet & Necklace",type:"fashion",format:"Jewelry styling",url:"https://www.instagram.com/reel/Daiay-VImXK/"},
+{title:"Camera Battery Charger & SSD",type:"tech",format:"Tech product",url:"https://www.instagram.com/reel/DeRvV7tIweA/"},
+{title:"Pop Up Bag",type:"fashion",format:"Fashion event",url:"https://www.instagram.com/reel/DeHstaVIgYr/"},
+{title:"Fashion Week",type:"fashion",format:"Event coverage",url:"https://www.instagram.com/reel/DeBBztMI6Rl/"},
+{title:"Calorie Counter App",type:"tech",format:"App showcase",url:"https://www.instagram.com/reel/DR2Q5m7iCjb/"},
+{title:"Mercedes-Benz Event",type:"fashion",format:"Event photography",url:"https://www.instagram.com/p/Ddhn4UKiGif/"},
+{title:"Tech Speaker",type:"tech",format:"Tech product",url:"https://www.instagram.com/reel/DcubwVaIhYI/"},
+{title:"Pixel Pure Skincare",type:"beauty",format:"Skincare",url:"https://www.instagram.com/reel/DcctOHOoE_w/"},
+{title:"Dossier Fragrance",type:"beauty",format:"Fragrance",url:"https://www.instagram.com/reel/DbYs4y6I9uN/"},
+{title:"TOTWOO Couple Bracelet",type:"fashion",format:"Jewelry",url:"https://www.instagram.com/reel/DbBi7iToEXY/"},
+{title:"Stress Watch App",type:"tech",format:"App and wearable",url:"https://www.instagram.com/reel/DX99Dl8xH5_/"},
+{title:"Champions Burger Event",type:"life",format:"Event content",url:"https://www.instagram.com/reel/DbBi7iToEXY/"},
+{title:"Beauty Products",type:"beauty",format:"Beauty product",url:"https://www.instagram.com/reel/DV_nhb5CP56/"},
+{title:"Beauty Products",type:"beauty",format:"Beauty product",url:"https://www.instagram.com/reel/DSGG3RtCFDl/"},
+{title:"Fashion Styling",type:"fashion",format:"Styling",url:"https://www.instagram.com/reel/DWGtfNoCJoY/"},
+{title:"Lifestyle Vlog",type:"life",format:"Vlog",url:"https://www.instagram.com/reel/DWpYfPuiNXh/"},
+{title:"AirPods Case Accessories",type:"tech",format:"Accessories",url:"https://www.instagram.com/reel/DYvL3gFodut/"},
+{title:"iPhone Case & Lumina Holder",type:"tech",format:"Accessories",url:"https://www.instagram.com/reel/Db6Rv8fRZaU/"},
+{title:"Hair Care",type:"beauty",format:"Hair care",url:"https://www.instagram.com/reel/DVeUDLMCDY-/"},
+{title:"Hair Care",type:"beauty",format:"Hair care",url:"https://www.instagram.com/reel/DUnxGS0iN5e/"},
+{title:"Glasses",type:"fashion",format:"Accessories",url:"https://www.instagram.com/reel/DKZhEQaBwW3/"}
+];
+
 const services = [
   { n: "01", title: "UGC that earns the pause", detail: "Concept-led videos, product demos, testimonials, unboxings, talking-to-camera, voiceovers, ASMR and clear calls to action. Built around the hook, the audience and the reason to care.", icon: Video },
   { n: "02", title: "Creator campaigns & brand partnerships", detail: "Sponsored Reels, integrated storytelling and long-term collaborations that bring a brand into my world without losing my voice or the audience's trust.", icon: Sparkles },
@@ -73,10 +99,11 @@ export default function Home() {
             <div className="categoryHead"><span>{cat.id} / {cat.label}</span><span className="categoryRound"><ArrowUpRight size={17}/></span></div>
             <h3>{cat.title}</h3><p className="categoryNote">{cat.note}</p>
             <div className="miniGallery">{cat.tiles.map((tile, i) => <div className={"miniTile miniTile" + (i + 1)} key={tile}><span className="miniIndex">0{i + 1}</span>{i === 0 && <span className="miniPlay"><Play size={12} fill="currentColor"/></span>}<b>{tile}</b></div>)}</div>
+            <div className="portfolioLinks">{portfolioItems.filter((item) => item.type === cat.kind).map((item, i) => <a className="portfolioLinkCard" href={item.url} target="_blank" rel="noreferrer" key={item.title + item.url + i}><span className="portfolioLinkNumber">{String(i + 1).padStart(2, "0")}</span><span className="portfolioLinkCopy"><strong>{item.title}</strong><small>{item.format}</small></span><span className="portfolioLinkArrow"><ArrowUpRight size={15}/></span></a>)}</div>
             <a className="categoryLink" href="#contact">LET’S BUILD THIS FORMAT <ArrowUpRight size={13}/></a>
           </article>)}
         </div>
-        <p className="workFootnote">Selected videos, campaign stills and behind the scenes moments will live here by category. We will add your real photos and video covers so the work speaks for itself.</p>
+        <p className="workFootnote">Selected Instagram projects are linked by category. Next, we can add your actual photos, reel covers and insight screenshots so the portfolio feels visual as well as clickable.</p>
       </section>
 
       <section className="insightsSection" id="insights">
