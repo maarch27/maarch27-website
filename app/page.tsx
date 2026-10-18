@@ -19,13 +19,13 @@ const franceIG = "https://www.instagram.com/maarch_in_france/";
    PHOTOS  (all live in public/image/)
    HERO is the first-page picture: change this one filename to swap it.
    ===================================================================== */
-const HERO = "facial-gua-sha.jpg";
-const HERO_POS = "48% 50%";
+const HERO = "_hero-collage.jpg";
+const HERO_POS = "50% 50%";
 const P = (n: string) => "/image/" + encodeURIComponent(n);
 
 // The four photos beside "About me"
-const ABOUT_P = ["paris-bag-1.jpg", "paris-bag-2.jpg", "paris-bag-3.jpg", "paris-bag-4.jpg"];
-const ABOUT = ABOUT_P;
+const HERO4 = ["paris-bag-1.jpg", "paris-bag-2.jpg", "paris-bag-3.jpg", "paris-bag-4.jpg"]; // already inside the hero collage
+const ABOUT = ["autumn-bench.jpg", "glasses-selfie.jpg", "autumn-bench-wide.jpg", "street-brown.jpg"];
 
 // Every photo is used in exactly one place on the site, so nothing repeats.
 // Pick a world (per category) and Featured films (per category) take the photos below.
@@ -47,7 +47,7 @@ const filmPhotos: Record<Cat, string[]> = {
   Travel: ["Tezza-8005.JPG"],
 };
 const KNOWN = ["IMG_1434.JPG","IMG_1701.JPG","IMG_2092.JPG","IMG_2319.jpg","IMG_4554.JPG","IMG_4560.JPG","IMG_4562.JPG","IMG_4616.JPG","IMG_4816.JPG","IMG_4830.JPG","IMG_5214.jpg","IMG_5216.JPG","IMG_6559.JPG","IMG_6704.jpg","IMG_8716.jpg","Tezza-8005.JPG","armani-gallery.jpg","armani-violins.jpg","autumn-bench-wide.jpg","autumn-bench.jpg","bowling-polka.jpg","exmiloo-brow.jpg","facial-gua-sha.jpg","filming-setup.jpg","glasses-selfie.jpg","green-mask.jpg","mask-blue-towel.jpg","paris-bag-1.jpg","paris-bag-2.jpg","paris-bag-3.jpg","paris-bag-4.jpg","street-brown.jpg"];
-const USED = new Set<string>([HERO, ...ABOUT, ...Object.values(worldPhotos).flat(), ...Object.values(filmPhotos).flat()]);
+const USED = new Set<string>([HERO, ...HERO4, ...ABOUT, ...Object.values(worldPhotos).flat(), ...Object.values(filmPhotos).flat()]);
 // gallery order: portrait / landscape mixed for a balanced wall
 const GALLERY_FIRST = ["mask-blue-towel.jpg", "IMG_6704.jpg", "armani-gallery.jpg", "IMG_4562.JPG", "IMG_6559.JPG", "IMG_4560.JPG"];
 
