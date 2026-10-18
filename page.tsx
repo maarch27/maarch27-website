@@ -23,28 +23,28 @@ export default function Home() {
       <header className="siteHeader">
         <a className="wordmark" href="#top" aria-label="MAARCH 27 home">MAARCH<span>_27</span></a>
         <nav aria-label="Main navigation">
-          <a href="#work">Work</a><a href="#about">About</a><a href="#why">Why me</a><a href="#booking">Booking</a>
+          <a href="#work">Work</a><a href="#brands">Brands</a><a href="#about">About</a><a href="#services">Services</a><a href="#booking">Booking</a>
         </nav>
         <a className="headerCta" href="#booking">LET&apos;S CREATE <ArrowUpRight size={14} /></a>
       </header>
 
       <section className="hero" id="top">
         <div className="heroCopy">
-          <p className="eyebrow"><span className="eyebrowDot" /> CREATOR · UGC · SOFTWARE ENGINEER</p>
-          <h1>Creative content.<br /><em>Real connection.</em></h1>
-          <p className="heroIntro">I’m Mariam — a creator with a point of view, making fashion, beauty, lifestyle, travel and tech stories for brands across the U.S. and France.</p>
+          <p className="eyebrow"><span className="eyebrowDot" /> FASHION · BEAUTY · LIFESTYLE · UGC</p>
+          <h1>A creative soul.<br /><em>A signature story.</em></h1>
+          <p className="heroIntro">I’m Mariam, the creative behind MAARCH_27. I turn fashion, beauty, lifestyle, travel and tech into polished, personality-led stories through short-form video, photography and UGC.</p>
           <div className="heroActions">
             <a className="button buttonDark" href="#work">Explore my work <ArrowDownRight size={16} /></a>
-            <a className="textLink" href="#booking">Book a conversation <ArrowUpRight size={15} /></a>
+            <a className="textLink" href="https://maarch27.my.canva.site/media-kit" target="_blank" rel="noreferrer">View my media kit <ArrowUpRight size={15} /></a>
           </div>
           <div className="heroFootnote"><span>UGC & SHORT-FORM VIDEO</span><span>PHOTOGRAPHY</span><span>CREATOR CAMPAIGNS</span></div>
         </div>
         <div className="heroVisual">
           <div className="heroPhoto" role="img" aria-label="Editorial portrait placeholder; replace with Mariam's own image" />
           <div className="photoLabel"><span>MAARCH_27</span><span>CREATOR PORTFOLIO — 2026</span></div>
-          <div className="floatingNote"><span className="floatingStar">✳</span><span>Ideas with intention.<br />Content with a point of view.</span></div>
+          <div className="floatingNote"><span className="floatingStar">✳</span><span>Curious by nature.<br />Creative by instinct.</span></div>
         </div>
-        <div className="heroIndex">CREATIVE PARTNER / 01</div>
+        <div className="heroIndex">THE MAARCH_27 POINT OF VIEW / 01</div>
       </section>
 
       <section className="proofBar" aria-label="Creator highlights">
@@ -57,7 +57,7 @@ export default function Home() {
       <section className="workSection sectionPad" id="work">
         <div className="sectionHeading">
           <div><p className="eyebrow">THE PORTFOLIO</p><h2>Different formats.<br /><em>One clear point of view.</em></h2></div>
-          <p className="sectionAside">A focused selection of videos, photography and creator campaigns. We’ll replace every sample tile with your actual work and link out to Instagram posts where useful.</p>
+          <p className="sectionAside">From scroll-stopping hooks to cinematic details: explore the different ways I build stories for brands. Each project preview will open its video or campaign once the final media is connected.</p>
         </div>
         <div className="workGrid">
           {work.map((item) => (
@@ -77,6 +77,21 @@ export default function Home() {
         <p className="sectionFootnote">Portfolio tiles are currently placeholders. No campaign results or client endorsements are being invented.</p>
       </section>
 
+
+      <section className="brandSection sectionPad" id="brands">
+        <div className="brandHeading">
+          <p className="eyebrow">SELECTED BRAND EXPERIENCE</p>
+          <h2>Good stories are<br /><em>better together.</em></h2>
+          <p>From beauty and fashion to tech and lifestyle, I love finding the detail that makes a brand feel memorable.</p>
+        </div>
+        <div className="brandWall" aria-label="Selected brands">
+          {["SHEIN", "STYLEWE", "CIDER", "ANUA", "CANON", "TEDDY BLAKE", "TOTWOO", "DOSSIER", "AUPEN", "MERCEDES-BENZ"].map((brand) => (
+            <span key={brand} className="brandWord">{brand}</span>
+          ))}
+        </div>
+        <p className="sectionFootnote">Selected names shown for portfolio direction; confirm the final list of published brand partnerships before launch.</p>
+      </section>
+
       <section className="insightsSection sectionPad" id="insights">
         <div className="sectionHeading">
           <div><p className="eyebrow">THE NUMBERS BEHIND THE STORY</p><h2>Creative is the start.<br /><em>Evidence adds context.</em></h2></div>
@@ -94,9 +109,9 @@ export default function Home() {
         <div className="aboutImage"><span>REPLACE WITH YOUR PORTRAIT</span></div>
         <div className="aboutCopy">
           <p className="eyebrow">THE PERSON BEHIND THE CONTENT</p>
-          <h2>Hi, I’m Mariam.<br /><em>Creator and builder.</em></h2>
-          <p>I’m the creator behind MAARCH_27, working with brands across the U.S. and France. My content moves between beauty, skincare, fashion, lifestyle, travel, entertaining vlogs and tech.</p>
-          <p>I’m also a software engineer. That combination gives me a creative eye and a technical way of thinking: I enjoy making products understandable, finding the human angle and turning a brief into a story people want to keep watching.</p>
+          <h2>Hi, I’m Mariam.<br /><em>The mind behind the mood.</em></h2>
+          <p>I’m the creator behind MAARCH_27: a fashion-loving, idea-collecting, camera-ready creative who loves turning everyday moments and beautiful products into stories people want to watch.</p>
+          <p>I’m also a graphic designer, video editor and software-engineering graduate. I can shape the concept, find the hook, film the details, edit the story and think about the marketing behind it. My work blends a visual point of view with strategy, curiosity and a little bit of obsession over the details.</p>
           <div className="signature">Mariam <span>— MAARCH_27</span></div>
           <a className="button buttonOutline" href="#booking">Let&apos;s create together <ArrowUpRight size={16} /></a>
         </div>
@@ -104,7 +119,7 @@ export default function Home() {
 
       <section className="whySection sectionPad" id="why">
         <p className="eyebrow">WHY MAARCH_27</p>
-        <h2>Not just content.<br /><em>A creative partner.</em></h2>
+        <h2>More than a pretty frame.<br /><em>A whole creative process.</em></h2>
         <div className="reasonGrid">
           {reasons.map(({icon: Icon, title, body}, index) => (
             <article className="reasonCard" key={title}>
@@ -112,6 +127,21 @@ export default function Home() {
               <h3>{title}</h3><p>{body}</p>
             </article>
           ))}
+        </div>
+      </section>
+
+
+      <section className="servicesSection sectionPad" id="services">
+        <div className="sectionHeading">
+          <div><p className="eyebrow">WAYS WE CAN WORK TOGETHER</p><h2>From the first idea<br /><em>to the final frame.</em></h2></div>
+          <p className="sectionAside">Thoughtful creative, polished production and content built around the story your brand needs to tell.</p>
+        </div>
+        <div className="serviceList">
+          <div><span>01</span><h3>UGC & short-form video</h3><p>Hooks, unboxings, product demos, talking videos, voiceovers, ASMR and story-led Reels.</p><ArrowUpRight size={17} /></div>
+          <div><span>02</span><h3>Fashion, beauty & lifestyle</h3><p>Editorial-inspired videos, styling, product details, everyday rituals and personal storytelling.</p><ArrowUpRight size={17} /></div>
+          <div><span>03</span><h3>Photography & visual assets</h3><p>Campaign imagery, product photography and aesthetic visuals for social-first storytelling.</p><ArrowUpRight size={17} /></div>
+          <div><span>04</span><h3>Creative direction & editing</h3><p>Concepts, scripts, viral-hook ideation, shot lists, editing, pacing and visual consistency.</p><ArrowUpRight size={17} /></div>
+          <div><span>05</span><h3>Creator partnerships</h3><p>Sponsored content, launches, events and longer-term brand relationships.</p><ArrowUpRight size={17} /></div>
         </div>
       </section>
 
@@ -145,8 +175,8 @@ export default function Home() {
 
       <footer className="siteFooter">
         <a className="wordmark" href="#top">MAARCH<span>_27</span></a>
-        <p>Creator instinct. Engineer mindset. Stories with a point of view.</p>
-        <div><a href="https://www.instagram.com/maarch_27/" target="_blank" rel="noreferrer">INSTAGRAM <ArrowUpRight size={12} /></a><a href="mailto:Collaborationmaarch@gmail.com">EMAIL <ArrowUpRight size={12} /></a></div>
+        <p>Curious by nature. Creative by instinct.</p>
+        <div><a href="https://www.instagram.com/maarch_27/" target="_blank" rel="noreferrer">INSTAGRAM <ArrowUpRight size={12} /></a><a href="https://www.tiktok.com/@maarch_27" target="_blank" rel="noreferrer">TIKTOK <ArrowUpRight size={12} /></a><a href="https://www.pinterest.com/maarch_27/" target="_blank" rel="noreferrer">PINTEREST <ArrowUpRight size={12} /></a><a href="mailto:Collaborationmaarch@gmail.com">EMAIL <ArrowUpRight size={12} /></a></div>
         <span className="copyright">© 2026 MAARCH_27</span>
       </footer>
     </main>
