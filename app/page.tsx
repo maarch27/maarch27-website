@@ -19,8 +19,8 @@ const franceIG = "https://www.instagram.com/maarch_in_france/";
    PHOTOS  (all live in public/image/)
    HERO is the first-page picture: change this one filename to swap it.
    ===================================================================== */
-const HERO = "IMG_5216.JPG";
-const HERO_POS = "50% 38%";
+const HERO = "facial-gua-sha.jpg";
+const HERO_POS = "48% 50%";
 const P = (n: string) => "/image/" + encodeURIComponent(n);
 
 // The four photos beside "About me"
@@ -36,8 +36,8 @@ const worldPhotos: Record<Cat, string[]> = {
   Beauty: ["IMG_1701.JPG", "IMG_5214.jpg", "green-mask.jpg"],
   Fashion: ["IMG_4554.JPG", "IMG_4816.JPG", "IMG_4562.JPG"],
   Tech: ["IMG_2092.JPG", "IMG_8716.jpg"],
-  Lifestyle: ["filming-setup.jpg", "IMG_4830.JPG"],
-  Travel: ["autumn-bench.jpg"],
+  Lifestyle: ["facial-gua-sha.jpg","filming-setup.jpg", "IMG_4830.JPG"],
+  Travel: ["IMG_5216.JPG"],
 };
 const filmPhotos: Record<Cat, string[]> = {
   Beauty: ["IMG_2319.jpg", "exmiloo-brow.jpg", "armani-violins.jpg"],
@@ -46,7 +46,7 @@ const filmPhotos: Record<Cat, string[]> = {
   Lifestyle: ["IMG_6704.jpg", "mask-blue-towel.jpg"],
   Travel: ["Tezza-8005.JPG"],
 };
-const KNOWN = ["IMG_1434.JPG","IMG_1701.JPG","IMG_2092.JPG","IMG_2319.jpg","IMG_4554.JPG","IMG_4560.JPG","IMG_4562.JPG","IMG_4616.JPG","IMG_4816.JPG","IMG_4830.JPG","IMG_5214.jpg","IMG_5216.JPG","IMG_6559.JPG","IMG_6704.jpg","IMG_8716.jpg","Tezza-8005.JPG","armani-gallery.jpg","armani-violins.jpg","autumn-bench-wide.jpg","autumn-bench.jpg","bowling-polka.jpg","exmiloo-brow.jpg","filming-setup.jpg","glasses-selfie.jpg","green-mask.jpg","mask-blue-towel.jpg","paris-bag-1.jpg","paris-bag-2.jpg","paris-bag-3.jpg","paris-bag-4.jpg","street-brown.jpg"];
+const KNOWN = ["IMG_1434.JPG","IMG_1701.JPG","IMG_2092.JPG","IMG_2319.jpg","IMG_4554.JPG","IMG_4560.JPG","IMG_4562.JPG","IMG_4616.JPG","IMG_4816.JPG","IMG_4830.JPG","IMG_5214.jpg","IMG_5216.JPG","IMG_6559.JPG","IMG_6704.jpg","IMG_8716.jpg","Tezza-8005.JPG","armani-gallery.jpg","armani-violins.jpg","autumn-bench-wide.jpg","autumn-bench.jpg","bowling-polka.jpg","exmiloo-brow.jpg","facial-gua-sha.jpg","filming-setup.jpg","glasses-selfie.jpg","green-mask.jpg","mask-blue-towel.jpg","paris-bag-1.jpg","paris-bag-2.jpg","paris-bag-3.jpg","paris-bag-4.jpg","street-brown.jpg"];
 const USED = new Set<string>([HERO, ...ABOUT, ...Object.values(worldPhotos).flat(), ...Object.values(filmPhotos).flat()]);
 // gallery order: portrait / landscape mixed for a balanced wall
 const GALLERY_FIRST = ["mask-blue-towel.jpg", "IMG_6704.jpg", "armani-gallery.jpg", "IMG_4562.JPG", "IMG_6559.JPG", "IMG_4560.JPG"];
