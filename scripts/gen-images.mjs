@@ -9,7 +9,8 @@ const dir = "public/image";
 if (!existsSync(dir) && existsSync("app/image")) { cpSync("app/image", dir, { recursive: true }); console.log("copied app/image -> public/image"); }
 if (!existsSync(dir)) { console.log(`No photos folder yet (${dir}). Add your photos there; the site falls back to placeholders until then.`); process.exit(0); }
 
-const heic = readdirSync(dir).filter((f) => /\.(heic|heif)$/i.test(f));
+const withHeic = process.argv.includes("--heic"); // HEIC is skipped unless you ask: node scripts/gen-images.mjs --heic
+const heic = withHeic ? readdirSync(dir).filter((f) => /\.(heic|heif)$/i.test(f)) : [];
 if (heic.length) {
   let convert;
   try { convert = (await import("heic-convert")).default; }
@@ -27,6 +28,6 @@ if (heic.length) {
   }
 }
 
-const web = readdirSync(dir).filter((f) => /\.(jpe?g|png|webp|avif)$/i.test(f)).sort();
+const web = readdirSync(dir).filter((f) => /\.(jpe?g|png|webp|avif)$/i.test(f) && !f.startsWith("_") && !f.startsWith(".")).sort();
 writeFileSync(join(dir, "index.json"), JSON.stringify(web, null, 2));
 console.log(`Done: ${web.length} photos listed in ${dir}/index.json`);

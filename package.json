@@ -23,7 +23,6 @@
     "@types/react-dom": "^19.0.3",
     "eslint": "^9.19.0",
     "eslint-config-next": "^15.2.0",
-    "typescript": "^5.7.3",
-    "heic-convert": "^2.1.0"
+    "typescript": "^5.7.3"
   }
 }
