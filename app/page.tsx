@@ -60,8 +60,8 @@ export default function Home() {
         <div className="heroLayout">
           <div className="heroTitleWrap">
             <p className="heroKicker"><span className="goldLine" /> THE PERSON BEHIND THE PERSPECTIVE</p>
-            <h1>Ideas with<br /><em>main character</em><br />energy<span className="heroPeriod">.</span></h1>
-            <p className="heroStatement">I’m Mariam, the face, eye and mind behind <strong>@maarch_27</strong>. I create fashion, beauty, lifestyle and tech stories for brands across France, the United States and worldwide. My work brings together strong hooks, thoughtful visuals and edits that make people feel something.</p>
+            <h1>Not just content.<br /><em>A whole feeling.</em><br />That’s my world<span className="heroPeriod">.</span></h1>
+            <p className="heroStatement">I’m Mariam, the creator behind <strong>@maarch_27</strong>. I turn fashion, beauty, lifestyle, travel and tech into stories people want to watch, save and remember. Think considered visuals, personality-led storytelling and edits with a point of view, created for brands in France, the United States and worldwide.</p>
             <div className="heroButtons"><a className="button buttonDark" href="#work">Enter my creative world <ArrowDown size={15} /></a><a className="quietLink" href="#contact">Let’s create together <ArrowUpRight size={15} /></a></div>
             <div className="heroMicro"><span><i /> FASHION, BEAUTY, LIFESTYLE, TECH</span><span>CONCEPT → CAMERA → CUT</span></div>
           </div>
@@ -77,7 +77,7 @@ export default function Home() {
       </section>
 
       <section className="numbersRibbon" id="numbers" aria-label="Creator reach and experience">
-        <div><strong>153K</strong><span>INSTAGRAM COMMUNITY</span></div><i />
+        <div><strong>160K+</strong><span>INSTAGRAM COMMUNITY</span></div><i />
         <div><strong>500+</strong><span>BRANDS COLLABORATED WITH</span></div><i />
         <div><strong>4+ YEARS</strong><span>CREATING & COLLABORATING</span></div><i />
         <div><strong>MILLIONS</strong><span>OF CONTENT VIEWS</span></div>
@@ -86,14 +86,14 @@ export default function Home() {
       <section className="aboutSection" id="about">
         <div className="sectionEyebrow"><span>01 / THE HUMAN</span><span>MEET THE CREATIVE</span></div>
         <div className="aboutGrid">
-          <div><p className="oversizedNote">Hi, I’m Mariam<span> ✳</span></p><h2>A creative mind<br/>with <em>her own point of view.</em></h2></div>
-          <div className="aboutCopy"><p>I’m a creator who genuinely loves fashion, beauty, lifestyle, travel and technology. I care about how a story looks, how it feels, and why someone would choose to keep watching.</p><p>From the first idea to the final edit, I bring together visual taste, strong hooks, platform aware storytelling and the little personal details that make content feel human, never copied from a template.</p><p>I can be the face on camera, the eye behind the lens and the editor shaping the final feeling. I care about pacing, styling, sound, search friendly wording and the tiny details that make a brand memorable.</p><a className="quietLink" href="https://maarch27.my.canva.site/media-kit" target="_blank" rel="noreferrer">A closer look at my media kit <ArrowUpRight size={15}/></a></div>
+          <div><p className="oversizedNote">Hi, I’m Mariam<span> ✳</span></p><h2>Good visuals.<br/>Real personality.<br/><em>A point of view.</em></h2></div>
+          <div className="aboutCopy"><p>I’m a full-time creator with a curious eye and a love for fashion, beauty, lifestyle, travel and tech. I’m drawn to beautiful details, unexpected angles and the little moments that make a product feel part of real life.</p><p>From the first idea to the final cut, I bring creative direction, filming, editing and platform-aware storytelling together. I want every project to feel polished but personal, elevated but never distant, and unmistakably made with intention.</p><p>I can be the face on camera, the eye behind the lens and the editor shaping the final feeling. I pay attention to styling, light, sound, pacing and discoverability, because the smallest choices can make a brand story feel memorable.</p><a className="quietLink" href="https://maarch27.my.canva.site/media-kit" target="_blank" rel="noreferrer">A closer look at my media kit <ArrowUpRight size={15}/></a></div>
         </div>
         <div className="aboutPills"><span>VISUAL TASTE</span><span>HOOKS THAT LAND</span><span>SEO MINDED</span><span>EDITING WITH INTENTION</span><span>A DISTINCT VOICE</span></div>
       </section>
 
       <section className="workSection" id="work">
-        <div className="workHeading"><div><div className="sectionEyebrow"><span>02 / THE PORTFOLIO</span><span>SCROLL, WATCH, FEEL</span></div><h2>Different sides of me.<br/><em>One creative point of view.</em></h2></div><p>From fashion and beauty to tech, travel, talking videos and ASMR, every format gives me another way to bring a brand story to life.</p></div>
+        <div className="workHeading"><div><div className="sectionEyebrow"><span>02 / THE PORTFOLIO</span><span>SCROLL, WATCH, FEEL</span></div><h2>Many moods.<br/><em>One unmistakable point of view.</em></h2></div><p>Explore the mix: fashion details, beauty rituals, tech worth talking about, everyday life, travel moments, events, voiceovers and ASMR. Every project starts with the story, not a template.</p></div>
         <div className="creativeCategories">
           {categories.map((cat) => <article className={"categoryCard category-" + cat.kind} key={cat.id}>
             <div className="categoryHead"><span>{cat.id} / {cat.label}</span><span className="categoryRound"><ArrowUpRight size={17}/></span></div>
@@ -107,7 +107,7 @@ export default function Home() {
       </section>
 
       <section className="insightsSection" id="insights">
-        <div className="insightsHeader"><div className="sectionEyebrow"><span>03 / THE WHY</span><span>BEYOND THE AESTHETIC</span></div><h2>Pretty gets a glance.<br/><em>Purpose earns the pause.</em></h2></div>
+        <div className="insightsHeader"><div className="sectionEyebrow"><span>03 / THE WHY</span><span>BEYOND THE AESTHETIC</span></div><h2>Beautiful is the beginning.<br/><em>The story makes it stay.</em></h2></div>
         <div className="insightGrid">
           <article><span className="insightSymbol">↗</span><span className="insightNo">01 / THE HOOK</span><h3>Win the first second.</h3><p>I look for the scroll-stopper: a visual, question, feeling or opening line that gives people a reason to stay.</p></article>
           <article><span className="insightSymbol">✳</span><span className="insightNo">02 / THE STORY</span><h3>Make it feel human.</h3><p>People connect with a point of view. I turn features into moments, benefits into stories and products into something people can picture in their lives.</p></article>
@@ -118,23 +118,23 @@ export default function Home() {
 
       <section className="manifestoSection">
         <div className="manifestoPhoto"><div className="manifestoPhotoFrame"><span>CREATIVE INSTINCT / PERSONAL TOUCH</span><b>THE MAGIC<br/>IS IN THE<br/><em>DETAIL.</em></b></div><span className="manifestoDoodle">stay curious ✳</span></div>
-        <div className="manifestoText"><div className="sectionEyebrow"><span>04 / WHAT I BRING</span><span>THE CREATIVE PARTNER</span></div><h2>Good taste gets attention.<br/><em>My point of view makes it personal.</em></h2><p>I bring a strong visual instinct, an eye for details, a clear creative opinion and a hands-on understanding of filming and editing. I’m comfortable being on camera, working behind it, or shaping the story from the first idea through delivery.</p><p>I care about the brief, but I also care about what makes the brief interesting. The goal isn’t content for content’s sake. It’s work with a feeling, a message and a reason to remember the brand.</p><div className="signature">Mariam <span>— THE MIND BEHIND @MAARCH_27</span></div></div>
+        <div className="manifestoText"><div className="sectionEyebrow"><span>04 / WHAT I BRING</span><span>THE CREATIVE PARTNER</span></div><h2>Elevated visuals.<br/><em>Human stories. Lasting feeling.</em></h2><p>I bring visual instinct, a clear creative opinion and a hands-on understanding of filming and editing. I’m comfortable in front of the camera, behind it, or shaping a concept from the first moodboard to the final delivery. My style blends editorial polish with real-life personality.</p><p>I care about the brief, but I also care about what makes the brief interesting. The goal isn’t content for content’s sake. It’s work with a feeling, a message and a reason to remember the brand.</p><div className="signature">Mariam <span>— THE MIND BEHIND @MAARCH_27</span></div></div>
       </section>
 
       <section className="servicesSection" id="services">
         <div className="sectionEyebrow"><span>05 / THE COLLABORATION</span><span>THOUGHTFUL BY DESIGN</span></div>
-        <div className="serviceIntro"><h2>What I bring<br/><em>to the table.</em></h2><p>For brands that value a clear point of view, intentional creative and content made to do more than fill a feed.</p></div>
+        <div className="serviceIntro"><h2>Creative ideas.<br/><em>Considered execution.</em></h2><p>For brands looking for more than a deliverable: a thoughtful concept, a distinct visual language and content designed around a real audience.</p></div>
         <div className="serviceRows">{services.map(({n,title,detail,icon:Icon}) => <article className="serviceRow" key={n}><span className="serviceNo">{n}</span><Icon size={21} strokeWidth={1.4}/><h3>{title}</h3><p>{detail}</p><ArrowUpRight className="serviceArrow" size={17}/></article>)}</div>
         <div className="standardsStrip"><Sparkles size={19}/><p><strong>High standards. Intentional partnerships.</strong><br/>I take on projects selectively so every collaboration gets the creative attention, communication and care it deserves.</p></div>
       </section>
 
       <section className="brandSection" id="brands">
-        <div className="brandIntro"><div className="sectionEyebrow"><span>06 / BRAND DEALS</span><span>GOOD COMPANY</span></div><h2>Brands I’ve had<br/>the pleasure to<br/><em>create with.</em></h2><p>Every partnership is a chance to find the story, the format and the feeling that make a brand stand out. Here are some names from my collaboration world.</p><a className="quietLink" href="#contact">Your brand could be next <ArrowUpRight size={15}/></a></div>
+        <div className="brandIntro"><div className="sectionEyebrow"><span>06 / BRAND DEALS</span><span>GOOD COMPANY</span></div><h2>Good stories are<br/>better when we<br/><em>create together.</em></h2><p>Every partnership is a chance to find the story, the format and the feeling that make a brand stand out. Here are some names from my collaboration world.</p><a className="quietLink" href="#contact">Your brand could be next <ArrowUpRight size={15}/></a></div>
         <div className="brandOrbit"><span className="orbitLabel">SELECTED COLLABORATIONS</span><div className="brandCircles">{brands.map((brand, i) => <div className={"brandCircle brandCircle" + (i % 5 + 1)} key={brand}><span>{brand}</span></div>)}</div><p>Brand names shown as a snapshot of past collaborations.</p></div>
       </section>
 
       <section className="bookingSection" id="contact">
-        <div className="bookingIntro"><div className="sectionEyebrow"><span>07 / YOUR MOVE</span><span>PAID PARTNERSHIPS & CREATIVE PROJECTS</span></div><h2>Have a good<br/><em>project in mind?</em></h2><p>Launching something or looking for a creator with a clear point of view? Tell me about the campaign, the deliverables, your budget, usage requirements and timeline. I take on a considered number of paid partnerships so every project gets the attention it deserves.</p><p className="availabilityNote"><span className="availabilityDot"/> I work with a limited number of projects at a time to protect the quality of each collaboration. Availability is confirmed after reviewing the brief.</p><a className="bookingEmail" href="mailto:Collaborationmaarch@gmail.com"><Mail size={17}/> Collaborationmaarch@gmail.com</a>
+        <div className="bookingIntro"><div className="sectionEyebrow"><span>07 / YOUR MOVE</span><span>PAID PARTNERSHIPS & CREATIVE PROJECTS</span></div><h2>Have a good<br/><em>project in mind?</em></h2><p>Launching a product, building a campaign or looking for a creative partner for the long run? Share your idea, deliverables, budget, usage needs and timeline. I prioritise paid projects with room for strong creative and clear collaboration.</p><p className="availabilityNote"><span className="availabilityDot"/> I work with a limited number of projects at a time to protect the quality of each collaboration. Availability is confirmed after reviewing the brief.</p><a className="bookingEmail" href="mailto:Collaborationmaarch@gmail.com"><Mail size={17}/> Collaborationmaarch@gmail.com</a>
           <div className="socialCluster"><a href="https://www.instagram.com/maarch_27/" target="_blank" rel="noreferrer"><Instagram size={16}/> Instagram <ArrowUpRight size={12}/></a><a href="https://www.tiktok.com/@maarch_27" target="_blank" rel="noreferrer"><AudioLines size={16}/> TikTok <ArrowUpRight size={12}/></a><a href="https://www.pinterest.com/maarch_27/" target="_blank" rel="noreferrer"><Sparkles size={16}/> Pinterest <ArrowUpRight size={12}/></a><a href="https://www.youtube.com/@maarch_27" target="_blank" rel="noreferrer"><Youtube size={16}/> YouTube <ArrowUpRight size={12}/></a><a href="https://linktr.ee/maarch_27" target="_blank" rel="noreferrer"><Globe2 size={16}/> Linktree <ArrowUpRight size={12}/></a></div>
           <div className="bookingCallout"><strong>Want to talk it through?</strong><span>For focused strategy calls, creative consultations and detailed project planning, the fee and format are shared before confirming a booking.</span></div><CalendlyBooking />
         </div>
