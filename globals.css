@@ -92,3 +92,82 @@ h1,h2,h3,p{margin-top:0}h1,h2{font-weight:400;letter-spacing:-1.8px}h1{font-size
 .bookingIntro .calendlyBooking,.bookingIntro .calendlyWrap{margin-top:15px}
 @media(max-width:800px){.workGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 16px}.workMedia{height:280px}.reasonGrid{grid-template-columns:repeat(2,1fr);gap:25px 18px}.testimonialsSection{gap:6%}.insightGrid{gap:10px}.insightCard{padding:16px}}
 @media(max-width:560px){.workGrid{grid-template-columns:1fr;gap:30px}.workMedia{height:390px}.insightGrid{grid-template-columns:1fr}.insightCard{min-height:130px}.insightCard strong{margin:13px 0 6px}.reasonGrid{grid-template-columns:1fr 1fr;gap:26px 14px}.reasonCard h3{font-size:17px}.testimonialsSection{grid-template-columns:1fr;gap:15px}.testimonialPlaceholder{padding:22px}.testimonialPlaceholder p{font-size:19px}.bookingCallout{margin-top:22px}}
+
+
+/* MAARCH_27 — luxury editorial refinements */
+:root{--paper:#f7f3ec;--ink:#211d18;--muted:#756b60;--line:#dcd2c4;--accent:#b79b70;--serif:'Playfair Display',Georgia,serif;--sans:'DM Sans',Arial,sans-serif}
+::selection{background:#cbb58f;color:#211d18}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #a68a5e;outline-offset:4px}
+.siteHeader{position:sticky;top:0;z-index:20;background:#f7f3ecef;backdrop-filter:blur(14px)}
+.wordmark{letter-spacing:-1.4px}.wordmark span{color:#a4875b}
+.hero{overflow:hidden}.heroPhoto{background-image:linear-gradient(0deg,rgba(37,32,27,.10),rgba(37,32,27,0)),url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1100&q=85');animation:photoReveal .9s ease both}
+.floatingNote{border:1px solid #d7c7ae}.floatingStar{color:#a88752;font-size:19px}
+.workGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:34px 22px}
+.workCard{min-width:0;animation:riseIn .6s ease both}
+.workMedia{height:350px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;transition:transform .35s ease,filter .35s ease}
+.workMedia:before{content:"";position:absolute;inset:0;opacity:.85;transition:transform .6s ease}
+.workCard:hover .workMedia:before{transform:scale(1.045)}
+.workBeauty:before{background:linear-gradient(145deg,#c5a995,#eadfd1 52%,#a88c78)}
+.workTech:before{background:linear-gradient(145deg,#77766f,#d6c9b5 55%,#b2a18a)}
+.workFashion:before{background:linear-gradient(145deg,#938477,#d8c9b5 48%,#5f5146)}
+.workLifestyle:before{background:linear-gradient(145deg,#b2b4a3,#e5d9c6 52%,#9d8b76)}
+.workTravel:before{background:linear-gradient(145deg,#8e9a8d,#e2d8c6 55%,#9c8069)}
+.workSkincare:before{background:linear-gradient(145deg,#e0c7b2,#f0e6d9 50%,#b38c79)}
+.workNumber,.mediaTag,.mediaPlaceholder,.workArrow{position:absolute;z-index:2}
+.workNumber{top:15px;left:15px;color:#fff;font-size:9px;letter-spacing:1px}
+.mediaTag{top:13px;right:13px;color:#fff;border:1px solid #ffffff99;padding:7px 9px;font-size:8px;letter-spacing:1px}
+.mediaPlaceholder{max-width:80%;text-align:center;color:#fff;font-size:9px;letter-spacing:1.4px;text-transform:uppercase;border:1px solid #ffffff85;padding:12px;background:#33281b12}
+.workArrow{right:13px;bottom:13px;width:36px;height:36px;border-radius:50%;background:var(--paper);display:grid;place-items:center;transition:transform .2s}
+.workCard:hover .workArrow{transform:translate(2px,-2px)}
+.workMeta{display:flex;justify-content:space-between;margin:16px 0 9px;color:#927b5c;font-size:8px;letter-spacing:1.2px}
+.workCard h3{font-family:var(--serif);font-size:23px;line-height:1.2;font-weight:400;margin:0 0 8px}
+.workCard>p{font-size:11px;line-height:1.7;color:#766d62;margin:0}
+.workMetric{font-size:9px;color:#968b7e;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);letter-spacing:.2px}
+.sectionFootnote{font-size:9px;color:#92877a;line-height:1.7;margin-top:28px}
+.brandSection{background:#eee7dc;display:grid;grid-template-columns:.8fr 1.2fr;gap:45px;align-items:center}
+.brandHeading h2{font-size:clamp(36px,4vw,54px);line-height:1.1;font-weight:400;letter-spacing:-1.6px;margin:0 0 18px}
+.brandHeading h2 em{font-family:var(--serif);font-weight:400}
+.brandHeading>p:last-child{font-size:11px;line-height:1.8;color:#746a5f;max-width:300px}
+.brandWall{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-top:1px solid #d2c7b8;border-left:1px solid #d2c7b8}
+.brandWord{min-height:82px;display:flex;align-items:center;justify-content:center;text-align:center;padding:15px;border-right:1px solid #d2c7b8;border-bottom:1px solid #d2c7b8;font-size:clamp(11px,1.4vw,16px);font-weight:600;letter-spacing:1.1px;color:#5e5141;transition:background .25s,color .25s}
+.brandWord:nth-child(3n){font-family:var(--serif);font-weight:400;letter-spacing:.4px}
+.brandWord:hover{background:#e1d4c1;color:#211d18}
+.brandSection .sectionFootnote{grid-column:1/-1;margin-top:0}
+.insightGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.insightCard{border:1px solid var(--line);padding:25px;min-height:175px;display:flex;flex-direction:column;align-items:flex-start;transition:transform .25s,border-color .25s}
+.insightCard:hover{transform:translateY(-4px);border-color:#b6a184}
+.insightCard span{font-size:8px;letter-spacing:1.2px;color:#9a8363}
+.insightCard strong{font-family:var(--serif);font-weight:400;font-size:23px;margin:23px 0 10px}
+.insightCard p{font-size:10px;line-height:1.7;color:#786f64;margin:0}
+.whySection>h2{font-size:clamp(38px,4.5vw,58px);font-weight:400;line-height:1.1;margin:0 0 45px}
+.whySection>h2 em{font-family:var(--serif);font-weight:400}
+.reasonGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.reasonCard{position:relative;padding:25px 19px;border:1px solid var(--line);min-height:215px;transition:background .25s,transform .25s}
+.reasonCard:hover{background:#eee7dc;transform:translateY(-4px)}
+.reasonNumber{display:block;color:#a18b6b;font-size:9px;letter-spacing:1px;margin-bottom:28px}
+.reasonCard h3{font-family:var(--serif);font-weight:400;font-size:19px;line-height:1.25;margin:16px 0 10px}
+.reasonCard p{font-size:10px;line-height:1.8;color:#766d62;margin:0}
+.testimonialsSection{display:grid;grid-template-columns:.8fr 1fr;gap:12%;align-items:center;background:#f0e9df}
+.testimonialIntro h2{font-size:clamp(34px,4vw,49px);font-weight:400;line-height:1.1;letter-spacing:-1.4px}
+.testimonialIntro h2 em{font-family:var(--serif)}
+.testimonialIntro>p:last-child{font-size:11px;line-height:1.8;color:#786f64}
+.testimonialPlaceholder{padding:34px;border-left:1px solid #b9a78d}
+.testimonialPlaceholder>p{font-family:var(--serif);font-style:italic;font-size:22px;line-height:1.55;margin:20px 0}
+.testimonialPlaceholder span{font-size:8px;letter-spacing:1px;color:#8a7b68}
+.bookingCallout{display:flex;flex-direction:column;gap:6px;margin-top:27px;padding:17px;border:1px solid var(--line)}
+.bookingCallout strong{font-family:var(--serif);font-weight:400;font-size:17px}
+.bookingCallout span{font-size:10px;line-height:1.7;color:#786f64}
+.calendarPanel{margin-top:20px;padding:20px;border:1px solid var(--line)}
+.calendarPanelHeading{display:flex;align-items:center;gap:13px}
+.calendarIcon{width:36px;height:36px;border:1px solid var(--line);display:grid;place-items:center}
+.calendarPanelHeading .eyebrow{margin-bottom:5px}
+.calendarPanelHeading h3{font-family:var(--serif);font-size:19px;font-weight:400;margin:0}
+.calendarSetupNotice{font-size:10px;line-height:1.8;color:#776d61;margin-top:16px}
+.calendarSetupNotice ol{padding-left:18px}
+.calendarSetupNotice a{display:inline-flex;align-items:center;gap:6px;border-bottom:1px solid #aa9678;padding-bottom:4px}
+.calendlyFrame{width:100%;min-height:560px;border:0;margin-top:18px}
+@keyframes riseIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes photoReveal{from{opacity:.4;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:800px){.workGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.brandSection{grid-template-columns:1fr;gap:25px}.reasonGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.testimonialsSection{grid-template-columns:1fr;gap:30px}}
+@media(max-width:560px){.workGrid,.insightGrid{grid-template-columns:1fr}.workMedia{height:360px}.brandWall{grid-template-columns:repeat(2,minmax(0,1fr))}.brandWord{min-height:70px}.reasonGrid{grid-template-columns:1fr 1fr}.reasonCard{padding:19px 14px}.reasonCard h3{font-size:17px}.testimonialsSection{padding-top:60px;padding-bottom:60px}.calendarPanel{padding:15px}.calendlyFrame{min-height:600px}.siteFooter>div{flex-wrap:wrap}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
