@@ -304,7 +304,7 @@ export default function Home() {
     <main className="site">
       <Shapes />
       <header className="top">
-        <a href="#home" className="logo">Maarch<span className="gold">27</span></a>
+        <a href="#home" className="logo">Maarch<span className="gold sub">27</span></a>
         <nav aria-label="Main"><a href="#about">About</a><a href="#why">Why me</a><a href="#worlds">Work</a><a href="#services">Services</a><a href="#contact">Contact</a></nav>
         <a className="pill" href="#book">Book me</a>
       </header>
@@ -313,6 +313,7 @@ export default function Home() {
       <section className="hero" id="home">
         <div className="hero-copy">
           <p className="eyebrow">UGC creator · Booked worldwide</p>
+          <p className="avail"><i aria-hidden="true">✦</i> Limited monthly availability <span>·</span> A brand favorite</p>
           <h1><span className="spark s1">✦</span><span className="spark s2">✦</span>Mariam <em className="gold">Ch</em></h1>
           <span className="rot" aria-hidden="true"><span>Beauty</span><span>Fashion</span><span>Tech</span><span>Lifestyle</span><span>Travel</span></span>
           <p className="lede">Films that make people stop, feel and buy. Made for 500+ brands, with a limited number of spots each month.</p>
@@ -513,7 +514,7 @@ export default function Home() {
       </section>
 
       <footer className="foot">
-        <a href="#home" className="logo">Maarch<span className="gold">27</span></a>
+        <a href="#home" className="logo">Maarch<span className="gold sub">27</span></a>
         <ul className="icons">{social.map((s) => <li key={s.name}><a href={s.url} target={s.icon === "mail" ? undefined : "_blank"} rel="noreferrer" aria-label={s.name}><Icon name={s.icon} /><span>{s.name}</span></a></li>)}</ul>
         <small>© {new Date().getFullYear()} Maarch27</small>
       </footer>
