@@ -553,3 +553,14 @@ body{background:var(--paper);color:var(--ink)}
 .bookingSection{grid-template-columns:1fr;gap:30px}.inquiryForm{padding:22px 17px}.formTwo{grid-template-columns:1fr;gap:0}.socialCluster{gap:7px}.socialCluster a{padding:9px;font-size:8px}
 .siteFooter{padding:28px 6%;justify-content:center;text-align:center}.siteFooter>p{width:100%;order:3}.siteFooter>div{justify-content:center;order:2}.siteFooter>span{width:100%;order:4}.siteFooter .wordmark{order:1}
 }
+
+/* Selected real portfolio links */
+.portfolioLinks{display:grid;gap:0;margin:20px 0 8px;border-top:1px solid var(--line)}
+.portfolioLinkCard{display:flex;align-items:center;gap:12px;padding:13px 2px;border-bottom:1px solid var(--line);transition:padding .2s ease,background .2s ease}
+.portfolioLinkCard:hover{padding-left:8px;background:rgba(255,255,255,.25)}
+.portfolioLinkNumber{font-size:10px;letter-spacing:.08em;color:var(--muted);min-width:22px}
+.portfolioLinkCopy{display:flex;flex:1;min-width:0;flex-direction:column;gap:4px}
+.portfolioLinkCopy strong{font-size:12px;letter-spacing:.01em;font-weight:600}
+.portfolioLinkCopy small{font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.portfolioLinkArrow{display:grid;place-items:center;width:28px;height:28px;border:1px solid var(--line);border-radius:50%;flex-shrink:0}
+@media(max-width:640px){.portfolioLinkCard{padding:12px 0}.portfolioLinkCopy strong{font-size:11px}}
