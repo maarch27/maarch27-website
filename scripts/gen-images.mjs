@@ -1,11 +1,13 @@
 // Run once from the project root:  node scripts/gen-images.mjs
 // 1) converts every HEIC/HEIF in public/image to JPG (browsers can't show HEIC)
 // 2) writes public/image/index.json so the site shows every photo automatically
-import { readdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
+import { readdirSync, readFileSync, writeFileSync, existsSync, cpSync } from "node:fs";
 import { join } from "node:path";
 
 const dir = "public/image";
-if (!existsSync(dir)) { console.error(`Folder ${dir} not found. Move your photos there first (mv app/image public/image).`); process.exit(1); }
+// Photos kept in app/image are not served by Next.js, so copy them to public/image.
+if (!existsSync(dir) && existsSync("app/image")) { cpSync("app/image", dir, { recursive: true }); console.log("copied app/image -> public/image"); }
+if (!existsSync(dir)) { console.log(`No photos folder yet (${dir}). Add your photos there; the site falls back to placeholders until then.`); process.exit(0); }
 
 const heic = readdirSync(dir).filter((f) => /\.(heic|heif)$/i.test(f));
 if (heic.length) {

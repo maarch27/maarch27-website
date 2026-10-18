@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "images": "node scripts/gen-images.mjs",
+    "predev": "node scripts/gen-images.mjs",
+    "prebuild": "node scripts/gen-images.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",
@@ -20,6 +23,7 @@
     "@types/react-dom": "^19.0.3",
     "eslint": "^9.19.0",
     "eslint-config-next": "^15.2.0",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "heic-convert": "^2.1.0"
   }
 }
