@@ -19,12 +19,13 @@ const franceIG = "https://www.instagram.com/maarch_in_france/";
    PHOTOS  (all live in public/image/)
    HERO is the first-page picture: change this one filename to swap it.
    ===================================================================== */
-const HERO = "autumn-bench.jpg";
-const HERO_POS = "42% 30%";
+const HERO = "IMG_5216.JPG";
+const HERO_POS = "50% 38%";
 const P = (n: string) => "/image/" + encodeURIComponent(n);
 
 // The four photos beside "About me"
-const ABOUT = ["paris-bag-1.jpg", "paris-bag-2.jpg", "paris-bag-3.jpg", "paris-bag-4.jpg"];
+const ABOUT_P = ["paris-bag-1.jpg", "paris-bag-2.jpg", "paris-bag-3.jpg", "paris-bag-4.jpg"];
+const ABOUT = ABOUT_P;
 
 // Every photo is used in exactly one place on the site, so nothing repeats.
 // Pick a world (per category) and Featured films (per category) take the photos below.
@@ -33,16 +34,16 @@ type Cat = "Beauty" | "Fashion" | "Tech" | "Lifestyle" | "Travel";
 const cats: Cat[] = ["Beauty", "Fashion", "Tech", "Lifestyle", "Travel"];
 const worldPhotos: Record<Cat, string[]> = {
   Beauty: ["IMG_1701.JPG", "IMG_5214.jpg", "green-mask.jpg"],
-  Fashion: ["IMG_4554.JPG", "IMG_4816.JPG", "street-brown.jpg"],
+  Fashion: ["IMG_4554.JPG", "IMG_4816.JPG", "IMG_4562.JPG"],
   Tech: ["IMG_2092.JPG", "IMG_8716.jpg"],
   Lifestyle: ["filming-setup.jpg", "IMG_4830.JPG"],
-  Travel: ["IMG_5216.JPG"],
+  Travel: ["autumn-bench.jpg"],
 };
 const filmPhotos: Record<Cat, string[]> = {
   Beauty: ["IMG_2319.jpg", "exmiloo-brow.jpg", "armani-violins.jpg"],
   Fashion: ["IMG_4616.JPG", "bowling-polka.jpg", "IMG_1434.JPG"],
   Tech: [],
-  Lifestyle: ["glasses-selfie.jpg", "autumn-bench-wide.jpg"],
+  Lifestyle: ["IMG_6704.jpg", "mask-blue-towel.jpg"],
   Travel: ["Tezza-8005.JPG"],
 };
 const KNOWN = ["IMG_1434.JPG","IMG_1701.JPG","IMG_2092.JPG","IMG_2319.jpg","IMG_4554.JPG","IMG_4560.JPG","IMG_4562.JPG","IMG_4616.JPG","IMG_4816.JPG","IMG_4830.JPG","IMG_5214.jpg","IMG_5216.JPG","IMG_6559.JPG","IMG_6704.jpg","IMG_8716.jpg","Tezza-8005.JPG","armani-gallery.jpg","armani-violins.jpg","autumn-bench-wide.jpg","autumn-bench.jpg","bowling-polka.jpg","exmiloo-brow.jpg","filming-setup.jpg","glasses-selfie.jpg","green-mask.jpg","mask-blue-towel.jpg","paris-bag-1.jpg","paris-bag-2.jpg","paris-bag-3.jpg","paris-bag-4.jpg","street-brown.jpg"];
@@ -289,16 +290,16 @@ export default function Home() {
 
       {/* HERO */}
       <section className="hero" id="home">
-        <div className="glow g1" aria-hidden="true" />
         <div className="hero-copy">
-          <p className="eyebrow">Mariam · lifestyle content creator</p>
-          <h1>Real life,<br /><em className="gold">made irresistible.</em></h1>
-          <span className="rot" aria-hidden="true"><span>for beauty brands</span><span>for fashion brands</span><span>for tech brands</span><span>for lifestyle brands</span><span>for travel brands</span></span>
-          <p className="lede">I film the way you actually live, in my own studio and out in the real world, and build every video around a strategy. Brands get content that feels genuine and drives real results.</p>
+          <p className="eyebrow">Luxury UGC creator · USA &amp; France · Booked worldwide</p>
+          <h1><span className="spark s1">✦</span><span className="spark s2">✦</span>Mariam <em className="gold">Ch</em></h1>
+          <span className="rot" aria-hidden="true"><span>Beauty</span><span>Fashion</span><span>Tech</span><span>Lifestyle</span><span>Travel</span></span>
+          <p className="lede">Films that make people stop, feel and buy. Made for 500+ brands, with a limited number of spots each month.</p>
           <div className="actions"><a className="btn" href="#book">Work with me</a><a className="btn line" href="#worlds">See my work</a></div>
-          <ul className="mini"><li><b className="gold">153K</b> followers</li><li><b className="gold">500+</b> brands</li><li><b className="gold">4+</b> years</li></ul>
         </div>
-        <div className="hero-img"><Img src={P(HERO)} alt="Mariam, lifestyle content creator" pos={HERO_POS} eager /></div>
+        <div className="hero-img"><Img src={P(HERO)} alt="Mariam, luxury UGC creator" pos={HERO_POS} eager /></div>
+        <div className="chip a"><b className="gold">153K</b><span>Instagram followers</span></div>
+        <div className="chip b"><b className="gold">500+</b><span>brands trusted me</span></div>
       </section>
 
       <div className="marquee" aria-label="Brands I have worked with">
