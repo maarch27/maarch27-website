@@ -1,5 +1,5 @@
 import { ArrowDownRight, ArrowUpRight, Instagram, Mail, Code2, Lightbulb, Clapperboard, Camera, BarChart3, Quote } from "lucide-react";
-import CalendlyBooking from "./components/CalendlyBooking";
+import CalendlyBooking from "./CalendlyBooking";
 
 const work = [
   { id: "01", category: "BEAUTY", format: "VIDEO", title: "Beauty that feels like you", note: "UGC video · Hook + product story", asset: "Add your video or thumbnail", className: "workMedia workBeauty", metric: "Add verified views / saves" },
