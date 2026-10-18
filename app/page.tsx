@@ -1,155 +1,391 @@
-import { ArrowDown, ArrowUpRight, Instagram, Mail, Play, Sparkles, Camera, Clapperboard, PenTool, Video, Menu, Youtube, Globe2, Search, AudioLines } from "lucide-react";
-import CalendlyBooking from "../CalendlyBooking";
+"use client";
 
-const categories = [
-  { id: "01", label: "TECH & APPS", title: "Make the useful irresistible.", kind: "tech", note: "Product demos · App walkthroughs · Voiceover", tiles: ["THE HOOK", "IN REAL LIFE", "HOW IT WORKS", "THE DETAILS", "MY VERDICT"] },
-  { id: "02", label: "FASHION & STYLING", title: "A look is a whole language.", kind: "fashion", note: "Outfit stories · Styling · Editorial details", tiles: ["THE LOOK", "GET DRESSED WITH ME", "DETAIL STUDY", "TRY ON", "THE FINAL FRAME"] },
-  { id: "03", label: "BEAUTY & ASMR", title: "Little rituals. Big feeling.", kind: "beauty", note: "Texture · Unboxing · Routines · Sound-led video", tiles: ["SOUND ON", "THE TEXTURE", "UNBOX WITH ME", "THE ROUTINE", "CLOSE UP"] },
-  { id: "04", label: "LIFESTYLE & VLOGS", title: "Let them into the moment.", kind: "life", note: "Daily life · Talking videos · Story-led Reels", tiles: ["LIFE LATELY", "COME WITH ME", "THE STORYTIME", "A DAY IN FRANCE", "ON MY MIND"] },
-  { id: "05", label: "TRAVEL & PLACES", title: "Make somewhere feel like a story.", kind: "travel", note: "Visual diaries · Destination content · Guides", tiles: ["POSTCARD", "A LITTLE ESCAPE", "THE PLACE", "TRAVEL DIARY", "SAVE THIS SPOT"] },
+import { useEffect, useState } from "react";
+
+/* =====================================================================
+   YOUR DETAILS
+   ===================================================================== */
+const email = "Collaborationmaarch27@gmail.com";
+const social = [
+  { name: "Instagram", icon: "ig", handle: "@maarch_27", url: "https://www.instagram.com/maarch_27/" },
+  { name: "TikTok", icon: "tt", handle: "@maarch_27", url: "https://www.tiktok.com/@maarch_27" },
+  { name: "YouTube", icon: "yt", handle: "@maarch_27", url: "https://youtube.com/@maarch_27" },
+  { name: "Pinterest", icon: "pin", handle: "maarch_27", url: "https://pin.it/3zNEyUu4A" },
+  { name: "Email", icon: "mail", handle: email, url: `mailto:${email}` },
+];
+const franceIG = "https://www.instagram.com/maarch_in_france/";
+
+/* =====================================================================
+   PHOTOS
+   Put photos in  public/image/  and run  node scripts/gen-images.mjs  once.
+   It converts HEIC to JPG and writes public/image/index.json, so every
+   photo in the folder shows up in the portfolio automatically.
+   (If you skip that step, the site still tries the filenames below.)
+   ===================================================================== */
+const IMGDIR = "/image/";
+const WEB = /\.(jpe?g|png|webp|avif)$/i;
+const stripExt = (f: string) => f.replace(/\.[^.]+$/, "");
+const GUESS = [".JPG", ".jpg", ".JPEG", ".jpeg", ".png", ".PNG", ".webp"];
+const FALLBACK_NAMES = ["IMG_8716", "IMG_5214", "IMG_2319", "IMG_2092", "IMG_1701", "IMG_4616", "IMG_4816", "IMG_6704", "IMG_5216", "IMG_4560", "IMG_6559", "IMG_1434", "IMG_4830", "IMG_4554", "IMG_4562", "IMG_2092 2", "Tezza-8005", "Tezza-5004", "IMG_2688"];
+
+function urls(base: string, files: string[] | null): string[] {
+  if (files) return files.filter((f) => WEB.test(f) && stripExt(f).toLowerCase() === base.toLowerCase()).map((f) => IMGDIR + encodeURIComponent(f));
+  return GUESS.map((e) => IMGDIR + encodeURIComponent(base) + e);
+}
+
+function PhotoInner({ cands, alt, pos, className, eager, onFail }: { cands: string[]; alt: string; pos: string; className?: string; eager?: boolean; onFail?: () => void }) {
+  const [i, setI] = useState(0);
+  const dead = i >= cands.length;
+  useEffect(() => { if (dead) onFail?.(); }, [dead]); // eslint-disable-line react-hooks/exhaustive-deps
+  if (dead) return null;
+  // eslint-disable-next-line @next/next/no-img-element
+  return <img className={className} src={cands[i]} alt={alt} style={{ objectPosition: pos }} loading={eager ? "eager" : "lazy"} onError={() => setI(i + 1)} />;
+}
+function Photo({ cands, alt, pos = "center 25%", className, eager, onFail }: { cands: string[]; alt: string; pos?: string; className?: string; eager?: boolean; onFail?: () => void }) {
+  return <PhotoInner key={cands.join("|")} cands={cands} alt={alt} pos={pos} className={className} eager={eager} onFail={onFail} />;
+}
+
+function Icon({ name }: { name: string }) {
+  const q = { width: 22, height: 22, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.7, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true };
+  if (name === "ig") return <svg {...q}><rect x="3" y="3" width="18" height="18" rx="5.5" /><circle cx="12" cy="12" r="4.2" /><circle cx="17.3" cy="6.7" r=".6" fill="currentColor" /></svg>;
+  if (name === "tt") return <svg {...q}><path d="M14 3v11.2a3.7 3.7 0 1 1-3.7-3.7" /><path d="M14 3c.4 2.6 2 4.3 4.8 4.6" /></svg>;
+  if (name === "yt") return <svg {...q}><rect x="2.5" y="5.5" width="19" height="13" rx="4" /><path d="M10 9.5v5l4.5-2.5z" fill="currentColor" /></svg>;
+  if (name === "pin") return <svg {...q}><circle cx="12" cy="12" r="9.2" /><path d="M10.6 17.5l1.7-7M9.8 13.2c-.6-2.6 1.1-4.4 3-4.4 1.6 0 2.7 1.1 2.7 2.6 0 2-1.2 3.4-2.6 3.4-.8 0-1.4-.6-1.2-1.3" /></svg>;
+  return <svg {...q}><rect x="3" y="5" width="18" height="14" rx="2.5" /><path d="M3.5 7l8.5 6.2L20.5 7" /></svg>;
+}
+const Rule = () => <div className="rule" aria-hidden="true"><i /><span>✦</span><i /></div>;
+
+/* =====================================================================
+   CONTENT
+   ===================================================================== */
+// Logos live in public/brands/<file>.png
+const brands: [string, string][] = [
+  ["Armani", "armani"], ["Kylie Cosmetics", "kylie-cosmetics"], ["Maybelline", "maybelline"], ["L’Oréal Paris", "loreal-paris"], ["NYX", "nyx"], ["Huda Beauty", "huda-beauty"],
+  ["Anua", "anua"], ["Numbuzin", "numbuzin"], ["Glossybox", "glossybox"], ["Heimish", "heimish"], ["Halara", "halara"], ["Temu", "temu"],
+  ["Shein", "shein"], ["Pepper Mayo", "pepper-mayo"], ["Italo Jewelry", "italo-jewelry"], ["JW Pei", "jw-pei"], ["Von Dutch", "von-dutch"], ["Bob and Brad", "bob-and-brad"],
+  ["Totwoo", "totwoo"], ["Pascal", "pascal"], ["Doogee", "doogee"], ["Blackview", "blackview"], ["Perfect Corset", "perfect-corset"],
+];
+const tickerA = brands.slice(0, 12).map((b) => b[0]);
+const tickerB = brands.slice(12).map((b) => b[0]);
+
+const why = [
+  ["Because your product should be the main character.", "I build each video around what your product does for a real person, so viewers see themselves using it."],
+  ["Because the first second decides everything.", "I write the hook first, then cut the rest to earn the next second. You get three hook variations to test."],
+  ["Because I do the whole thing myself.", "Concept, script, filming, lighting, editing and voice-over, all from my own studio. One person to brief, no handoffs."],
+  ["Because my audience listens.", "153K followers, 95% in the USA and Europe, 70% women, and 1.0M views in the last 30 days."],
+];
+const skills = ["Creative direction", "Scriptwriting", "Video editing", "Viral hooks", "Voice-over", "On-camera", "Photography", "Graphic design"];
+
+const services: [string, string, string][] = [
+  ["UGC videos", "Natural, scroll-stopping video built around your product and campaign goal. Hook, script, filming and edit, all in one.", "Hook variations · Captions · Ready to post"],
+  ["Instagram Reels", "Sponsored Reels with a strong first second, a clear story and pacing made for the feed.", "Concept · Filming · Editing"],
+  ["Carousels & photos", "Styled product and lifestyle carousels with clean, editorial imagery for your feed and your site.", "Product shots · Lifestyle · Retouching"],
+  ["UGC for paid ads", "Content built to convert on paid channels, with three hook variations and usage rights.", "Whitelisting · Spark Ads · Extra cuts"],
+  ["Demos & unboxings", "First impressions, swatches, try-ons and tutorials that feel like a recommendation, not an ad.", "Unboxing · Try-on · Tutorials"],
+  ["Testimonials & interviews", "On-camera reviews and interview-style videos in a natural, trustworthy voice.", "To camera · Q&A · Reviews"],
+  ["Hotels, travel & experiences", "Stays, restaurants, events and trips filmed as one cinematic story.", "Hospitality · Events · Travel"],
+  ["YouTube videos", "Longer reviews and storytelling edits for deeper product education.", "Review · Story edit · Thumbnail"],
+  ["Voice-over & scripting", "Professional scriptwriting and narrated edits, written in your brand’s tone.", "Script · Voice-over · Revisions"],
 ];
 
-
-const portfolioItems = [
-{title:"ANUA Skin Glow",type:"beauty",format:"Skincare",url:"https://www.instagram.com/reel/Dc1Z3PEx-yz/"},
-{title:"Jewelry Bracelet & Necklace",type:"fashion",format:"Jewelry styling",url:"https://www.instagram.com/reel/Daiay-VImXK/"},
-{title:"Camera Battery Charger & SSD",type:"tech",format:"Tech product",url:"https://www.instagram.com/reel/DeRvV7tIweA/"},
-{title:"Pop Up Bag",type:"fashion",format:"Fashion event",url:"https://www.instagram.com/reel/DeHstaVIgYr/"},
-{title:"Fashion Week",type:"fashion",format:"Event coverage",url:"https://www.instagram.com/reel/DeBBztMI6Rl/"},
-{title:"Calorie Counter App",type:"tech",format:"App showcase",url:"https://www.instagram.com/reel/DR2Q5m7iCjb/"},
-{title:"Mercedes-Benz Event",type:"fashion",format:"Event photography",url:"https://www.instagram.com/p/Ddhn4UKiGif/"},
-{title:"Tech Speaker",type:"tech",format:"Tech product",url:"https://www.instagram.com/reel/DcubwVaIhYI/"},
-{title:"Pixel Pure Skincare",type:"beauty",format:"Skincare",url:"https://www.instagram.com/reel/DcctOHOoE_w/"},
-{title:"Dossier Fragrance",type:"beauty",format:"Fragrance",url:"https://www.instagram.com/reel/DbYs4y6I9uN/"},
-{title:"TOTWOO Couple Bracelet",type:"fashion",format:"Jewelry",url:"https://www.instagram.com/reel/DXt78BkCLne/"},
-{title:"Stress Watch App",type:"tech",format:"App and wearable",url:"https://www.instagram.com/reel/DX99Dl8xH5_/"},
-{title:"Champions Burger Event",type:"life",format:"Event content",url:"https://www.instagram.com/reel/DbBi7iToEXY/"},
-{title:"Beauty Products",type:"beauty",format:"Beauty product",url:"https://www.instagram.com/reel/DV_nhb5CP56/"},
-{title:"Beauty Products",type:"beauty",format:"Beauty product",url:"https://www.instagram.com/reel/DSGG3RtCFDl/"},
-{title:"Fashion Styling",type:"fashion",format:"Styling",url:"https://www.instagram.com/reel/DWGtfNoCJoY/"},
-{title:"Lifestyle Vlog",type:"life",format:"Vlog",url:"https://www.instagram.com/reel/DWpYfPuiNXh/"},
-{title:"AirPods Case Accessories",type:"tech",format:"Accessories",url:"https://www.instagram.com/reel/DYvL3gFodut/"},
-{title:"iPhone Case & Lumina Holder",type:"tech",format:"Accessories",url:"https://www.instagram.com/reel/Db6Rv8fRZaU/"},
-{title:"Hair Care",type:"beauty",format:"Hair care",url:"https://www.instagram.com/reel/DVeUDLMCDY-/"},
-{title:"Hair Care",type:"beauty",format:"Hair care",url:"https://www.instagram.com/reel/DUnxGS0iN5e/"},
-{title:"Glasses",type:"fashion",format:"Accessories",url:"https://www.instagram.com/reel/DKZhEQaBwW3/"}
+type Cat = "Beauty" | "Fashion" | "Tech" | "Lifestyle" | "Travel";
+type Reel = { id: string; type?: "p"; title: string; cat: Cat };
+const reels: Reel[] = [
+  { id: "Dc1Z3PEx-yz", title: "Skincare glow with Anua", cat: "Beauty" },
+  { id: "DcctOHOoE_w", title: "Pixel Pure skincare", cat: "Beauty" },
+  { id: "DV_nhb5CP56", title: "Beauty products", cat: "Beauty" },
+  { id: "DSGG3RtCFDl", title: "Beauty products", cat: "Beauty" },
+  { id: "DVeUDLMCDY-", title: "Hair care", cat: "Beauty" },
+  { id: "DUnxGS0iN5e", title: "Hair care", cat: "Beauty" },
+  { id: "Daiay-VImXK", title: "Bracelet & necklace", cat: "Fashion" },
+  { id: "DeHstaVIgYr", title: "Pop-up bag", cat: "Fashion" },
+  { id: "DeBBztMI6Rl", title: "Fashion week", cat: "Fashion" },
+  { id: "Ddhn4UKiGif", type: "p", title: "Mercedes-Benz event style", cat: "Fashion" },
+  { id: "DWGtfNoCJoY", title: "Fashion style", cat: "Fashion" },
+  { id: "DKZhEQaBwW3", title: "Glasses", cat: "Fashion" },
+  { id: "DeRvV7tIweA", title: "Camera battery charger & SSD", cat: "Tech" },
+  { id: "DcubwVaIhYI", title: "Tech speaker", cat: "Tech" },
+  { id: "DR2Q5m7iCjb", title: "Calorie counter app", cat: "Tech" },
+  { id: "DX99Dl8xH5_", title: "Stress watch app", cat: "Tech" },
+  { id: "DYvL3gFodut", title: "AirPods case accessories", cat: "Tech" },
+  { id: "Db6Rv8fRZaU", title: "iPhone case & light holder", cat: "Tech" },
+  { id: "DbYs4y6I9uN", title: "Fragment Dossier", cat: "Lifestyle" },
+  { id: "DbBi7iToEXY", title: "Tottwoo couple bracelet", cat: "Lifestyle" },
+  { id: "DWpYfPuiNXh", title: "Vlog", cat: "Lifestyle" },
 ];
+const cats: Cat[] = ["Beauty", "Fashion", "Tech", "Lifestyle", "Travel"];
+const palettes: Record<Cat, { note: string; colors: string[] }> = {
+  Beauty: { note: "soft skin tones, rose and clean light", colors: ["#f4cfd0", "#c98a8f", "#8d4658", "#f6ede1"] },
+  Fashion: { note: "deep tones, gold detail, high contrast", colors: ["#d8bd8f", "#6d4a2a", "#2a0a15", "#f6ede1"] },
+  Tech: { note: "cool, quiet and precise", colors: ["#cfd6dd", "#6b7787", "#2f3744", "#1a0b14"] },
+  Lifestyle: { note: "warm, lived-in and relaxed", colors: ["#e8d2b5", "#b98a6a", "#6a3b4a", "#2d1019"] },
+  Travel: { note: "sea, light and open air", colors: ["#d9e4e3", "#8fa9a8", "#4a6b72", "#2a2330"] },
+};
+const igUrl = (r: { id: string; type?: "p" }) => `https://www.instagram.com/${r.type === "p" ? "p" : "reel"}/${r.id}/`;
 
-const services = [
-  { n: "01", title: "UGC that earns the pause", detail: "Concept-led videos, product demos, testimonials, unboxings, talking-to-camera, voiceovers, ASMR and clear calls to action. Built around the hook, the audience and the reason to care.", icon: Video },
-  { n: "02", title: "Creator campaigns & brand partnerships", detail: "Sponsored Reels, integrated storytelling and long-term collaborations that bring a brand into my world without losing my voice or the audience's trust.", icon: Sparkles },
-  { n: "03", title: "Photography & visual direction", detail: "Campaign stills, product details, outfit imagery, moodboards, shot lists and a considered visual language from first reference to final frame.", icon: Camera },
-  { n: "04", title: "Editing, hooks & storytelling", detail: "A sharper first second, intentional pacing, subtitles, sound, transitions, SEO-aware wording and platform-native edits designed to hold attention.", icon: Clapperboard },
-  { n: "05", title: "Creative concept & strategy", detail: "Research, creative angles, scripts and formats shaped for the audience, the platform and the campaign objective—not a one-size-fits-all template.", icon: PenTool },
+// Brand messages from your UGC portfolio: public/proof/01.png … 10.png
+const PROOF = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10"].map((n) => [`/proof/${n}.png`]);
+
+// Profile screenshots: public/stats/instagram.jpg, tiktok.png, youtube.jpg (add youtube.jpg when you have it)
+const platforms = [
+  { name: "Instagram", icon: "ig", url: social[0].url, shot: "/stats/instagram.jpg", cap: "153K followers · 1.0M views in the last 30 days" },
+  { name: "TikTok", icon: "tt", url: social[1].url, shot: "/stats/tiktok.png", cap: "Sponsored TikTok and UGC" },
+  { name: "YouTube", icon: "yt", url: social[2].url, shot: "/stats/youtube.jpg", cap: "Longer reviews and storytelling" },
 ];
+const audience = [{ v: 70, big: "70%", l: "women" }, { v: 95, big: "95%", l: "USA & Europe" }];
 
-const brands = ["ANUA", "AUPEN", "CANON", "CIDER", "DOSSIER", "MERCEDES-BENZ", "SHEIN", "STYLEWE", "TEDDY BLAKE", "TOTWOO"];
+// Your own video files: put them in public/videos/ and list them here.
+const videos: { src: string; title: string; poster?: string }[] = [
+  // { src: "/videos/my-film.mp4", title: "Skincare film", poster: "/image/IMG_2092.jpg" },
+];
+const projectTypes = ["UGC video", "Reel or carousel", "Product demo or unboxing", "Hotel or travel", "Photos", "Not sure yet"];
 
-export default function Home() {
+/* =====================================================================
+   CALENDAR (rebuilt from today's date on every visit; next 7 days booked)
+   ===================================================================== */
+function Availability() {
+  const [days, setDays] = useState<{ w: string; d: string; booked: boolean; today: boolean; full: string }[]>([]);
+  useEffect(() => {
+    setDays(Array.from({ length: 14 }, (_, i) => {
+      const x = new Date(); x.setDate(x.getDate() + i);
+      return { w: x.toLocaleDateString("en-GB", { weekday: "short" }), d: x.toLocaleDateString("en-GB", { day: "numeric", month: "short" }), booked: i < 7, today: i === 0, full: x.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" }) };
+    }));
+  }, []);
   return (
-    <main id="home" className="editorialSite">
-      <header className="siteHeader">
-        <a className="wordmark" href="#home" aria-label="Mariam home"><span className="wordmarkM">MARIAM</span><span className="wordmark27">MAARCH</span></a>
-        <nav aria-label="Main navigation"><a href="#home">Home</a><a href="#about">About me</a><a href="#work">My work</a><a href="#brands">Brand deals</a><a href="#insights">Insights</a><a href="#contact">Booking & contact</a></nav>
-        <a className="headerCta" href="#contact">BOOK A PROJECT <ArrowUpRight size={14} /></a>
-        <a className="mobileMenu" href="#contact" aria-label="Go to brand inquiries"><Menu size={21} /></a>
+    <div className="avail" aria-label="Availability">
+      {days.map((x) => x.booked
+        ? <div className="slot booked" key={x.full} aria-label={`${x.full}, booked`}><span>{x.today ? "Today" : x.w}</span><b>{x.d}</b><i>Booked</i></div>
+        : <a className="slot open" key={x.full} href={`mailto:${email}?subject=${encodeURIComponent("Booking request: " + x.full)}`}><span>{x.w}</span><b>{x.d}</b><i>Request</i></a>)}
+    </div>
+  );
+}
+
+/* =====================================================================
+   PAGE
+   ===================================================================== */
+export default function Home() {
+  const [files, setFiles] = useState<string[] | null | undefined>(undefined); // undefined = still loading
+  const [cat, setCat] = useState<Cat>("Beauty");
+  const [fcat, setFcat] = useState<Cat>("Beauty");
+  const [lb, setLb] = useState<null | { items: string[][]; i: number }>(null);
+  const [reel, setReel] = useState<null | Reel>(null);
+  const [bad, setBad] = useState<Record<number, true>>({});
+  const [noShot, setNoShot] = useState<Record<string, true>>({});
+  const [f, setF] = useState({ name: "", email: "", brand: "", type: projectTypes[0], details: "" });
+
+  useEffect(() => {
+    let live = true;
+    fetch("/image/index.json").then((r) => (r.ok ? r.json() : Promise.reject())).then((j) => live && setFiles(Array.isArray(j) ? (j as string[]) : null)).catch(() => live && setFiles(null));
+    return () => { live = false; };
+  }, []);
+
+  const step = (d: number) => setLb((s) => (s ? { ...s, i: (s.i + d + s.items.length) % s.items.length } : s));
+  useEffect(() => {
+    const k = (e: KeyboardEvent) => {
+      if (e.key === "Escape") { setLb(null); setReel(null); }
+      if (e.key === "ArrowRight") step(1);
+      if (e.key === "ArrowLeft") step(-1);
+    };
+    window.addEventListener("keydown", k); return () => window.removeEventListener("keydown", k);
+  }, []);
+
+  const pick = (...bases: string[]) => (files === undefined ? [] : bases.flatMap((b) => urls(b, files)));
+  const gal: string[][] = files === undefined ? [] : files ? files.filter((n) => WEB.test(n)).map((n) => [IMGDIR + encodeURIComponent(n)]) : FALLBACK_NAMES.map((n) => urls(n, null));
+  const visible = gal.map((g, i) => ({ g, i })).filter((x) => !bad[x.i]);
+  const collage = [pick("IMG_4816", "IMG_2319"), pick("IMG_5214", "IMG_1701"), pick("IMG_6704", "IMG_4616"), pick("IMG_2092", "IMG_5216")];
+
+  const worldReels = reels.filter((r) => r.cat === cat);
+  const filmReels = reels.filter((r) => r.cat === fcat);
+  const send = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    const body = `Name: ${f.name}\nEmail: ${f.email}\nBrand / company: ${f.brand}\nProject type: ${f.type}\n\nProject details:\n${f.details}`;
+    window.location.href = `mailto:${email}?subject=${encodeURIComponent("Collaboration enquiry: " + f.brand)}&body=${encodeURIComponent(body)}`;
+  };
+
+  return (
+    <main className="site">
+      <header className="top">
+        <a href="#home" className="logo">Maarch<span className="gold">27</span></a>
+        <nav aria-label="Main"><a href="#about">About</a><a href="#proof">Proof</a><a href="#portfolio">Portfolio</a><a href="#services">Services</a><a href="#contact">Contact</a></nav>
+        <a className="pill" href="#book">Book me</a>
       </header>
 
-      <section className="heroEditorial">
-        <div className="heroTopline"><span>CREATOR · VISUAL STORYTELLER · VIDEO EDITOR</span><span>FRANCE ↔ UNITED STATES ↔ WORLDWIDE</span></div>
-        <div className="heroLayout">
-          <div className="heroTitleWrap">
-            <p className="heroKicker"><span className="goldLine" /> THE PERSON BEHIND THE PERSPECTIVE</p>
-            <h1>Not just content.<br /><em>A whole feeling.</em><br />That’s my world<span className="heroPeriod">.</span></h1>
-            <p className="heroStatement">I’m Mariam, the creator behind <strong>@maarch_27</strong>. I turn fashion, beauty, lifestyle, travel and tech into stories people want to watch, save and remember. Think considered visuals, personality-led storytelling and edits with a point of view, created for brands in France, the United States and worldwide.</p>
-            <div className="heroButtons"><a className="button buttonDark" href="#work">Enter my creative world <ArrowDown size={15} /></a><a className="quietLink" href="#contact">Let’s create together <ArrowUpRight size={15} /></a></div>
-            <div className="heroMicro"><span><i /> FASHION, BEAUTY, LIFESTYLE, TECH</span><span>CONCEPT → CAMERA → CUT</span></div>
+      {/* HERO */}
+      <section className="hero" id="home">
+        <div className="hero-copy">
+          <p className="eyebrow">Luxury UGC creator · USA &amp; France · Booked worldwide</p>
+          <h1><span className="spark s1">✦</span><span className="spark s2">✦</span>Mariam <em className="gold">Ch</em></h1>
+          <span className="rot" aria-hidden="true"><span>Beauty</span><span>Fashion</span><span>Tech</span><span>Lifestyle</span><span>Travel</span></span>
+          <p className="lede">Films that make people stop, feel and buy. Made for 500+ brands, with a limited number of spots each month.</p>
+          <div className="actions"><a className="btn" href="#book">Work with me</a><a className="btn line" href="#portfolio">See my work</a></div>
+        </div>
+        <div className="hero-img"><Photo cands={pick("IMG_2688", "IMG_8716", "IMG_5214", "Tezza-5004")} alt="Mariam, luxury UGC creator" pos="center 20%" eager /></div>
+        <div className="chip a"><b className="gold">153K</b><span>Instagram followers</span></div>
+        <div className="chip b"><b className="gold">500+</b><span>brands trusted me</span></div>
+      </section>
+
+      <div className="marquee" aria-label="Brands I have worked with">
+        <div className="row">{[...tickerA, ...tickerA].map((b, i) => <span key={i}>{b}</span>)}</div>
+        <div className="row">{[...tickerB, ...tickerB].map((b, i) => <span key={i}>{b}</span>)}</div>
+      </div>
+
+      {/* ABOUT */}
+      <section className="about" id="about">
+        <div className="collage">{collage.map((c, i) => <div key={i} className={`c c${i + 1}`}><Photo cands={c} alt={`Mariam, photo ${i + 1}`} /></div>)}</div>
+        <div>
+          <p className="no">01 — The creator</p>
+          <h2>A creator who treats every video like a <em className="gold">campaign.</em></h2>
+          <p>I’m a creator and graphic designer based between the USA and France, with 4+ years across beauty, skincare, fashion, travel, tech and lifestyle. I work with fast-growing startups and established international names alike.</p>
+          <p>My work is strategy-driven: creative direction, storytelling, editing and viral hooks, tailored to each brand’s identity and goals. My pricing depends on scope, usage rights and production, not on follower count alone.</p>
+          <ul className="tags">{skills.map((s) => <li key={s}>{s}</li>)}</ul>
+        </div>
+      </section>
+
+      {/* WHY ME */}
+      <section className="why" id="why">
+        <p className="no">02 — Why me</p>
+        <h2>Why <em className="gold">me?</em></h2>
+        <ol>{why.map(([t, d]) => <li key={t}><h3>{t}</h3><p>{d}</p></li>)}</ol>
+      </section>
+
+      {/* PROOF: platforms */}
+      <section className="proof" id="proof">
+        <div className="head"><div><p className="no">03 — Proof</p><h2>Real profiles. <em className="gold">Real audience.</em></h2></div>
+          <div className="donuts">{audience.map((a) => (
+            <div key={a.l} className="donut"><i style={{ background: `conic-gradient(var(--gold-d) ${a.v * 3.6}deg, rgba(91,36,41,.14) 0)` }}><b>{a.big}</b></i><span>{a.l}</span></div>
+          ))}</div>
+        </div>
+        <div className="plat">
+          {platforms.map((p) => (
+            <a key={p.name} className="pcard" href={p.url} target="_blank" rel="noreferrer">
+              <div className="pshot">
+                {noShot[p.name] ? <div className="pfallback"><Icon name={p.icon} /><b>{p.name}</b><span>Watch on {p.name}</span></div>
+                  : <Photo cands={[p.shot]} alt={`${p.name} profile of Mariam`} pos="top" onFail={() => setNoShot((s) => ({ ...s, [p.name]: true }))} />}
+              </div>
+              <div className="pcap"><span className="pi"><Icon name={p.icon} />{p.name}</span><small>{p.cap}</small></div>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      {/* PROOF: brand messages */}
+      <section className="says">
+        <div className="head"><div><p className="no">04 — Kind words</p><h2>What brands <em className="gold">say.</em></h2></div><p>Real messages from brands I’ve worked with. Tap one to read it.</p></div>
+        <div className="wall">{PROOF.map((c, i) => (
+          <button key={i} className="shot" onClick={() => setLb({ items: PROOF, i })} aria-label={`Open brand message ${i + 1}`}><Photo cands={c} alt={`Message from a brand, ${i + 1}`} /></button>
+        ))}</div>
+      </section>
+
+      {/* PORTFOLIO */}
+      <section className="work" id="portfolio">
+        <div className="head"><div><p className="no">05 — Selected work</p><h2>A portfolio <em className="gold">in light.</em></h2></div><p>Tap any photo to see it larger.</p></div>
+        <div className="gal">{gal.map((g, i) => bad[i] ? null : (
+          <button key={i} className="g" onClick={() => setLb({ items: visible.map((v) => v.g), i: Math.max(0, visible.findIndex((v) => v.i === i)) })} aria-label={`Open photo ${i + 1}`}>
+            <Photo cands={g} alt={`Mariam portfolio photo ${i + 1}`} onFail={() => setBad((s) => ({ ...s, [i]: true }))} />
+          </button>
+        ))}</div>
+      </section>
+
+      {/* PICK A WORLD */}
+      <section className="reels" id="reels">
+        <div className="head"><div><p className="no">06 — Campaigns</p><h2>Pick a world. <em className="gold">Press play.</em></h2></div><p>Real campaigns from my Instagram. Choose a category, then press a cover to watch.</p></div>
+        <div className="chips" role="tablist">{cats.map((c) => <button key={c} role="tab" aria-selected={cat === c} className={cat === c ? "on" : ""} onClick={() => setCat(c)}>{c}</button>)}</div>
+        <div className="palette"><div>{palettes[cat].colors.map((c) => <i key={c} style={{ background: c }} title={c} />)}</div><p>{cat} palette: {palettes[cat].note}</p></div>
+        <div className="reel-grid">
+          {worldReels.length ? worldReels.map((r) => (
+            <button key={r.id} className="reel" onClick={() => setReel(r)} aria-label={`Play ${r.title}`}>
+              <iframe className="embed" src={`${igUrl(r)}embed`} title="" loading="lazy" tabIndex={-1} aria-hidden="true" />
+              <Photo cands={[`/reels/${r.id}.jpg`, `/reels/${r.id}.png`]} alt="" className="cover" />
+              <span className="play" aria-hidden="true">▶</span><strong>{r.title}</strong>
+            </button>
+          )) : (
+            <a className="reel" href={franceIG} target="_blank" rel="noreferrer"><span className="play" aria-hidden="true">↗</span><strong>Life in France on @maarch_in_france</strong></a>
+          )}
+        </div>
+      </section>
+
+      {/* FEATURED FILMS (all films, same worlds) */}
+      <section className="films">
+        <div className="head"><div><p className="no">07 — Films</p><h2>Featured <em className="gold">films.</em></h2></div><p>Every film, by world. Press play right here.</p></div>
+        <div className="chips dark" role="tablist">{cats.map((c) => <button key={c} role="tab" aria-selected={fcat === c} className={fcat === c ? "on" : ""} onClick={() => setFcat(c)}>{c}</button>)}</div>
+        <div className="film-row" key={fcat}>
+          {filmReels.length ? filmReels.map((r) => (
+            <figure key={r.id}><iframe src={`${igUrl(r)}embed`} title={r.title} loading="lazy" allowFullScreen /><figcaption>{r.title}</figcaption></figure>
+          )) : (
+            <a className="film-link" href={franceIG} target="_blank" rel="noreferrer"><b>Life in France</b><span>Watch on @maarch_in_france ↗</span></a>
+          )}
+          {fcat === "Lifestyle" && videos.map((v) => (<figure key={v.src}><video src={v.src} poster={v.poster} controls muted loop playsInline preload="metadata" /><figcaption>{v.title}</figcaption></figure>))}
+        </div>
+      </section>
+
+      {/* BRANDS */}
+      <section className="trusted">
+        <div className="head"><div><p className="no">08 — Brands</p><h2>Worked with <em className="gold">500+ brands.</em></h2></div><p>A few of the names I’ve created for, from global beauty houses to new launches.</p></div>
+        <ul className="logos">{brands.map(([name, file]) => (
+          <li key={file}><div className="shape"><Photo cands={[`/brands/${file}.png`]} alt={name} pos="center" /></div><span>{name}</span></li>
+        ))}</ul>
+      </section>
+
+      {/* SERVICES */}
+      <section className="services" id="services">
+        <div className="head"><div><p className="no">09 — Services</p><h2>The atelier <em className="gold">of content.</em></h2></div><p>A bespoke offering for beauty, fashion, tech and lifestyle brands. Packages depend on scope and usage rights, so tell me the goal and I’ll shape the format and quote.</p></div>
+        <ul>{services.map(([t, d, inc], i) => (
+          <li key={t}><span className="n">{String(i + 1).padStart(2, "0")}</span><h3>{t}</h3><p>{d}<small>{inc}</small></p>
+            <a href={`mailto:${email}?subject=${encodeURIComponent("Enquiry: " + t)}`} aria-label={`Ask about ${t}`}>Ask about this ↗</a></li>
+        ))}</ul>
+      </section>
+
+      {/* BOOK */}
+      <section className="book" id="book">
+        <Rule />
+        <div className="head"><div><p className="no">10 — Booking</p><h2>Work with <em className="gold">me.</em></h2></div><p>Choose a date and send me your request. I reply by email to confirm your collaboration spot.</p></div>
+        <Availability />
+      </section>
+
+      {/* CONTACT */}
+      <section className="contact" id="contact">
+        <div className="cwrap">
+          <div><p className="no">11 — Business inquiries</p><h2>Let’s create something <em className="gold">unforgettable.</em></h2>
+            <p>Share the product, the goal and the timeline. Tell me about your brand and I’ll take it from there.</p>
+            <a className="mail" href={`mailto:${email}`}>{email}</a>
+            <ul className="soc">{social.map((s) => <li key={s.name}><a href={s.url} target={s.icon === "mail" ? undefined : "_blank"} rel="noreferrer" aria-label={s.name}><Icon name={s.icon} /><span>{s.name}</span></a></li>)}</ul>
           </div>
-          <div className="heroCollage" aria-label="Editorial collage for Mariam's creative portfolio">
-            <a className="heroPhoto heroPhotoOne heroPortrait" href="https://www.instagram.com/maarch_27/" target="_blank" rel="noreferrer" aria-label="See Mariam's Instagram"><img className="heroActualPhoto" src="/image/IMG_8716.jpg" alt="Mariam Maarch, fashion and lifestyle creator" /><span className="photoTag">MARIAM MAARCH / THE CREATIVE</span><span className="heroPortraitFallback">A point<br/>of <em>view.</em></span></a>
-            <a className="heroPhoto heroPhotoTwo heroSocialTile" href="https://www.instagram.com/reel/DWpYfPuiNXh/" target="_blank" rel="noreferrer"><img className="heroActualPhoto" src="/image/IMG_5214.jpg" alt="Mariam's lifestyle and daily creator content" /><span className="photoTag">LIFE LATELY / 02</span><span className="scribble">life, lately ↗</span><span className="tileCTA">WATCH THE VLOG <ArrowUpRight size={13}/></span></a>
-            <a className="heroPhoto heroPhotoThree heroSocialTile" href="https://www.instagram.com/reel/Dc1Z3PEx-yz/" target="_blank" rel="noreferrer"><img className="heroActualPhoto" src="/image/IMG_4816.JPG" alt="Beauty and skincare creator content by Mariam" /><span className="photoTag">BEAUTY STORY / 03</span><span className="playDisk"><Play size={17} fill="currentColor" /></span><span className="tileCTA">WATCH ANUA REEL <ArrowUpRight size={13}/></span></a>
-            <div className="heroSticker"><Sparkles size={17}/><span>MADE BY A<br/>CREATIVE MIND</span></div>
-            <div className="heroSideNote">a little taste<br/>of everything</div>
+          <form onSubmit={send}>
+            <label>Your name<input required value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} autoComplete="name" /></label>
+            <label>Email address<input required type="email" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} autoComplete="email" /></label>
+            <label>Brand or company<input required value={f.brand} onChange={(e) => setF({ ...f, brand: e.target.value })} autoComplete="organization" /></label>
+            <label>Project type<select value={f.type} onChange={(e) => setF({ ...f, type: e.target.value })}>{projectTypes.map((t) => <option key={t}>{t}</option>)}</select></label>
+            <label>Project details<textarea required rows={5} value={f.details} onChange={(e) => setF({ ...f, details: e.target.value })} placeholder="Product, goal, timeline, usage rights…" /></label>
+            <button className="btn gold-btn" type="submit">Send enquiry</button>
+          </form>
+        </div>
+      </section>
+
+      <footer className="foot">
+        <a href="#home" className="logo">Maarch<span className="gold">27</span></a>
+        <ul className="icons">{social.map((s) => <li key={s.name}><a href={s.url} target={s.icon === "mail" ? undefined : "_blank"} rel="noreferrer"><Icon name={s.icon} /><span>{s.name}</span></a></li>)}</ul>
+        <small>© {new Date().getFullYear()} Maarch27</small>
+      </footer>
+
+      {lb && (
+        <div className="modal" role="dialog" aria-modal="true" aria-label="Photo viewer" onClick={() => setLb(null)}>
+          <Photo cands={lb.items[lb.i]} alt="Enlarged view" className="big" />
+          <button className="x" aria-label="Close">×</button>
+          {lb.items.length > 1 && (<>
+            <button className="nav prev" aria-label="Previous" onClick={(e) => { e.stopPropagation(); step(-1); }}>‹</button>
+            <button className="nav next" aria-label="Next" onClick={(e) => { e.stopPropagation(); step(1); }}>›</button>
+          </>)}
+        </div>
+      )}
+      {reel && (
+        <div className="modal" role="dialog" aria-modal="true" aria-label={reel.title} onClick={() => setReel(null)}>
+          <div className="frame" onClick={(e) => e.stopPropagation()}>
+            <iframe src={`${igUrl(reel)}embed`} title={reel.title} allowFullScreen />
+            <a href={igUrl(reel)} target="_blank" rel="noreferrer">Open on Instagram</a>
           </div>
+          <button className="x" aria-label="Close" onClick={() => setReel(null)}>×</button>
         </div>
-        <div className="heroBottomline"><span>A CREATIVE MIND WITH A POINT OF VIEW.</span><span>STORIES PEOPLE WANT TO STAY FOR.</span><a href="#numbers">SCROLL MY WORLD ↓</a></div>
-      </section>
-
-      <section className="numbersRibbon" id="numbers" aria-label="Creator reach and experience">
-        <div><strong>160K+</strong><span>INSTAGRAM COMMUNITY</span></div><i />
-        <div><strong>500+</strong><span>BRANDS COLLABORATED WITH</span></div><i />
-        <div><strong>4+ YEARS</strong><span>CREATING & COLLABORATING</span></div><i />
-        <div><strong>MILLIONS</strong><span>OF CONTENT VIEWS</span></div>
-      </section>
-
-      <section className="aboutSection" id="about">
-        <div className="sectionEyebrow"><span>01 / THE HUMAN</span><span>MEET THE CREATIVE</span></div>
-        <div className="aboutGrid">
-          <div><p className="oversizedNote">Hi, I’m Mariam<span> ✳</span></p><h2>Good visuals.<br/>Real personality.<br/><em>A point of view.</em></h2></div>
-          <div className="aboutCopy"><p>I’m a full-time creator with a curious eye and a love for fashion, beauty, lifestyle, travel and tech. I’m drawn to beautiful details, unexpected angles and the little moments that make a product feel part of real life.</p><p>From the first idea to the final cut, I bring creative direction, filming, editing and platform-aware storytelling together. I want every project to feel polished but personal, elevated but never distant, and unmistakably made with intention.</p><p>I can be the face on camera, the eye behind the lens and the editor shaping the final feeling. I pay attention to styling, light, sound, pacing and discoverability, because the smallest choices can make a brand story feel memorable.</p><a className="quietLink" href="https://maarch27.my.canva.site/media-kit" target="_blank" rel="noreferrer">A closer look at my media kit <ArrowUpRight size={15}/></a></div>
-        </div>
-        <div className="aboutPills"><span>VISUAL TASTE</span><span>HOOKS THAT LAND</span><span>SEO MINDED</span><span>EDITING WITH INTENTION</span><span>A DISTINCT VOICE</span></div>
-      </section>
-
-      <section className="workSection" id="work">
-        <div className="workHeading"><div><div className="sectionEyebrow"><span>02 / THE PORTFOLIO</span><span>SCROLL, WATCH, FEEL</span></div><h2>Many moods.<br/><em>One unmistakable point of view.</em></h2></div><p>Explore the mix: fashion details, beauty rituals, tech worth talking about, everyday life, travel moments, events, voiceovers and ASMR. Every project starts with the story, not a template.</p></div>
-        <div className="creativeCategories">
-          {categories.map((cat) => <article className={"categoryCard category-" + cat.kind} key={cat.id}>
-            <div className="categoryHead"><span>{cat.id} / {cat.label}</span><span className="categoryRound"><ArrowUpRight size={17}/></span></div>
-            <h3>{cat.title}</h3><p className="categoryNote">{cat.note}</p>
-            <div className="miniGallery">{cat.tiles.map((tile, i) => <div className={"miniTile miniTile" + (i + 1)} key={tile}><span className="miniIndex">0{i + 1}</span>{i === 0 && <span className="miniPlay"><Play size={12} fill="currentColor"/></span>}<b>{tile}</b></div>)}</div>
-            <div className="portfolioReelGrid">{portfolioItems.filter((item) => item.type === cat.kind).map((item, i) => { const shortcode = item.url.match(/\/(?:reel|p)\/([^/]+)/)?.[1]; const postType = item.url.includes("/p/") ? "p" : "reel"; const embedUrl = shortcode ? `https://www.instagram.com/${postType}/${shortcode}/embed` : item.url; return <article className="portfolioReelCard" key={item.title + item.url + i}><div className="portfolioReelFrame"><iframe src={embedUrl} title={item.title + " Instagram post"} loading="lazy" allow="encrypted-media; picture-in-picture" /></div><div className="portfolioReelInfo"><span className="portfolioLinkNumber">{String(i + 1).padStart(2, "0")} / {cat.label}</span><strong>{item.title}</strong><small>{item.format}</small><a href={item.url} target="_blank" rel="noreferrer">WATCH ON INSTAGRAM <ArrowUpRight size={13}/></a></div></article>; })}</div>
-            <a className="categoryLink" href="#contact">LET’S BUILD THIS FORMAT <ArrowUpRight size={13}/></a>
-          </article>)}
-        </div>
-        <p className="workFootnote">Explore selected live Instagram projects by category. Each project opens its original post, so brands can watch the work in context. Performance screenshots and verified client testimonials can be added when supplied.</p>
-      </section>
-
-      <section className="insightsSection" id="insights">
-        <div className="insightsHeader"><div className="sectionEyebrow"><span>03 / THE WHY</span><span>BEYOND THE AESTHETIC</span></div><h2>Beautiful is the beginning.<br/><em>The story makes it stay.</em></h2></div>
-        <div className="insightGrid">
-          <article><span className="insightSymbol">↗</span><span className="insightNo">01 / THE HOOK</span><h3>Win the first second.</h3><p>I look for the scroll-stopper: a visual, question, feeling or opening line that gives people a reason to stay.</p></article>
-          <article><span className="insightSymbol">✳</span><span className="insightNo">02 / THE STORY</span><h3>Make it feel human.</h3><p>People connect with a point of view. I turn features into moments, benefits into stories and products into something people can picture in their lives.</p></article>
-          <article><span className="insightSymbol">⌁</span><span className="insightNo">03 / THE DISCOVERY</span><h3>Create for the platform.</h3><p>Search-aware language, relevant keywords, natural pacing, clear structure and edits that respect how people discover content.</p></article>
-          <article><span className="insightSymbol">◎</span><span className="insightNo">04 / THE FINISH</span><h3>Details are the difference.</h3><p>Framing, texture, sound, subtitles and the final cut work together so the content feels polished without losing its personality.</p></article>
-        </div>
-      </section>
-
-      <section className="manifestoSection">
-        <div className="manifestoPhoto"><img className="manifestoActualPhoto" src="/image/IMG_4616.JPG" alt="Mariam's editorial creator photography" /><div className="manifestoPhotoFrame"><span>CREATIVE INSTINCT / PERSONAL TOUCH</span><b>THE MAGIC<br/>IS IN THE<br/><em>DETAIL.</em></b></div><span className="manifestoDoodle">stay curious ✳</span></div>
-        <div className="manifestoText"><div className="sectionEyebrow"><span>04 / WHAT I BRING</span><span>THE CREATIVE PARTNER</span></div><h2>Elevated visuals.<br/><em>Human stories. Lasting feeling.</em></h2><p>I bring visual instinct, a clear creative opinion and a hands-on understanding of filming and editing. I’m comfortable in front of the camera, behind it, or shaping a concept from the first moodboard to the final delivery. My style blends editorial polish with real-life personality.</p><p>I care about the brief, but I also care about what makes the brief interesting. The goal isn’t content for content’s sake. It’s work with a feeling, a message and a reason to remember the brand.</p><div className="signature">Mariam <span>— THE MIND BEHIND @MAARCH_27</span></div></div>
-      </section>
-
-      <section className="servicesSection" id="services">
-        <div className="sectionEyebrow"><span>05 / THE COLLABORATION</span><span>THOUGHTFUL BY DESIGN</span></div>
-        <div className="serviceIntro"><h2>Creative ideas.<br/><em>Considered execution.</em></h2><p>For brands looking for more than a deliverable: a thoughtful concept, a distinct visual language and content designed around a real audience.</p></div>
-        <div className="serviceRows">{services.map(({n,title,detail,icon:Icon}) => <article className="serviceRow" key={n}><span className="serviceNo">{n}</span><Icon size={21} strokeWidth={1.4}/><h3>{title}</h3><p>{detail}</p><ArrowUpRight className="serviceArrow" size={17}/></article>)}</div>
-        <div className="standardsStrip"><Sparkles size={19}/><p><strong>High standards. Intentional partnerships.</strong><br/>I take on projects selectively so every collaboration gets the creative attention, communication and care it deserves.</p></div>
-      </section>
-
-      <section className="brandSection" id="brands">
-        <div className="brandIntro"><div className="sectionEyebrow"><span>06 / BRAND DEALS</span><span>GOOD COMPANY</span></div><h2>Good stories are<br/>better when we<br/><em>create together.</em></h2><p>Every partnership is a chance to find the story, the format and the feeling that make a brand stand out. Here are some names from my collaboration world.</p><a className="quietLink" href="#contact">Your brand could be next <ArrowUpRight size={15}/></a></div>
-        <div className="brandOrbit"><span className="orbitLabel">SELECTED COLLABORATIONS</span><div className="brandCircles">{brands.map((brand, i) => <div className={"brandCircle brandCircle" + (i % 5 + 1)} key={brand}><span>{brand}</span></div>)}</div><p>Brand names shown as a snapshot of past collaborations.</p></div>
-      </section>
-
-      <section className="bookingSection" id="contact">
-        <div className="bookingIntro"><div className="sectionEyebrow"><span>07 / YOUR MOVE</span><span>PAID PARTNERSHIPS & CREATIVE PROJECTS</span></div><h2>Have a good<br/><em>project in mind?</em></h2><p>Launching a product, building a campaign or looking for a creative partner for the long run? Share your idea, deliverables, budget, usage needs and timeline. I prioritise paid projects with room for strong creative and clear collaboration.</p><p className="availabilityNote"><span className="availabilityDot"/> I work with a limited number of projects at a time to protect the quality of each collaboration. Availability is confirmed after reviewing the brief.</p><a className="bookingEmail" href="mailto:Collaborationmaarch@gmail.com"><Mail size={17}/> Collaborationmaarch@gmail.com</a>
-          <div className="socialCluster"><a href="https://www.instagram.com/maarch_27/" target="_blank" rel="noreferrer"><Instagram size={16}/> Instagram <ArrowUpRight size={12}/></a><a href="https://www.tiktok.com/@maarch_27" target="_blank" rel="noreferrer"><AudioLines size={16}/> TikTok <ArrowUpRight size={12}/></a><a href="https://www.pinterest.com/maarch_27/" target="_blank" rel="noreferrer"><Sparkles size={16}/> Pinterest <ArrowUpRight size={12}/></a><a href="https://www.youtube.com/@maarch_27" target="_blank" rel="noreferrer"><Youtube size={16}/> YouTube <ArrowUpRight size={12}/></a><a href="https://linktr.ee/maarch_27" target="_blank" rel="noreferrer"><Globe2 size={16}/> Linktree <ArrowUpRight size={12}/></a></div>
-          <div className="bookingCallout"><strong>Want to talk it through?</strong><span>For focused strategy calls, creative consultations and detailed project planning, the fee and format are shared before confirming a booking.</span></div><CalendlyBooking />
-        </div>
-        <form className="inquiryForm" action="mailto:Collaborationmaarch@gmail.com" method="post" encType="text/plain">
-          <div className="formHeader"><span>THE PROJECT BRIEF</span><span>LET’S START HERE ↗</span></div>
-          <label htmlFor="brand-name">Your name / brand *</label><input id="brand-name" name="Name / brand" placeholder="Name or company" required/>
-          <label htmlFor="work-email">Work email *</label><input id="work-email" name="Email" type="email" placeholder="you@brand.com" required/>
-          <label htmlFor="project-type">What are you looking for? *</label><select id="project-type" name="Project type" defaultValue="" required><option value="" disabled>Choose a creative service</option><option>Paid UGC package</option><option>Sponsored creator campaign</option><option>Photography / visual assets</option><option>Video editing</option><option>Creative direction / strategy</option><option>Tech / app content</option><option>Long-term partnership</option><option>Event / launch</option><option>Paid consultation call</option><option>Other</option></select>
-          <div className="formTwo"><div><label htmlFor="market">Campaign market</label><select id="market" name="Market" defaultValue=""><option value="">Choose market</option><option>United States</option><option>France</option><option>International / other</option></select></div><div><label htmlFor="budget">Budget range</label><select id="budget" name="Budget" defaultValue=""><option value="">Choose budget</option><option>Under €500 / $500</option><option>€500–€1,000 / $500–$1,000</option><option>€1,000–€2,500 / $1,000–$2,500</option><option>€2,500+ / $2,500+</option><option>To be discussed</option></select></div></div>
-          <label htmlFor="brief">Deliverables, usage, goals & timeline *</label><textarea id="brief" name="Project details" placeholder="Tell me what you’re launching, what you need, the timeline and your budget..." rows={5} required/>
-          <button className="button buttonDark submitButton" type="submit">Send the brief <ArrowUpRight size={16}/></button><p className="privacyNote">This inquiry starts in your email app. A form service can be connected later for direct website submissions.</p>
-        </form>
-      </section>
-
-      <footer className="siteFooter"><a className="wordmark" href="#home">maarch_27<span>®</span></a><p>Creative by instinct. Intentional by design.</p><div><a href="https://www.instagram.com/maarch_27/" target="_blank" rel="noreferrer">INSTAGRAM ↗</a><a href="https://www.tiktok.com/@maarch_27" target="_blank" rel="noreferrer">TIKTOK ↗</a><a href="https://www.pinterest.com/maarch_27/" target="_blank" rel="noreferrer">PINTEREST ↗</a><a href="https://www.youtube.com/@maarch_27" target="_blank" rel="noreferrer">YOUTUBE ↗</a><a href="https://linktr.ee/maarch_27" target="_blank" rel="noreferrer">LINKTREE ↗</a><a href="mailto:Collaborationmaarch@gmail.com">EMAIL ↗</a></div><span>© 2026 MARIAM MAARCH · MAARCH_27</span></footer>
+      )}
     </main>
   );
 }
