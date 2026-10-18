@@ -66,9 +66,9 @@ export default function Home() {
             <div className="heroMicro"><span><i /> FASHION, BEAUTY, LIFESTYLE, TECH</span><span>CONCEPT → CAMERA → CUT</span></div>
           </div>
           <div className="heroCollage" aria-label="Editorial collage for Mariam's creative portfolio">
-            <a className="heroPhoto heroPhotoOne heroPortrait" href="https://www.instagram.com/maarch_27/" target="_blank" rel="noreferrer"><span className="photoTag">MARIAM MAARCH / THE CREATIVE</span><span className="heroPortraitFallback">A point<br/>of <em>view.</em></span></a>
-            <a className="heroPhoto heroPhotoTwo heroSocialTile" href="https://www.instagram.com/reel/DWpYfPuiNXh/" target="_blank" rel="noreferrer"><span className="photoTag">LIFE LATELY / 02</span><span className="scribble">life, lately ↗</span><span className="tileCTA">WATCH THE VLOG <ArrowUpRight size={13}/></span></a>
-            <a className="heroPhoto heroPhotoThree heroSocialTile" href="https://www.instagram.com/reel/Dc1Z3PEx-yz/" target="_blank" rel="noreferrer"><span className="photoTag">BEAUTY STORY / 03</span><span className="playDisk"><Play size={17} fill="currentColor" /></span><span className="tileCTA">WATCH ANUA REEL <ArrowUpRight size={13}/></span></a>
+            <a className="heroPhoto heroPhotoOne heroPortrait" href="https://www.instagram.com/maarch_27/" target="_blank" rel="noreferrer" aria-label="See Mariam's Instagram"><img className="heroActualPhoto" src="/image/IMG_8716.jpg" alt="Mariam Maarch, fashion and lifestyle creator" /><span className="photoTag">MARIAM MAARCH / THE CREATIVE</span><span className="heroPortraitFallback">A point<br/>of <em>view.</em></span></a>
+            <a className="heroPhoto heroPhotoTwo heroSocialTile" href="https://www.instagram.com/reel/DWpYfPuiNXh/" target="_blank" rel="noreferrer"><img className="heroActualPhoto" src="/image/IMG_5214.jpg" alt="Mariam's lifestyle and daily creator content" /><span className="photoTag">LIFE LATELY / 02</span><span className="scribble">life, lately ↗</span><span className="tileCTA">WATCH THE VLOG <ArrowUpRight size={13}/></span></a>
+            <a className="heroPhoto heroPhotoThree heroSocialTile" href="https://www.instagram.com/reel/Dc1Z3PEx-yz/" target="_blank" rel="noreferrer"><img className="heroActualPhoto" src="/image/IMG_4816.JPG" alt="Beauty and skincare creator content by Mariam" /><span className="photoTag">BEAUTY STORY / 03</span><span className="playDisk"><Play size={17} fill="currentColor" /></span><span className="tileCTA">WATCH ANUA REEL <ArrowUpRight size={13}/></span></a>
             <div className="heroSticker"><Sparkles size={17}/><span>MADE BY A<br/>CREATIVE MIND</span></div>
             <div className="heroSideNote">a little taste<br/>of everything</div>
           </div>
@@ -103,7 +103,7 @@ export default function Home() {
             <a className="categoryLink" href="#contact">LET’S BUILD THIS FORMAT <ArrowUpRight size={13}/></a>
           </article>)}
         </div>
-        <p className="workFootnote">Selected Instagram projects are linked by category. Next, we can add your actual photos, reel covers and insight screenshots so the portfolio feels visual as well as clickable.</p>
+        <p className="workFootnote">Explore selected live Instagram projects by category. Each project opens its original post, so brands can watch the work in context. Performance screenshots and verified client testimonials can be added when supplied.</p>
       </section>
 
       <section className="insightsSection" id="insights">
@@ -117,7 +117,7 @@ export default function Home() {
       </section>
 
       <section className="manifestoSection">
-        <div className="manifestoPhoto"><div className="manifestoPhotoFrame"><span>CREATIVE INSTINCT / PERSONAL TOUCH</span><b>THE MAGIC<br/>IS IN THE<br/><em>DETAIL.</em></b></div><span className="manifestoDoodle">stay curious ✳</span></div>
+        <div className="manifestoPhoto"><img className="manifestoActualPhoto" src="/image/IMG_4616.JPG" alt="Mariam's editorial creator photography" /><div className="manifestoPhotoFrame"><span>CREATIVE INSTINCT / PERSONAL TOUCH</span><b>THE MAGIC<br/>IS IN THE<br/><em>DETAIL.</em></b></div><span className="manifestoDoodle">stay curious ✳</span></div>
         <div className="manifestoText"><div className="sectionEyebrow"><span>04 / WHAT I BRING</span><span>THE CREATIVE PARTNER</span></div><h2>Elevated visuals.<br/><em>Human stories. Lasting feeling.</em></h2><p>I bring visual instinct, a clear creative opinion and a hands-on understanding of filming and editing. I’m comfortable in front of the camera, behind it, or shaping a concept from the first moodboard to the final delivery. My style blends editorial polish with real-life personality.</p><p>I care about the brief, but I also care about what makes the brief interesting. The goal isn’t content for content’s sake. It’s work with a feeling, a message and a reason to remember the brand.</p><div className="signature">Mariam <span>— THE MIND BEHIND @MAARCH_27</span></div></div>
       </section>
 
