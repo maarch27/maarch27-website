@@ -49,26 +49,26 @@ export default function Home() {
   return (
     <main id="home" className="editorialSite">
       <header className="siteHeader">
-        <a className="wordmark" href="#home" aria-label="maarch_27 home"><span className="wordmarkM">M</span><span className="wordmark27">27</span></a>
-        <nav aria-label="Main navigation"><a href="#home">Home</a><a href="#work">The work</a><a href="#insights">Insights</a><a href="#about">About Mariam</a><a href="#brands">Brand deals</a></nav>
+        <a className="wordmark" href="#home" aria-label="Mariam home"><span className="wordmarkM">MARIAM</span><span className="wordmark27">MAARCH</span></a>
+        <nav aria-label="Main navigation"><a href="#home">Home</a><a href="#about">About me</a><a href="#work">My work</a><a href="#brands">Brand deals</a><a href="#insights">Insights</a><a href="#contact">Booking & contact</a></nav>
         <a className="headerCta" href="#contact">BOOK A PROJECT <ArrowUpRight size={14} /></a>
         <a className="mobileMenu" href="#contact" aria-label="Go to brand inquiries"><Menu size={21} /></a>
       </header>
 
       <section className="heroEditorial">
-        <div className="heroTopline"><span>INDEPENDENT CREATOR · CREATIVE PARTNER · STORYTELLER</span><span>FRANCE ↔ UNITED STATES ↔ WORLDWIDE</span></div>
+        <div className="heroTopline"><span>CREATOR · VISUAL STORYTELLER · VIDEO EDITOR</span><span>FRANCE ↔ UNITED STATES ↔ WORLDWIDE</span></div>
         <div className="heroLayout">
           <div className="heroTitleWrap">
             <p className="heroKicker"><span className="goldLine" /> THE PERSON BEHIND THE PERSPECTIVE</p>
             <h1>Ideas with<br /><em>main character</em><br />energy<span className="heroPeriod">.</span></h1>
-            <p className="heroStatement">I’m Mariam — the creative mind behind <strong>@maarch_27</strong>. Living in France, working with brands worldwide, and turning good ideas into content with a point of view.</p>
+            <p className="heroStatement">I’m Mariam, the face, eye and mind behind <strong>@maarch_27</strong>. I create fashion, beauty, lifestyle and tech stories for brands across France, the United States and worldwide. My work brings together strong hooks, thoughtful visuals and edits that make people feel something.</p>
             <div className="heroButtons"><a className="button buttonDark" href="#work">Enter my creative world <ArrowDown size={15} /></a><a className="quietLink" href="#contact">Let’s create together <ArrowUpRight size={15} /></a></div>
             <div className="heroMicro"><span><i /> FASHION, BEAUTY, LIFESTYLE, TECH</span><span>CONCEPT → CAMERA → CUT</span></div>
           </div>
           <div className="heroCollage" aria-label="Editorial collage for Mariam's creative portfolio">
-            <div className="heroPhoto heroPhotoOne"><span className="photoTag">THE CREATIVE / 01</span><b>YOUR<br/>POINT<br/><em>OF VIEW.</em></b></div>
-            <div className="heroPhoto heroPhotoTwo"><span className="photoTag">OFF DUTY / 02</span><span className="scribble">life, lately ↗</span></div>
-            <div className="heroPhoto heroPhotoThree"><span className="photoTag">ON SET / 03</span><span className="playDisk"><Play size={17} fill="currentColor" /></span></div>
+            <a className="heroPhoto heroPhotoOne heroPortrait" href="https://www.instagram.com/maarch_27/" target="_blank" rel="noreferrer"><span className="photoTag">MARIAM MAARCH / THE CREATIVE</span><span className="heroPortraitFallback">A point<br/>of <em>view.</em></span></a>
+            <a className="heroPhoto heroPhotoTwo heroSocialTile" href="https://www.instagram.com/reel/DWpYfPuiNXh/" target="_blank" rel="noreferrer"><span className="photoTag">LIFE LATELY / 02</span><span className="scribble">life, lately ↗</span><span className="tileCTA">WATCH THE VLOG <ArrowUpRight size={13}/></span></a>
+            <a className="heroPhoto heroPhotoThree heroSocialTile" href="https://www.instagram.com/reel/Dc1Z3PEx-yz/" target="_blank" rel="noreferrer"><span className="photoTag">BEAUTY STORY / 03</span><span className="playDisk"><Play size={17} fill="currentColor" /></span><span className="tileCTA">WATCH ANUA REEL <ArrowUpRight size={13}/></span></a>
             <div className="heroSticker"><Sparkles size={17}/><span>MADE BY A<br/>CREATIVE MIND</span></div>
             <div className="heroSideNote">a little taste<br/>of everything</div>
           </div>
@@ -86,8 +86,8 @@ export default function Home() {
       <section className="aboutSection" id="about">
         <div className="sectionEyebrow"><span>01 / THE HUMAN</span><span>MEET THE CREATIVE</span></div>
         <div className="aboutGrid">
-          <div><p className="oversizedNote">Hi, I’m Mariam<span> ✳</span></p><h2>A creative mind<br/>with a <em>point of view.</em></h2></div>
-          <div className="aboutCopy"><p>I’m a creator who genuinely loves fashion, beauty, lifestyle, travel and technology. I care about how a story looks, how it feels, and why someone would choose to keep watching.</p><p>From the first concept to the final edit, I bring together visual taste, hands-on creation, strong hooks, platform-aware storytelling and the little personal details that make content feel human—not copied from a trend report.</p><p>I can be the face on camera, the eye behind the lens, and the editor shaping the final feeling. I’m curious, detail-driven and intentional about making every frame earn its place.</p><a className="quietLink" href="https://maarch27.my.canva.site/media-kit" target="_blank" rel="noreferrer">A closer look at my media kit <ArrowUpRight size={15}/></a></div>
+          <div><p className="oversizedNote">Hi, I’m Mariam<span> ✳</span></p><h2>A creative mind<br/>with <em>her own point of view.</em></h2></div>
+          <div className="aboutCopy"><p>I’m a creator who genuinely loves fashion, beauty, lifestyle, travel and technology. I care about how a story looks, how it feels, and why someone would choose to keep watching.</p><p>From the first idea to the final edit, I bring together visual taste, strong hooks, platform aware storytelling and the little personal details that make content feel human, never copied from a template.</p><p>I can be the face on camera, the eye behind the lens and the editor shaping the final feeling. I care about pacing, styling, sound, search friendly wording and the tiny details that make a brand memorable.</p><a className="quietLink" href="https://maarch27.my.canva.site/media-kit" target="_blank" rel="noreferrer">A closer look at my media kit <ArrowUpRight size={15}/></a></div>
         </div>
         <div className="aboutPills"><span>VISUAL TASTE</span><span>HOOKS THAT LAND</span><span>SEO MINDED</span><span>EDITING WITH INTENTION</span><span>A DISTINCT VOICE</span></div>
       </section>
@@ -135,8 +135,8 @@ export default function Home() {
 
       <section className="bookingSection" id="contact">
         <div className="bookingIntro"><div className="sectionEyebrow"><span>07 / YOUR MOVE</span><span>PAID PARTNERSHIPS & CREATIVE PROJECTS</span></div><h2>Have a good<br/><em>project in mind?</em></h2><p>Launching something or looking for a creator with a clear point of view? Tell me about the campaign, the deliverables, your budget, usage requirements and timeline. I take on a considered number of paid partnerships so every project gets the attention it deserves.</p><p className="availabilityNote"><span className="availabilityDot"/> I work with a limited number of projects at a time to protect the quality of each collaboration. Availability is confirmed after reviewing the brief.</p><a className="bookingEmail" href="mailto:Collaborationmaarch@gmail.com"><Mail size={17}/> Collaborationmaarch@gmail.com</a>
-          <div className="socialCluster"><a href="https://www.instagram.com/maarch_27/" target="_blank" rel="noreferrer"><Instagram size={16}/> Instagram <ArrowUpRight size={12}/></a><a href="https://www.tiktok.com/@maarch_27" target="_blank" rel="noreferrer"><AudioLines size={16}/> TikTok <ArrowUpRight size={12}/></a><a href="https://www.pinterest.com/maarch_27/" target="_blank" rel="noreferrer"><Sparkles size={16}/> Pinterest <ArrowUpRight size={12}/></a><a href="https://www.youtube.com/@maarch_27" target="_blank" rel="noreferrer"><Youtube size={16}/> YouTube <ArrowUpRight size={12}/></a></div>
-          <div className="bookingCallout"><strong>Want to talk it through?</strong><span>Project calls and consulting time are booked separately and are paid. The fee and format are shared before a booking is confirmed.</span></div><CalendlyBooking />
+          <div className="socialCluster"><a href="https://www.instagram.com/maarch_27/" target="_blank" rel="noreferrer"><Instagram size={16}/> Instagram <ArrowUpRight size={12}/></a><a href="https://www.tiktok.com/@maarch_27" target="_blank" rel="noreferrer"><AudioLines size={16}/> TikTok <ArrowUpRight size={12}/></a><a href="https://www.pinterest.com/maarch_27/" target="_blank" rel="noreferrer"><Sparkles size={16}/> Pinterest <ArrowUpRight size={12}/></a><a href="https://www.youtube.com/@maarch_27" target="_blank" rel="noreferrer"><Youtube size={16}/> YouTube <ArrowUpRight size={12}/></a><a href="https://linktr.ee/maarch_27" target="_blank" rel="noreferrer"><Globe2 size={16}/> Linktree <ArrowUpRight size={12}/></a></div>
+          <div className="bookingCallout"><strong>Want to talk it through?</strong><span>For focused strategy calls, creative consultations and detailed project planning, the fee and format are shared before confirming a booking.</span></div><CalendlyBooking />
         </div>
         <form className="inquiryForm" action="mailto:Collaborationmaarch@gmail.com" method="post" encType="text/plain">
           <div className="formHeader"><span>THE PROJECT BRIEF</span><span>LET’S START HERE ↗</span></div>
@@ -149,7 +149,7 @@ export default function Home() {
         </form>
       </section>
 
-      <footer className="siteFooter"><a className="wordmark" href="#home">maarch_27<span>®</span></a><p>Creative by instinct. Intentional by design.</p><div><a href="https://www.instagram.com/maarch_27/" target="_blank" rel="noreferrer">INSTAGRAM ↗</a><a href="https://www.tiktok.com/@maarch_27" target="_blank" rel="noreferrer">TIKTOK ↗</a><a href="https://www.pinterest.com/maarch_27/" target="_blank" rel="noreferrer">PINTEREST ↗</a><a href="https://www.youtube.com/@maarch_27" target="_blank" rel="noreferrer">YOUTUBE ↗</a><a href="mailto:Collaborationmaarch@gmail.com">EMAIL ↗</a></div><span>© 2026 MAARCH_27</span></footer>
+      <footer className="siteFooter"><a className="wordmark" href="#home">maarch_27<span>®</span></a><p>Creative by instinct. Intentional by design.</p><div><a href="https://www.instagram.com/maarch_27/" target="_blank" rel="noreferrer">INSTAGRAM ↗</a><a href="https://www.tiktok.com/@maarch_27" target="_blank" rel="noreferrer">TIKTOK ↗</a><a href="https://www.pinterest.com/maarch_27/" target="_blank" rel="noreferrer">PINTEREST ↗</a><a href="https://www.youtube.com/@maarch_27" target="_blank" rel="noreferrer">YOUTUBE ↗</a><a href="https://linktr.ee/maarch_27" target="_blank" rel="noreferrer">LINKTREE ↗</a><a href="mailto:Collaborationmaarch@gmail.com">EMAIL ↗</a></div><span>© 2026 MARIAM MAARCH · MAARCH_27</span></footer>
     </main>
   );
 }
