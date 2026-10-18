@@ -23,18 +23,18 @@ export default function Home() {
   return (
     <main id="home" className="editorialSite">
       <header className="siteHeader">
-        <a className="wordmark" href="#home" aria-label="maarch_27 home">maarch_27<span>®</span></a>
-        <nav aria-label="Main navigation"><a href="#home">Home</a><a href="#work">The work</a><a href="#insights">Insights</a><a href="#about">About Mariam</a><a href="#contact">Brand deals</a></nav>
+        <a className="wordmark" href="#home" aria-label="maarch_27 home"><span className="wordmarkM">M</span><span className="wordmark27">27</span></a>
+        <nav aria-label="Main navigation"><a href="#home">Home</a><a href="#work">The work</a><a href="#insights">Insights</a><a href="#about">About Mariam</a><a href="#brands">Brand deals</a></nav>
         <a className="headerCta" href="#contact">BOOK A PROJECT <ArrowUpRight size={14} /></a>
         <a className="mobileMenu" href="#contact" aria-label="Go to brand inquiries"><Menu size={21} /></a>
       </header>
 
       <section className="heroEditorial">
-        <div className="heroTopline"><span>INDEPENDENT CREATOR · CREATIVE PARTNER · STORYTELLER</span><span>FRANCE BASED / WORLDWIDE COLLABORATIONS</span></div>
+        <div className="heroTopline"><span>INDEPENDENT CREATOR · CREATIVE PARTNER · STORYTELLER</span><span>FRANCE ↔ UNITED STATES ↔ WORLDWIDE</span></div>
         <div className="heroLayout">
           <div className="heroTitleWrap">
             <p className="heroKicker"><span className="goldLine" /> THE PERSON BEHIND THE PERSPECTIVE</p>
-            <h1>Ideas with<br /><em>main-character</em><br />energy<span className="heroPeriod">.</span></h1>
+            <h1>Ideas with<br /><em>main character</em><br />energy<span className="heroPeriod">.</span></h1>
             <p className="heroStatement">I’m Mariam — the creative mind behind <strong>@maarch_27</strong>. Living in France, working with brands worldwide, and turning good ideas into content with a point of view.</p>
             <div className="heroButtons"><a className="button buttonDark" href="#work">Enter my creative world <ArrowDown size={15} /></a><a className="quietLink" href="#contact">Let’s create together <ArrowUpRight size={15} /></a></div>
             <div className="heroMicro"><span><i /> FASHION, BEAUTY, LIFESTYLE, TECH</span><span>CONCEPT → CAMERA → CUT</span></div>
@@ -47,7 +47,7 @@ export default function Home() {
             <div className="heroSideNote">a little taste<br/>of everything</div>
           </div>
         </div>
-        <div className="heroBottomline"><span>NOT JUST A PRETTY FRAME.</span><span>A REASON TO KEEP WATCHING.</span><a href="#numbers">SCROLL MY WORLD ↓</a></div>
+        <div className="heroBottomline"><span>A CREATIVE MIND WITH A POINT OF VIEW.</span><span>STORIES PEOPLE WANT TO STAY FOR.</span><a href="#numbers">SCROLL MY WORLD ↓</a></div>
       </section>
 
       <section className="numbersRibbon" id="numbers" aria-label="Creator reach and experience">
@@ -67,7 +67,7 @@ export default function Home() {
       </section>
 
       <section className="workSection" id="work">
-        <div className="workHeading"><div><div className="sectionEyebrow"><span>02 / THE PORTFOLIO</span><span>SCROLL, WATCH, FEEL</span></div><h2>Different formats.<br/><em>One unmistakable POV.</em></h2></div><p>Each story has its own texture. Explore the formats, moods and creative angles I bring to a campaign.</p></div>
+        <div className="workHeading"><div><div className="sectionEyebrow"><span>02 / THE PORTFOLIO</span><span>SCROLL, WATCH, FEEL</span></div><h2>Different sides of me.<br/><em>One creative point of view.</em></h2></div><p>From fashion and beauty to tech, travel, talking videos and ASMR, every format gives me another way to bring a brand story to life.</p></div>
         <div className="creativeCategories">
           {categories.map((cat) => <article className={"categoryCard category-" + cat.kind} key={cat.id}>
             <div className="categoryHead"><span>{cat.id} / {cat.label}</span><span className="categoryRound"><ArrowUpRight size={17}/></span></div>
@@ -76,7 +76,7 @@ export default function Home() {
             <a className="categoryLink" href="#contact">LET’S BUILD THIS FORMAT <ArrowUpRight size={13}/></a>
           </article>)}
         </div>
-        <p className="workFootnote">The portfolio is designed around real work: video covers, campaign stills and creator-led stories. Replace the visual panels with selected project media as we add your actual assets.</p>
+        <p className="workFootnote">Selected videos, campaign stills and behind the scenes moments will live here by category. We will add your real photos and video covers so the work speaks for itself.</p>
       </section>
 
       <section className="insightsSection" id="insights">
@@ -91,7 +91,7 @@ export default function Home() {
 
       <section className="manifestoSection">
         <div className="manifestoPhoto"><div className="manifestoPhotoFrame"><span>CREATIVE INSTINCT / PERSONAL TOUCH</span><b>THE MAGIC<br/>IS IN THE<br/><em>DETAIL.</em></b></div><span className="manifestoDoodle">stay curious ✳</span></div>
-        <div className="manifestoText"><div className="sectionEyebrow"><span>04 / WHAT I BRING</span><span>THE CREATIVE PARTNER</span></div><h2>Good taste gets attention.<br/><em>Good stories make it matter.</em></h2><p>I bring a strong visual instinct, an eye for details, a clear creative opinion and a hands-on understanding of filming and editing. I’m comfortable being on camera, working behind it, or shaping the story from the first idea through delivery.</p><p>I care about the brief, but I also care about what makes the brief interesting. The goal isn’t content for content’s sake. It’s work with a feeling, a message and a reason to remember the brand.</p><div className="signature">Mariam <span>— THE MIND BEHIND @MAARCH_27</span></div></div>
+        <div className="manifestoText"><div className="sectionEyebrow"><span>04 / WHAT I BRING</span><span>THE CREATIVE PARTNER</span></div><h2>Good taste gets attention.<br/><em>My point of view makes it personal.</em></h2><p>I bring a strong visual instinct, an eye for details, a clear creative opinion and a hands-on understanding of filming and editing. I’m comfortable being on camera, working behind it, or shaping the story from the first idea through delivery.</p><p>I care about the brief, but I also care about what makes the brief interesting. The goal isn’t content for content’s sake. It’s work with a feeling, a message and a reason to remember the brand.</p><div className="signature">Mariam <span>— THE MIND BEHIND @MAARCH_27</span></div></div>
       </section>
 
       <section className="servicesSection" id="services">
@@ -107,7 +107,7 @@ export default function Home() {
       </section>
 
       <section className="bookingSection" id="contact">
-        <div className="bookingIntro"><div className="sectionEyebrow"><span>07 / YOUR MOVE</span><span>PAID PARTNERSHIPS & CREATIVE PROJECTS</span></div><h2>Have a good<br/><em>project in mind?</em></h2><p>If you’re building, launching or dreaming up something with a point of view, tell me about it. For paid partnerships, share the deliverables, budget, usage requirements and timeline so I can assess the fit.</p><p className="availabilityNote"><span className="availabilityDot"/> I work with a limited number of projects at a time to protect the quality of each collaboration. Availability is confirmed after reviewing the brief.</p><a className="bookingEmail" href="mailto:Collaborationmaarch@gmail.com"><Mail size={17}/> Collaborationmaarch@gmail.com</a>
+        <div className="bookingIntro"><div className="sectionEyebrow"><span>07 / YOUR MOVE</span><span>PAID PARTNERSHIPS & CREATIVE PROJECTS</span></div><h2>Have a good<br/><em>project in mind?</em></h2><p>Launching something or looking for a creator with a clear point of view? Tell me about the campaign, the deliverables, your budget, usage requirements and timeline. I take on a considered number of paid partnerships so every project gets the attention it deserves.</p><p className="availabilityNote"><span className="availabilityDot"/> I work with a limited number of projects at a time to protect the quality of each collaboration. Availability is confirmed after reviewing the brief.</p><a className="bookingEmail" href="mailto:Collaborationmaarch@gmail.com"><Mail size={17}/> Collaborationmaarch@gmail.com</a>
           <div className="socialCluster"><a href="https://www.instagram.com/maarch_27/" target="_blank" rel="noreferrer"><Instagram size={16}/> Instagram <ArrowUpRight size={12}/></a><a href="https://www.tiktok.com/@maarch_27" target="_blank" rel="noreferrer"><AudioLines size={16}/> TikTok <ArrowUpRight size={12}/></a><a href="https://www.pinterest.com/maarch_27/" target="_blank" rel="noreferrer"><Sparkles size={16}/> Pinterest <ArrowUpRight size={12}/></a><a href="https://www.youtube.com/@maarch_27" target="_blank" rel="noreferrer"><Youtube size={16}/> YouTube <ArrowUpRight size={12}/></a></div>
           <div className="bookingCallout"><strong>Want to talk it through?</strong><span>Project calls and consulting time are booked separately and are paid. The fee and format are shared before a booking is confirmed.</span></div><CalendlyBooking />
         </div>
