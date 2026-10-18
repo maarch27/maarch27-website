@@ -21,7 +21,7 @@ const portfolioItems = [
 {title:"Tech Speaker",type:"tech",format:"Tech product",url:"https://www.instagram.com/reel/DcubwVaIhYI/"},
 {title:"Pixel Pure Skincare",type:"beauty",format:"Skincare",url:"https://www.instagram.com/reel/DcctOHOoE_w/"},
 {title:"Dossier Fragrance",type:"beauty",format:"Fragrance",url:"https://www.instagram.com/reel/DbYs4y6I9uN/"},
-{title:"TOTWOO Couple Bracelet",type:"fashion",format:"Jewelry",url:"https://www.instagram.com/reel/DbBi7iToEXY/"},
+{title:"TOTWOO Couple Bracelet",type:"fashion",format:"Jewelry",url:"https://www.instagram.com/reel/DXt78BkCLne/"},
 {title:"Stress Watch App",type:"tech",format:"App and wearable",url:"https://www.instagram.com/reel/DX99Dl8xH5_/"},
 {title:"Champions Burger Event",type:"life",format:"Event content",url:"https://www.instagram.com/reel/DbBi7iToEXY/"},
 {title:"Beauty Products",type:"beauty",format:"Beauty product",url:"https://www.instagram.com/reel/DV_nhb5CP56/"},
