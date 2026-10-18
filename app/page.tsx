@@ -25,7 +25,7 @@ const P = (n: string) => "/image/" + encodeURIComponent(n);
 
 // The four photos beside "About me"
 const HERO4 = ["paris-bag-1.jpg", "paris-bag-2.jpg", "paris-bag-3.jpg", "paris-bag-4.jpg"]; // already inside the hero collage
-const ABOUT = ["autumn-bench.jpg", "glasses-selfie.jpg", "autumn-bench-wide.jpg", "street-brown.jpg"];
+const ABOUT = ["facial-gua-sha.jpg", "glasses-selfie.jpg", "autumn-bench.jpg"];
 
 // Every photo is used in exactly one place on the site, so nothing repeats.
 // Pick a world (per category) and Featured films (per category) take the photos below.
@@ -34,7 +34,7 @@ type Cat = "Beauty" | "Fashion" | "Tech" | "Lifestyle" | "Travel";
 const cats: Cat[] = ["Beauty", "Fashion", "Tech", "Lifestyle", "Travel"];
 const worldPhotos: Record<Cat, string[]> = {
   Beauty: ["IMG_1701.JPG", "IMG_5214.jpg", "green-mask.jpg"],
-  Fashion: ["IMG_4554.JPG", "IMG_4816.JPG", "IMG_4562.JPG"],
+  Fashion: ["IMG_4554.JPG", "IMG_4816.JPG", "street-brown.jpg"],
   Tech: ["IMG_2092.JPG", "IMG_8716.jpg"],
   Lifestyle: ["facial-gua-sha.jpg","filming-setup.jpg", "IMG_4830.JPG"],
   Travel: ["IMG_5216.JPG"],
@@ -74,6 +74,22 @@ const reels: Reel[] = [
   { id: "DbYs4y6I9uN", title: "Fragment Dossier", cat: "Lifestyle" },
   { id: "DbBi7iToEXY", title: "Couple bracelet", cat: "Lifestyle" },
   { id: "DWpYfPuiNXh", title: "Vlog", cat: "Lifestyle" },
+];
+// Cover photos for reels (real Instagram covers in public/reels/<id>.jpg win when present)
+const coverPool: Record<Cat, string[]> = {
+  Beauty: ["IMG_4562.JPG", "mask-blue-towel.jpg", "IMG_6559.JPG", "armani-gallery.jpg", "glasses-selfie.jpg", "IMG_4560.JPG"],
+  Fashion: ["paris-bag-1.jpg", "paris-bag-2.jpg", "paris-bag-3.jpg", "paris-bag-4.jpg", "autumn-bench-wide.jpg", "IMG_5216.JPG"],
+  Tech: ["filming-setup.jpg", "IMG_6704.jpg", "IMG_4830.JPG", "IMG_1434.JPG", "armani-gallery.jpg", "IMG_4554.JPG"],
+  Lifestyle: ["autumn-bench-wide.jpg", "glasses-selfie.jpg", "paris-bag-2.jpg"],
+  Travel: ["IMG_5216.JPG"],
+};
+// "More about me": edit these lines freely, they are only text.
+const meIntro = "Behind every video there is a real person, and brands tell me that is exactly why it works.";
+const meFacets: [string, string][] = [
+  ["Between two worlds", "I split my life between the USA and France and travel often, so my content carries both: the polish of Paris and the ease of everyday life."],
+  ["Hands-on, start to finish", "I plan, style, film, edit and voice every piece myself in my own studio with professional light and camera, so nothing gets lost between the idea and the final film."],
+  ["Genuine over perfect", "I only make content that feels like a real recommendation from a friend with great taste, never a stiff ad. That is what keeps people watching and buying."],
+  ["Easy to work with", "Clear briefs, quick replies, honest ideas and delivery on time. Brands come back because the process feels as good as the result."],
 ];
 const igUrl = (r: { id: string; type?: "p" }) => `https://www.instagram.com/${r.type === "p" ? "p" : "reel"}/${r.id}/`;
 
@@ -210,10 +226,13 @@ function Availability() {
 /* A designed cover for reels (shown instead of loading Instagram until pressed). */
 function ReelCover({ r }: { r: Reel }) {
   const pal = palettes[r.cat].c;
+  const idx = reels.filter((x) => x.cat === r.cat).indexOf(r);
+  const pool = coverPool[r.cat];
   return (
     <span className="rcover" style={{ ["--a" as string]: pal[0], ["--b" as string]: pal[1], ["--c" as string]: pal[2] }}>
+      <Img src={P(pool[idx % pool.length])} alt="" className="rimg" pos="center 25%" />
       <Img src={`/reels/${r.id}.jpg`} alt="" className="rimg" />
-      <span className="rtag">{r.cat} · Reel</span>
+      <span className="rtag">Reel</span>
       <span className="rtitle">{r.title}</span>
     </span>
   );
@@ -262,7 +281,7 @@ export default function Home() {
 
   const gallery = (() => {
     const all = files ?? KNOWN;
-    const rest = all.filter((n) => !USED.has(n));
+    const rest = all;
     const first = GALLERY_FIRST.filter((n) => rest.includes(n));
     return [...first, ...rest.filter((n) => !first.includes(n))].filter((n) => !bad[n]);
   })();
@@ -325,9 +344,25 @@ export default function Home() {
         </div>
       </section>
 
+      {/* MORE ABOUT ME */}
+      <section className="me" id="me">
+        <div className="me-in">
+          <div className="rv">
+            <p className="no">02 · The person behind the camera</p>
+            <h2>More about <em className="gold">me.</em></h2>
+            <p className="me-intro">{meIntro}</p>
+          </div>
+          <ul className="me-list">
+            {meFacets.map(([t, d], i) => (
+              <li key={t} className="rv"><span className="me-n">0{i + 1}</span><div><h3>{t}</h3><p>{d}</p></div></li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
       {/* WHY ME */}
       <section className="why" id="why">
-        <div className="head rv"><div><p className="no">02 · Why me</p><h2>Why <em className="gold">me?</em></h2></div><p>Because content that feels real performs better. Here is exactly what you get when you work with me.</p></div>
+        <div className="head rv"><div><p className="no">03 · Why me</p><h2>Why <em className="gold">me?</em></h2></div><p>Because content that feels real performs better. Here is exactly what you get when you work with me.</p></div>
         <ol className="reasons">{why.map((w, i) => (
           <li key={w.t} className="rv">
             <span className="num gold">0{i + 1}</span>
@@ -352,7 +387,7 @@ export default function Home() {
 
       {/* RECEIPTS */}
       <section className="proof" id="proof">
-        <div className="head rv"><div><p className="no">03 · Proof</p><h2>Proof, <em className="gold">not promises.</em></h2></div><p>My real profiles and the words brands have sent me after working together.</p></div>
+        <div className="head rv"><div><p className="no">04 · Proof</p><h2>Proof, <em className="gold">not promises.</em></h2></div><p>My real profiles and the words brands have sent me after working together.</p></div>
         <div className="proof-top rv">
           <div className="plats">
             {[{ n: "Instagram", s: "/stats/instagram.jpg", c: "153K followers" }, { n: "TikTok", s: "/stats/tiktok.jpg", c: "Fashion · Beauty · Lifestyle" }].map((p) => !noShot[p.n] && (
@@ -379,7 +414,7 @@ export default function Home() {
 
       {/* PICK A WORLD */}
       <section className="worlds" id="worlds">
-        <div className="head rv"><div><p className="no">04 · Campaigns</p><h2>Pick a world. <em className="gold">Press play.</em></h2></div><p>Choose a category. Reels open in a player, photos open large.</p></div>
+        <div className="head rv"><div><p className="no">05 · Campaigns</p><h2>Pick a world. <em className="gold">Press play.</em></h2></div><p>Choose a category. Reels open in a player, photos open large.</p></div>
         <div className="chips" role="tablist">{cats.map((c) => <button key={c} role="tab" aria-selected={cat === c} className={cat === c ? "on" : ""} onClick={() => setCat(c)}>{c}</button>)}</div>
         <div className="palette"><div>{palettes[cat].c.map((c) => <i key={c} style={{ background: c }} title={c} />)}</div><p>{cat} palette: {palettes[cat].note}</p></div>
         <div className="mosaic" key={cat}>
@@ -394,7 +429,7 @@ export default function Home() {
 
       {/* FEATURED FILMS */}
       <section className="films">
-        <div className="head rv"><div><p className="no">05 · Films</p><h2>Featured <em className="gold">films.</em></h2></div><p>Pick a world, then pick a film or a photo story from the list.</p></div>
+        <div className="head rv"><div><p className="no">06 · Films</p><h2>Featured <em className="gold">films.</em></h2></div><p>Pick a world, then pick a film or a photo story from the list.</p></div>
         <div className="chips" role="tablist">{cats.map((c) => <button key={c} role="tab" aria-selected={fcat === c} className={fcat === c ? "on" : ""} onClick={() => switchF(c)}>{c}</button>)}</div>
         <div className="cinema" key={fcat}>
           <div className="stage">
@@ -419,7 +454,7 @@ export default function Home() {
 
       {/* MY CREATIVE WORK */}
       <section className="work" id="work">
-        <div className="head rv"><div><p className="no">06 · Portfolio</p><h2>My creative <em className="gold">work.</em></h2></div><p>More of the content I create, from beauty rituals to city days. Tap a photo to see it larger.</p></div>
+        <div className="head rv"><div><p className="no">07 · Portfolio</p><h2>My creative <em className="gold">work.</em></h2></div><p>More of the content I create, from beauty rituals to city days. Tap a photo to see it larger.</p></div>
         <div className="gal">{gallery.map((n) => (
           <button key={n} className="g" onClick={() => openPhotos(gallery, n)} aria-label={`Open ${n}`}>
             <Img src={P(n)} alt="Mariam portfolio photo" onFail={() => setBad((s) => ({ ...s, [n]: true }))} onLoad={(e) => { const im = e.currentTarget; im.parentElement?.setAttribute("data-o", im.naturalHeight / im.naturalWidth > 1.3 ? "tall" : "wide"); }} />
@@ -429,7 +464,7 @@ export default function Home() {
 
       {/* BRANDS */}
       <section className="trusted">
-        <div className="head rv"><div><p className="no">07 · Brands</p><h2>Worked with <em className="gold">500+ brands.</em></h2></div><p>A few of the names I’ve created for, from global beauty houses to new launches.</p></div>
+        <div className="head rv"><div><p className="no">08 · Brands</p><h2>Worked with <em className="gold">500+ brands.</em></h2></div><p>A few of the names I’ve created for, from global beauty houses to new launches.</p></div>
         <ul className="logos">{brands.map(([name, file], i) => (
           <li key={file} className="rv">
             <div className={`badge sh-${shapeCycle[i % 4]}`}><div className={`badge-in sh-${shapeCycle[i % 4]}`}><Img src={`/brands/${file}.png`} alt={name} /></div></div>
@@ -440,7 +475,7 @@ export default function Home() {
 
       {/* SERVICES */}
       <section className="services" id="services">
-        <div className="head rv"><div><p className="no">08 · Services</p><h2>The atelier <em className="gold">of content.</em></h2></div><p>A bespoke offering for beauty, fashion, tech and lifestyle brands. Packages depend on scope and usage rights, so tell me the goal and I’ll shape the format and quote.</p></div>
+        <div className="head rv"><div><p className="no">09 · Services</p><h2>The atelier <em className="gold">of content.</em></h2></div><p>A bespoke offering for beauty, fashion, tech and lifestyle brands. Packages depend on scope and usage rights, so tell me the goal and I’ll shape the format and quote.</p></div>
         <ul>{services.map(([t, d, inc], i) => (
           <li key={t} className="rv"><span className="n gold">{String(i + 1).padStart(2, "0")}</span><h3>{t}</h3><p>{d}<small>{inc}</small></p>
             <a href={`mailto:${email}?subject=${encodeURIComponent("Enquiry: " + t)}`} aria-label={`Ask about ${t}`}>Ask about this ↗</a></li>
@@ -449,14 +484,14 @@ export default function Home() {
 
       {/* BOOK */}
       <section className="book" id="book">
-        <div className="head rv"><div><p className="no">09 · Booking</p><h2>Work with <em className="gold">me.</em></h2></div><p>Choose a date and send me your request. I reply by email to confirm your collaboration spot.</p></div>
+        <div className="head rv"><div><p className="no">10 · Booking</p><h2>Work with <em className="gold">me.</em></h2></div><p>Choose a date and send me your request. I reply by email to confirm your collaboration spot.</p></div>
         <Availability />
       </section>
 
       {/* CONTACT */}
       <section className="contact" id="contact">
         <div className="cwrap">
-          <div><p className="no">10 · Business inquiries</p><h2>Let’s create something <em className="gold">unforgettable.</em></h2>
+          <div><p className="no">11 · Business inquiries</p><h2>Let’s create something <em className="gold">unforgettable.</em></h2>
             <p>Share the product, the goal and the timeline. Tell me about your brand and I’ll take it from there.</p>
             <a className="mail" href={`mailto:${email}`}>{email}</a>
             <ul className="soc">{social.map((s) => <li key={s.name}><a href={s.url} target={s.icon === "mail" ? undefined : "_blank"} rel="noreferrer" aria-label={s.name}><Icon name={s.icon} /><span>{s.name}</span></a></li>)}</ul>
