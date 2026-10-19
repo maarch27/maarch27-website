@@ -25,33 +25,24 @@ const P = (n: string) => "/image/" + encodeURIComponent(n);
 
 // The four photos beside "About me"
 const HERO4 = ["paris-bag-1.jpg", "paris-bag-2.jpg", "paris-bag-3.jpg", "paris-bag-4.jpg"]; // already inside the hero collage
-const ABOUT = ["facial-gua-sha.jpg", "glasses-selfie.jpg", "autumn-bench.jpg"];
+const ABOUT = ["facial-gua-sha.jpg", "glasses-selfie.jpg", "autumn-bench.jpg", "street-brown.jpg"];
 
 // Every photo is used in exactly one place on the site, so nothing repeats.
 // Pick a world (per category) and Featured films (per category) take the photos below.
 // Everything else in public/image (including any photo you add later) goes to "My creative work".
 type Cat = "Beauty" | "Fashion" | "Tech" | "Lifestyle" | "Travel";
-const cats: Cat[] = ["Beauty", "Fashion", "Tech", "Lifestyle", "Travel"];
-const worldPhotos: Record<Cat, string[]> = {
-  Beauty: ["green-mask.jpg"],
-  Fashion: ["IMG_4554.JPG", "IMG_4816.JPG", "street-brown.jpg"],
-  Tech: ["IMG_2092.JPG", "IMG_8716.jpg"],
-  Lifestyle: ["filming-setup.jpg", "IMG_4830.JPG"],
-  Travel: ["IMG_5216.JPG"],
-};
-const filmPhotos: Record<Cat, string[]> = {
-  Beauty: ["IMG_2319.jpg", "exmiloo-brow.jpg", "armani-violins.jpg"],
-  Fashion: ["IMG_4616.JPG", "bowling-polka.jpg", "IMG_1434.JPG"],
-  Tech: [],
-  Lifestyle: ["IMG_6704.jpg", "mask-blue-towel.jpg"],
-  Travel: ["Tezza-8005.JPG"],
-};
+const cats: Cat[] = ["Beauty", "Fashion", "Tech", "Lifestyle"];
 const KNOWN = ["IMG_1434.JPG","IMG_1701.JPG","IMG_2092.JPG","IMG_2319.jpg","IMG_4554.JPG","IMG_4560.JPG","IMG_4562.JPG","IMG_4616.JPG","IMG_4816.JPG","IMG_4830.JPG","IMG_5214.jpg","IMG_5216.JPG","IMG_6559.JPG","IMG_6704.jpg","IMG_8716.jpg","Tezza-8005.JPG","armani-gallery.jpg","armani-violins.jpg","autumn-bench-wide.jpg","autumn-bench.jpg","bowling-polka.jpg","exmiloo-brow.jpg","facial-gua-sha.jpg","filming-setup.jpg","glasses-selfie.jpg","camera-pool.jpg","swimwear-edit.jpg","tripod-bags.jpg","watch-hand.jpg","shoes-italo.jpg","cerave.jpg","camera-orange.jpg","dossier-lying.jpg","dossier-flatlay.jpg","mirror-room.jpg","travel-grid.jpg","clarins.jpg","green-mask.jpg","mask-blue-towel.jpg","paris-bag-1.jpg","paris-bag-2.jpg","paris-bag-3.jpg","paris-bag-4.jpg","street-brown.jpg"];
-const USED = new Set<string>([HERO, ...HERO4, ...ABOUT, ...Object.values(worldPhotos).flat(), ...Object.values(filmPhotos).flat()]);
-// gallery order: portrait / landscape mixed for a balanced wall
-const GALLERY_FIRST = ["mask-blue-towel.jpg", "IMG_6704.jpg", "armani-gallery.jpg", "IMG_4562.JPG", "IMG_6559.JPG", "IMG_4560.JPG"];
+// Photos placed on purpose in other sections (so they are NOT repeated in My creative work)
+const ME_PHOTO = "IMG_5216.JPG";
+const WHYNOT = ["dossier-lying.jpg", "camera-orange.jpg"];
+const FLOATS = ["watch-hand.jpg", "shoes-italo.jpg", "clarins.jpg", "tripod-bags.jpg", "cerave.jpg", "mirror-room.jpg"];
+const SKIP = ["autumn-bench-wide.jpg", "mask-blue-towel.jpg", "IMG_1434.JPG", "IMG_4560.JPG"]; // near-duplicates and tight crops
+const USED = new Set<string>([HERO, ...HERO4, ...ABOUT, ME_PHOTO, ...WHYNOT, ...FLOATS, ...SKIP]);
+// My creative work: every other photo, each shown once. This order mixes tall and wide shots.
+const GALLERY_FIRST = ["IMG_4616.JPG", "swimwear-edit.jpg", "armani-violins.jpg", "travel-grid.jpg", "IMG_1701.JPG", "bowling-polka.jpg", "dossier-flatlay.jpg", "IMG_4554.JPG", "camera-pool.jpg", "IMG_5214.jpg", "IMG_4830.JPG", "green-mask.jpg"];
 
-type Reel = { id: string; type?: "p"; title: string; cat: Cat };
+type Reel = { id: string; type?: "p"; title: string; cat: Cat; tag?: string };
 const reels: Reel[] = [
   { id: "Dc1Z3PEx-yz", title: "Skin glow with Anua", cat: "Beauty" },
   { id: "DcctOHOoE_w", title: "Pixel Pure skincare", cat: "Beauty" },
@@ -59,21 +50,21 @@ const reels: Reel[] = [
   { id: "DSGG3RtCFDl", title: "Beauty favourites", cat: "Beauty" },
   { id: "DVeUDLMCDY-", title: "Hair care ritual", cat: "Beauty" },
   { id: "DUnxGS0iN5e", title: "Hair care ritual", cat: "Beauty" },
-  { id: "Daiay-VImXK", title: "Bracelet & necklace", cat: "Fashion" },
-  { id: "DeHstaVIgYr", title: "Pop-up bag", cat: "Fashion" },
+  { id: "Daiay-VImXK", title: "Bracelet & necklace", cat: "Fashion", tag: "Accessories" },
+  { id: "DeHstaVIgYr", title: "Pop-up bag", cat: "Fashion", tag: "Bags" },
   { id: "DeBBztMI6Rl", title: "Fashion week", cat: "Fashion" },
   { id: "Ddhn4UKiGif", type: "p", title: "Mercedes-Benz event style", cat: "Fashion" },
   { id: "DWGtfNoCJoY", title: "Fashion style", cat: "Fashion" },
-  { id: "DKZhEQaBwW3", title: "Sunglasses", cat: "Fashion" },
-  { id: "DeRvV7tIweA", title: "Camera battery charger & SSD", cat: "Tech" },
-  { id: "DcubwVaIhYI", title: "Tech speaker", cat: "Tech" },
-  { id: "DR2Q5m7iCjb", title: "Calorie counter app", cat: "Tech" },
-  { id: "DX99Dl8xH5_", title: "Stress watch app", cat: "Tech" },
-  { id: "DYvL3gFodut", title: "AirPods case accessories", cat: "Tech" },
-  { id: "Db6Rv8fRZaU", title: "iPhone case & light holder", cat: "Tech" },
+  { id: "DKZhEQaBwW3", title: "Sunglasses", cat: "Fashion", tag: "Accessories" },
+  { id: "DeRvV7tIweA", title: "Camera battery charger & SSD", cat: "Tech", tag: "Gadget" },
+  { id: "DcubwVaIhYI", title: "Tech speaker", cat: "Tech", tag: "Audio" },
+  { id: "DR2Q5m7iCjb", title: "Calorie counter app", cat: "Tech", tag: "App" },
+  { id: "DX99Dl8xH5_", title: "Stress watch app", cat: "Tech", tag: "App" },
+  { id: "DYvL3gFodut", title: "AirPods case accessories", cat: "Tech", tag: "Accessories" },
+  { id: "Db6Rv8fRZaU", title: "iPhone case & light holder", cat: "Tech", tag: "Accessories" },
   { id: "DbYs4y6I9uN", title: "Fragment Dossier", cat: "Lifestyle" },
-  { id: "DbBi7iToEXY", title: "Couple bracelet", cat: "Lifestyle" },
-  { id: "DWpYfPuiNXh", title: "Vlog", cat: "Lifestyle" },
+    { id: "DWpYfPuiNXh", title: "Vlog", cat: "Lifestyle" },
+  { id: "DbBi7iToEXY", title: "Couple bracelet", cat: "Tech", tag: "Smart bracelet" },
 ];
 // Cover photos for reels (real Instagram covers in public/reels/<id>.jpg win when present)
 const coverPool: Record<Cat, string[]> = {
@@ -98,19 +89,16 @@ const igUrl = (r: { id: string; type?: "p" }) => `https://www.instagram.com/${r.
 const palettes: Record<Cat, { note: string; c: [string, string, string, string] }> = {
   Beauty: { note: "soft skin tones, rose and clean light", c: ["#f4cfd0", "#c98a8f", "#8d4658", "#f6ede1"] },
   Fashion: { note: "deep tones, gold detail, high contrast", c: ["#d8bd8f", "#6d4a2a", "#3a1217", "#f6ede1"] },
-  Tech: { note: "cool, quiet and precise", c: ["#d5dbe0", "#8793a1", "#3f4856", "#f4efe6"] },
+  Tech: { note: "apps, smart bracelets, audio and everyday gadgets", c: ["#d5dbe0", "#8793a1", "#3f4856", "#f4efe6"] },
   Lifestyle: { note: "warm, lived-in and relaxed", c: ["#ecd7b8", "#b98a6a", "#7a3b45", "#f6ede1"] },
   Travel: { note: "city light, golden hour and open air", c: ["#e6dcc8", "#b9a27a", "#7d5a3c", "#f6ede1"] },
 };
 
-type Item = { kind: "reel"; r: Reel } | { kind: "photo"; src: string; label: string };
-function itemsFor(cat: Cat, photos: Record<Cat, string[]>): Item[] {
-  const rs: Item[] = reels.filter((r) => r.cat === cat).map((r) => ({ kind: "reel", r }));
-  const ps: Item[] = photos[cat].map((s) => ({ kind: "photo", src: s, label: cat }));
-  const out: Item[] = [];
-  for (let i = 0; i < Math.max(rs.length, ps.length); i++) { if (rs[i]) out.push(rs[i]); if (ps[i]) out.push(ps[i]); }
-  return out;
-}
+const coverOf = (r: Reel) => {
+  const pool = coverPool[r.cat];
+  const idx = reels.filter((x) => x.cat === r.cat).indexOf(r);
+  return reelCover[r.id] ?? pool[idx % pool.length];
+};
 
 const brands: [string, string][] = [
   ["Armani", "armani"], ["Kylie Cosmetics", "kylie-cosmetics"], ["Maybelline", "maybelline"], ["L’Oréal Paris", "loreal-paris"], ["NYX", "nyx"], ["Huda Beauty", "huda-beauty"],
@@ -125,12 +113,12 @@ const shapeCycle = ["scallop", "squircle", "arch", "blob"] as const;
 const skills = ["Creative direction", "Scriptwriting", "Video editing", "Viral hooks", "Voice-over", "On-camera", "Photography", "Graphic design"];
 const facts: [string, string][] = [["153K", "Instagram followers"], ["500+", "brands"], ["4+", "years creating"], ["1.0M", "views in 30 days"]];
 
-const why: { t: string; d: string; get: string[] }[] = [
-  { t: "Real lifestyle, not staged ads", d: "Your product enters a real day: a morning routine, getting ready, a night out, a trip. People recognise themselves in it, so they trust it. That feeling is what turns a view into a purchase.", get: ["Genuine, natural content", "Your product in a real scene"] },
-  { t: "A strategy behind every frame", d: "I start from your goal, whether that’s awareness, sales or app installs, and build the hook, the story and the call to action around it. Nothing is filmed just because it looks pretty.", get: ["Goal-led concept", "Script and hook plan"] },
-  { t: "Hooks that stop the scroll", d: "The first second decides everything. I write it first, then cut the rest to earn the next second. For ads, I deliver hook variations so you can test what works.", get: ["3 hook variations", "Captions and clean cuts"] },
-  { t: "A pro setup and one person to brief", d: "I have my own studio, professional camera and lighting. Concept, script, filming, editing and voice-over all come from me, so you brief one person and nothing gets lost between steps.", get: ["Studio and on-location", "Fast, simple communication"] },
-  { t: "An audience that listens", d: "153K followers, 95% in the USA and Europe, 70% women. When I recommend something, a real and engaged community sees it.", get: ["Whitelisting and Spark Ads", "Usage rights available"] },
+const why: { t: string; d: string }[] = [
+  { t: "Real lifestyle, not staged ads", d: "Your product enters a real day, so people recognise themselves in it and trust it." },
+  { t: "A strategy behind every frame", d: "I build the hook, story and call to action around your goal: awareness, sales or installs." },
+  { t: "Hooks that stop the scroll", d: "I write the first second first, and deliver hook variations so you can test what works." },
+  { t: "A pro setup, one person to brief", d: "My own studio, camera and lighting, with concept, filming, editing and voice-over from me." },
+  { t: "An audience that listens", d: "153K followers, 95% in the USA and Europe, 70% women, with whitelisting and usage rights available." },
 ];
 const versus: [string, string][] = [
   ["Generic scripts that could be for any brand", "A concept built around your product, your tone and your goal"],
@@ -157,11 +145,8 @@ const steps = [["Brief", "You share the product, goal and timeline."], ["Concept
 const quotes: { q: string; by: string }[] = [
   { q: "The content you created was excellent and helped increase our sales even more.", by: "Gloss Room" },
   { q: "It truly seems like our product shines even brighter thanks to your amazing presence. We are beyond grateful!", by: "HeartPercent" },
-  { q: "Thank you so much for creating such a beautiful vlog about our salon! We absolutely loved the way you captured the atmosphere and the whole experience.", by: "Glamour salon" },
   { q: "Your dedication and creativity have made a significant impact on our brand community.", by: "Numbuzin" },
   { q: "I really appreciate all the care you put into this. Thank you so much.", by: "Chillab" },
-  { q: "Thank you so much for the photos! These glasses really suit you perfectly.", by: "where.light" },
-  { q: "Hi dear, the content looks great!", by: "AMOS Professional" },
   { q: "We look forward to more collaborations with you in the future.", by: "Vraiko" },
 ];
 const projectTypes = ["UGC video", "Reel or carousel", "Product demo or unboxing", "Hotel or travel", "Photos", "Not sure yet"];
@@ -175,6 +160,10 @@ function Img({ src, alt, className, pos, eager, onFail, onLoad }: { src: string;
   if (bad) return null;
   // eslint-disable-next-line @next/next/no-img-element
   return <img key={src} className={className} src={src} alt={alt} style={pos ? { objectPosition: pos } : undefined} loading={eager ? "eager" : "lazy"} onError={() => setBad(true)} onLoad={onLoad} />;
+}
+
+function Float({ src, side, shape }: { src: string; side: "l" | "r"; shape: 1 | 2 | 3 | 4 }) {
+  return <div className={`fl fl-${side} fls${shape}`} aria-hidden="true"><Img src={P(src)} alt="" /></div>;
 }
 
 function Icon({ name }: { name: string }) {
@@ -227,14 +216,11 @@ function Availability() {
 
 /* A designed cover for reels (shown instead of loading Instagram until pressed). */
 function ReelCover({ r }: { r: Reel }) {
-  const pal = palettes[r.cat].c;
-  const idx = reels.filter((x) => x.cat === r.cat).indexOf(r);
-  const pool = coverPool[r.cat];
   return (
-    <span className="rcover" style={{ ["--a" as string]: pal[0], ["--b" as string]: pal[1], ["--c" as string]: pal[2] }}>
-      <Img src={P(reelCover[r.id] ?? pool[idx % pool.length])} alt="" className="rimg" pos="center 22%" />
+    <span className="rcover">
+      <Img src={P(coverOf(r))} alt="" className="rimg" pos="center 22%" />
       <Img src={`/reels/${r.id}.jpg`} alt="" className="rimg" />
-      <span className="rtag">Reel</span>
+      <span className="rtag">{r.tag ?? (r.type === "p" ? "Post" : "Reel")}</span>
       <span className="rtitle">{r.title}</span>
     </span>
   );
@@ -282,15 +268,14 @@ export default function Home() {
   }, []);
 
   const gallery = (() => {
-    const all = files ?? KNOWN;
-    const rest = all;
-    const first = GALLERY_FIRST.filter((n) => rest.includes(n));
-    return [...first, ...rest.filter((n) => !first.includes(n))].filter((n) => !bad[n]);
+    const all = (files ?? KNOWN).filter((n) => !USED.has(n) && !bad[n]);
+    const first = GALLERY_FIRST.filter((n) => all.includes(n));
+    return [...first, ...all.filter((n) => !first.includes(n))];
   })();
   const openPhotos = (list: string[], name: string) => setLb({ items: list.map(P), i: Math.max(0, list.indexOf(name)) });
 
-  const world = itemsFor(cat, worldPhotos);
-  const stageItems = itemsFor(fcat, filmPhotos);
+  const world = reels.filter((r) => r.cat === cat);
+  const stageItems = reels.filter((r) => r.cat === fcat).slice(0, 3);
   const cur = stageItems[Math.min(sel, stageItems.length - 1)];
   const switchF = (c: Cat) => { setFcat(c); setSel(0); setPlaying(false); };
 
@@ -315,7 +300,7 @@ export default function Home() {
           <p className="eyebrow">UGC creator · Booked worldwide</p>
           <p className="avail"><i aria-hidden="true">✦</i> Limited monthly availability <span>·</span> A brand favorite</p>
           <h1><span className="spark s1">✦</span><span className="spark s2">✦</span>Mariam <em className="gold">Ch</em></h1>
-          <span className="rot" aria-hidden="true"><span>Beauty</span><span>Fashion</span><span>Tech</span><span>Lifestyle</span><span>Travel</span></span>
+          <span className="rot" aria-hidden="true"><span>Beauty</span><span>Fashion</span><span>Tech</span><span>Lifestyle</span><span>Accessories</span></span>
           <p className="lede">Films that make people stop, feel and buy. Made for 500+ brands, with a limited number of spots each month.</p>
           <div className="actions"><a className="btn" href="#book">Work with me</a><a className="btn line" href="#worlds">See my work</a></div>
         </div>
@@ -354,6 +339,7 @@ export default function Home() {
             <p className="no">02 · The person behind the camera</p>
             <h2>More about <em className="gold">me.</em></h2>
             <p className="me-intro">{meIntro}</p>
+            <div className="me-photo"><Img src={P(ME_PHOTO)} alt="Mariam at an evening event in Paris" pos="center 35%" /></div>
           </div>
           <ul className="me-list">
             {meFacets.map(([t, d], i) => (
@@ -365,12 +351,12 @@ export default function Home() {
 
       {/* WHY ME */}
       <section className="why" id="why">
-        <div className="head rv"><div><p className="no">03 · Why me</p><h2>Why <em className="gold">me?</em></h2></div><p>Because content that feels real performs better. Here is exactly what you get when you work with me.</p></div>
+        <Float src="cerave.jpg" side="r" shape={1} />
+        <div className="head rv"><div><p className="no">03 · Why me</p><h2>Why <em className="gold">me?</em></h2></div><p>Because content that feels real performs better.</p></div>
         <ol className="reasons">{why.map((w, i) => (
           <li key={w.t} className="rv">
             <span className="num gold">0{i + 1}</span>
             <div><h3>{w.t}</h3><p>{w.d}</p></div>
-            <ul>{w.get.map((g) => <li key={g}>{g}</li>)}</ul>
           </li>
         ))}</ol>
 
@@ -393,6 +379,7 @@ export default function Home() {
 
       {/* RECEIPTS */}
       <section className="proof" id="proof">
+        <Float src="clarins.jpg" side="l" shape={3} />
         <div className="head rv"><div><p className="no">04 · Proof</p><h2>Proof, <em className="gold">not promises.</em></h2></div><p>My real profiles and the words brands have sent me after working together.</p></div>
         <div className="proof-top rv">
           <div className="plats">
@@ -420,40 +407,33 @@ export default function Home() {
 
       {/* PICK A WORLD */}
       <section className="worlds" id="worlds">
-        <div className="head rv"><div><p className="no">05 · Campaigns</p><h2>Pick a world. <em className="gold">Press play.</em></h2></div><p>Choose a category. Reels open in a player, photos open large.</p></div>
+        <div className="head rv"><div><p className="no">05 · Campaigns</p><h2>Pick a world. <em className="gold">Press play.</em></h2></div><p>Choose a category and press play on a real campaign from my Instagram.</p></div>
         <div className="chips" role="tablist">{cats.map((c) => <button key={c} role="tab" aria-selected={cat === c} className={cat === c ? "on" : ""} onClick={() => setCat(c)}>{c}</button>)}</div>
         <div className="palette"><div>{palettes[cat].c.map((c) => <i key={c} style={{ background: c }} title={c} />)}</div><p>{cat} palette: {palettes[cat].note}</p></div>
         <div className="mosaic" key={cat}>
-          {world.map((it, i) => it.kind === "reel" ? (
-            <button key={it.r.id} className="tile reel" onClick={() => setReel(it.r)} aria-label={`Play ${it.r.title}`}><ReelCover r={it.r} /><span className="play" aria-hidden="true">▶</span></button>
-          ) : (
-            <button key={it.src + i} className="tile photo" onClick={() => openPhotos(worldPhotos[cat], it.src)} aria-label={`Open ${cat} photo`}><Img src={P(it.src)} alt={`${cat} photo`} /></button>
+          {world.map((r) => (
+            <button key={r.id} className="tile reel" onClick={() => setReel(r)} aria-label={`Play ${r.title}`}><ReelCover r={r} /><span className="play" aria-hidden="true">▶</span></button>
           ))}
-          {cat === "Travel" && <a className="tile more" href={franceIG} target="_blank" rel="noreferrer"><b>Life in France</b><span>More on @maarch_in_france ↗</span></a>}
         </div>
       </section>
 
       {/* FEATURED FILMS */}
       <section className="films">
-        <div className="head rv"><div><p className="no">06 · Films</p><h2>Featured <em className="gold">films.</em></h2></div><p>Pick a world, then pick a film or a photo story from the list.</p></div>
+        <Float src="mirror-room.jpg" side="r" shape={2} />
+        <div className="head rv"><div><p className="no">06 · Films</p><h2>Featured <em className="gold">films.</em></h2></div><p>A closer look at selected films. Pick one from the list and press play.</p></div>
         <div className="chips" role="tablist">{cats.map((c) => <button key={c} role="tab" aria-selected={fcat === c} className={fcat === c ? "on" : ""} onClick={() => switchF(c)}>{c}</button>)}</div>
         <div className="cinema" key={fcat}>
           <div className="stage">
-            {cur?.kind === "reel" ? (
-              playing ? <iframe src={`${igUrl(cur.r)}embed`} title={cur.r.title} allowFullScreen />
-                : <button className="stagebtn" onClick={() => setPlaying(true)} aria-label={`Play ${cur.r.title}`}><ReelCover r={cur.r} /><span className="play big" aria-hidden="true">▶</span></button>
-            ) : cur ? (
-              <button className="stagebtn" onClick={() => openPhotos(filmPhotos[fcat], cur.src)} aria-label="Open photo"><Img src={P(cur.src)} alt={`${fcat} photo`} /></button>
-            ) : null}
+            {cur && (playing ? <iframe src={`${igUrl(cur)}embed`} title={cur.title} allowFullScreen />
+              : <button className="stagebtn" onClick={() => setPlaying(true)} aria-label={`Play ${cur.title}`}><ReelCover r={cur} /><span className="play big" aria-hidden="true">▶</span></button>)}
           </div>
           <ol className="playlist">
-            {stageItems.map((it, i) => (
-              <li key={i}><button className={i === sel ? "on" : ""} onClick={() => { setSel(i); setPlaying(false); }}>
-                <span className="th">{it.kind === "photo" ? <Img src={P(it.src)} alt="" /> : <span className="thr">▶</span>}</span>
-                <span className="tt"><b>{it.kind === "reel" ? it.r.title : `${fcat} story`}</b><small>{it.kind === "reel" ? "Reel" : "Photo"}</small></span>
+            {stageItems.map((r, i) => (
+              <li key={r.id}><button className={i === sel ? "on" : ""} onClick={() => { setSel(i); setPlaying(false); }}>
+                <span className="th"><Img src={P(coverOf(r))} alt="" /><Img src={`/reels/${r.id}.jpg`} alt="" /></span>
+                <span className="tt"><b>{r.title}</b><small>{r.tag ?? "Reel"} · {fcat}</small></span>
               </button></li>
             ))}
-            {fcat === "Travel" && <li><a className="more" href={franceIG} target="_blank" rel="noreferrer">More travel on @maarch_in_france ↗</a></li>}
           </ol>
         </div>
       </section>
@@ -470,6 +450,7 @@ export default function Home() {
 
       {/* BRANDS */}
       <section className="trusted">
+        <Float src="shoes-italo.jpg" side="l" shape={4} />
         <div className="head rv"><div><p className="no">08 · Brands</p><h2>Worked with <em className="gold">500+ brands.</em></h2></div><p>A few of the names I’ve created for, from global beauty houses to new launches.</p></div>
         <ul className="logos">{brands.map(([name, file], i) => (
           <li key={file} className="rv">
@@ -481,6 +462,7 @@ export default function Home() {
 
       {/* SERVICES */}
       <section className="services" id="services">
+        <Float src="watch-hand.jpg" side="r" shape={1} />
         <div className="head rv"><div><p className="no">09 · Services</p><h2>The atelier <em className="gold">of content.</em></h2></div><p>A bespoke offering for beauty, fashion, tech and lifestyle brands. Packages depend on scope and usage rights, so tell me the goal and I’ll shape the format and quote.</p></div>
         <ul>{services.map(([t, d, inc], i) => (
           <li key={t} className="rv"><span className="n gold">{String(i + 1).padStart(2, "0")}</span><h3>{t}</h3><p>{d}<small>{inc}</small></p>
@@ -490,6 +472,7 @@ export default function Home() {
 
       {/* BOOK */}
       <section className="book" id="book">
+        <Float src="tripod-bags.jpg" side="l" shape={2} />
         <div className="head rv"><div><p className="no">10 · Booking</p><h2>Work with <em className="gold">me.</em></h2></div><p>Choose a date and send me your request. I reply by email to confirm your collaboration spot.</p></div>
         <Availability />
       </section>
