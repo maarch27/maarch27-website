@@ -9,6 +9,15 @@ const dir = "public/image";
 if (!existsSync(dir) && existsSync("app/image")) { cpSync("app/image", dir, { recursive: true }); console.log("copied app/image -> public/image"); }
 if (!existsSync(dir)) { console.log(`No photos folder yet (${dir}). Add your photos there; the site falls back to placeholders until then.`); process.exit(0); }
 
+// Photos dropped into the top-level image/ folder are copied into public/image (only new ones),
+// so it does not matter which of the two folders you put new photos in.
+if (existsSync("image")) {
+  for (const f of readdirSync("image")) {
+    if (f.startsWith(".")) continue;
+    if (!existsSync(join(dir, f))) { cpSync(join("image", f), join(dir, f)); console.log("copied new photo", f); }
+  }
+}
+
 const withHeic = process.argv.includes("--heic"); // HEIC is skipped unless you ask: node scripts/gen-images.mjs --heic
 const heic = withHeic ? readdirSync(dir).filter((f) => /\.(heic|heif)$/i.test(f)) : [];
 if (heic.length) {
