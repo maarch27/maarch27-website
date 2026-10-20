@@ -1,24 +1,38 @@
-# Portfolio media folder
+# Maarch27 website
 
-Add approved portfolio files here, for example:
-- `beauty reel cover.jpg`
-- `tech ugc cover.jpg`
-- `fashion editorial.jpg`
-- `travel photo.jpg`
+One website that adapts automatically to computers, tablets and phones (the layout changes at screen widths
+960px and 560px in `globals.css`). Nothing separate to maintain for phone.
 
-Keep filenames simple and use optimized WebP/JPEG for photos and MP4 only for short videos where appropriate.
-Update `app/page.tsx` to use these assets. Do not upload client-confidential assets or private analytics screenshots without permission.
+## Where to change things
 
-Recommended portfolio item fields when we make this data-driven:
-- title and category
-- media type (video or photo)
-- thumbnail path
-- optional video path or public Instagram URL
-- brand name only where you have permission to display it
-- verified metric, platform and reporting period
+Only these files make up the live website. Edit them, nothing else.
 
-## Photos (important)
-Put every photo in `public/image/` (or leave them in `app/image/`; the script copies them).
-`npm run dev` and `npm run build` automatically run `scripts/gen-images.mjs`, which converts HEIC to JPG
-and writes `public/image/index.json` so every photo appears in the portfolio.
-Optional extras: `public/stats/youtube.jpg` (YouTube profile screenshot), `public/reels/<reel-id>.jpg` (Instagram reel covers), `public/videos/*.mp4` (list them in `videos` in `app/page.tsx`).
+| What | File |
+| --- | --- |
+| All text, sections, photos, reels, brands, services | `app/page.tsx` (top of the file has the lists) |
+| Colours, fonts, spacing, shapes, phone layout | `globals.css` |
+| Page title and description (Google, link previews) | `app/layout.tsx` |
+| Photos | `public/image/` (or drop new ones in `image/`, they are copied automatically) |
+| Brand logos | `public/brands/` |
+| Screenshots (Instagram, TikTok) | `public/stats/` |
+
+Files at the top level named `page.tsx` or `layout.tsx` were old copies and have been removed: only the ones
+inside `app/` count.
+
+## Handy edits in `app/page.tsx`
+
+- First-page photo: `HERO` near the top.
+- Reels and their categories: the `reels` list.
+- "More about me" text: `meIntro` and `meFacets`.
+- Email address: `email`.
+
+## Commands
+
+- `npm run dev` : preview on your computer at http://localhost:3000 (open the same address on your phone through the Codespace port link to check mobile)
+- `npm run covers` : download the real Instagram covers for the reels
+- Publish: `git add -A`, `git commit -m "what changed"`, `git push origin main`. Vercel updates the live site after about a minute.
+
+## Inquiry form
+
+The form posts to FormSubmit and sends to the email in `app/page.tsx`. On the very first test message,
+FormSubmit emails an "Activate Form" button to that address: click it once.
