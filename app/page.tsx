@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { parisDayISO, parisToDate } from "./lib/paris";
 
 /* =====================================================================
    YOUR DETAILS
@@ -209,19 +210,110 @@ function Shapes() {
   );
 }
 
-function Availability({ onPick }: { onPick: (day: string) => void }) {
-  const [days, setDays] = useState<{ w: string; d: string; booked: boolean; today: boolean; full: string }[]>([]);
+/* =====================================================================
+   BOOKING CALENDAR  (Paris time)
+   - Starts today, shows 3 weeks. Open days follow a random pattern that
+     changes once a day; most days stay closed.
+   - An open day has 1 time (mostly 14:00-15:00), sometimes 2.
+   - When Google Calendar is connected, anything in your calendar blocks
+     that time here, and a booking is added to your calendar.
+   ===================================================================== */
+type Slot = { start: string; end: string };
+type BookDay = { iso: string; dow: number; d: number; m: string; full: string; today: boolean; slots: Slot[] };
+type Picked = { iso: string; start: string; end: string; label: string };
+
+const MAIN_SLOT: Slot = { start: "14:00", end: "15:00" };
+const EXTRA_SLOTS: Slot[] = [{ start: "11:00", end: "12:00" }, { start: "15:30", end: "16:30" }, { start: "17:00", end: "18:00" }];
+const OPEN_CHANCE = 0.42; // share of days that are open
+const SECOND_SLOT_CHANCE = 0.25; // chance an open day gets a second time
+
+function rng(seed: number) {
+  let n = seed | 0;
+  return () => {
+    n = (n + 0x6d2b79f5) | 0;
+    let t = Math.imul(n ^ (n >>> 15), 1 | n);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function buildDays(): BookDay[] {
+  const rnd = rng(Number(parisDayISO(0).replace(/-/g, "")));
+  const days: BookDay[] = Array.from({ length: 21 }, (_, i) => {
+    const iso = parisDayISO(i);
+    const x = new Date(`${iso}T12:00:00Z`);
+    const open = rnd() < OPEN_CHANCE;
+    const slots = open ? [MAIN_SLOT, ...(rnd() < SECOND_SLOT_CHANCE ? [EXTRA_SLOTS[Math.floor(rnd() * EXTRA_SLOTS.length)]] : [])] : [];
+    slots.sort((p, q) => p.start.localeCompare(q.start));
+    return {
+      iso, dow: (x.getUTCDay() + 6) % 7, d: x.getUTCDate(), today: i === 0, slots,
+      m: x.toLocaleDateString("en-GB", { month: "short", timeZone: "UTC" }),
+      full: x.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" }),
+    };
+  });
+  for (let i = days.length - 1, open = days.filter((x) => x.slots.length).length; open < 6 && i > 1; i--) {
+    if (!days[i].slots.length) { days[i].slots = [MAIN_SLOT]; open++; }
+  }
+  // mostly one time a day: at most a third of open days get a second time
+  const open = days.filter((x) => x.slots.length);
+  open.filter((x) => x.slots.length > 1).slice(Math.max(1, Math.floor(open.length / 3))).forEach((x) => { x.slots = [MAIN_SLOT]; });
+  return days;
+}
+
+function Booking({ onPick, onMessage, taken }: { onPick: (p: Picked) => void; onMessage: () => void; taken: string[] }) {
+  const [days, setDays] = useState<BookDay[]>([]);
+  const [busy, setBusy] = useState<[number, number][]>([]);
+  const [sel, setSel] = useState("");
+  const [time, setTime] = useState("");
   useEffect(() => {
-    setDays(Array.from({ length: 14 }, (_, i) => {
-      const x = new Date(); x.setDate(x.getDate() + i);
-      return { w: x.toLocaleDateString("en-GB", { weekday: "short" }), d: x.toLocaleDateString("en-GB", { day: "numeric", month: "short" }), booked: i < 7, today: i === 0, full: x.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" }) };
-    }));
+    setDays(buildDays());
+    fetch("/api/availability", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j: { busy?: { start: string; end: string }[] } | null) => { if (j?.busy) setBusy(j.busy.map((x) => [Date.parse(x.start), Date.parse(x.end)])); })
+      .catch(() => {});
   }, []);
+  if (!days.length) return <div className="bk" aria-hidden="true" />;
+
+  const free = (day: BookDay, s: Slot) => {
+    const a = parisToDate(day.iso, s.start).getTime(), b = parisToDate(day.iso, s.end).getTime();
+    if (a < Date.now() + 2 * 3600 * 1000 || taken.includes(`${day.iso} ${s.start}`)) return false;
+    return !busy.some(([x, y]) => a < y && b > x);
+  };
+  const view = days.map((d) => ({ ...d, open: d.slots.filter((s) => free(d, s)) }));
+  const cur = view.find((d) => d.iso === sel && d.open.length);
+  const openCount = view.filter((d) => d.open.length).length;
+  const first = view[0], last = view[view.length - 1];
+  const range = first.m === last.m ? first.m : `${first.m} – ${last.m}`;
+  const choose = (s: Slot) => {
+    if (!cur) return;
+    setTime(s.start);
+    onPick({ iso: cur.iso, start: s.start, end: s.end, label: `${cur.full}, ${s.start}–${s.end} (Paris time)` });
+  };
   return (
-    <div className="avail" aria-label="Availability">
-      {days.map((x) => x.booked
-        ? <div className="slot booked" key={x.full} aria-label={`${x.full}, booked`}><span>{x.today ? "Today" : x.w}</span><b>{x.d}</b><i>Booked</i></div>
-        : <button type="button" className="slot open" key={x.full} onClick={() => onPick(x.full)} aria-label={`Request ${x.full}`}><span>{x.w}</span><b>{x.d}</b><i>Request</i></button>)}
+    <div className="bk">
+      <div className="bk-top">
+        <b className="bk-range">{range}</b>
+        <span className="bk-legend"><i className="lg o" />Available <i className="lg b" />Booked</span>
+      </div>
+      <div className="bk-grid" role="grid" aria-label="Choose a day">
+        {["M", "T", "W", "T", "F", "S", "S"].map((w, i) => <span key={i} className="bk-w" aria-hidden="true">{w}</span>)}
+        {Array.from({ length: first.dow }, (_, i) => <span key={`e${i}`} className="bk-e" aria-hidden="true" />)}
+        {view.map((x) => !x.open.length
+          ? <span key={x.iso} className={`bk-d booked${x.today ? " today" : ""}`} aria-label={`${x.full}, fully booked`}><b>{x.d}</b><small>{x.today ? "today" : "booked"}</small></span>
+          : <button key={x.iso} type="button" className={`bk-d open${sel === x.iso ? " on" : ""}${x.today ? " today" : ""}`} onClick={() => { setSel(x.iso); setTime(""); }} aria-pressed={sel === x.iso} aria-label={`${x.full}, ${x.open.length} time${x.open.length > 1 ? "s" : ""} available`}>
+              <b>{x.d}</b><small>{x.today ? "today" : x.open.length > 1 ? "2 times" : "1 time"}</small>
+            </button>)}
+      </div>
+      <div className="bk-slots" aria-live="polite">
+        {cur ? (<>
+          <p>Available on <b>{cur.full}</b> <span>(Paris time)</span></p>
+          <div>{cur.open.map((s) => (
+            <button key={s.start} type="button" className={time === s.start ? "on" : ""} onClick={() => choose(s)}>{s.start} – {s.end}</button>
+          ))}</div>
+          {time && <p className="bk-done">Added to your booking below ↓</p>}
+        </>) : <p>Only <b>{openCount} days</b> open in the next 3 weeks. Tap a day to see the time.</p>}
+        <button type="button" className="bk-msg" onClick={onMessage}>No time that works? Message me</button>
+      </div>
     </div>
   );
 }
@@ -253,6 +345,9 @@ export default function Home() {
   const [noShot, setNoShot] = useState<Record<string, true>>({});
   const [f, setF] = useState({ name: "", email: "", brand: "", type: projectTypes[0], date: "", details: "" });
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [picked, setPicked] = useState<Picked | null>(null);
+  const [taken, setTaken] = useState<string[]>([]);
+  const [booked, setBooked] = useState<"" | "yes" | "taken">("");
 
   useEffect(() => {
     let live = true;
@@ -296,21 +391,41 @@ export default function Home() {
     e.preventDefault();
     if (status === "sending") return;
     setStatus("sending");
-    try {
-      await sendInquiry(
-        { Name: f.name, Email: f.email, "Brand / company": f.brand, "Project type": f.type, "Preferred date": f.date || "Flexible", "Project details": f.details },
-        `New collaboration inquiry: ${f.brand}`,
-      );
+    setBooked("");
+    const slot = picked && f.date === picked.label ? picked : null;
+    const [mail, book] = await Promise.allSettled([
+      sendInquiry(
+        { Name: f.name, Email: f.email, "Brand / company": f.brand, "Project type": f.type, [slot ? "Booked time" : "Preferred date"]: f.date || "Flexible", "Project details": f.details },
+        slot ? `New booking: ${f.brand}, ${slot.label}` : `New collaboration inquiry: ${f.brand}`,
+      ),
+      slot
+        ? fetch("/api/book", {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ date: slot.iso, start: slot.start, end: slot.end, name: f.name, email: f.email, brand: f.brand, type: f.type, details: f.details }),
+          }).then(async (r) => ({ status: r.status, ...((await r.json().catch(() => ({}))) as { booked?: boolean }) }))
+        : Promise.resolve(null),
+    ]);
+    const res = book.status === "fulfilled" ? book.value : null;
+    if (slot && res?.booked) { setBooked("yes"); setTaken((t) => [...t, `${slot.iso} ${slot.start}`]); }
+    else if (slot && res?.status === 409) setBooked("taken");
+    if (mail.status === "fulfilled" || res?.booked) {
       setStatus("sent");
+      setPicked(null);
       setF({ name: "", email: "", brand: "", type: projectTypes[0], date: "", details: "" });
-    } catch {
-      setStatus("error");
-    }
+    } else setStatus("error");
   };
-  const pickDay = (day: string) => {
-    setF((v) => ({ ...v, date: day }));
+  const pickDay = (p: Picked) => {
+    setPicked(p);
+    setF((v) => ({ ...v, date: p.label }));
+    setStatus("idle");
+    setTimeout(() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }), 450);
+  };
+  const messageMe = () => {
+    setPicked(null);
+    setF((v) => ({ ...v, date: "" }));
     setStatus("idle");
     document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+    setTimeout(() => document.querySelector<HTMLTextAreaElement>("#contact textarea")?.focus({ preventScroll: true }), 700);
   };
 
   return (
@@ -501,8 +616,8 @@ export default function Home() {
       {/* BOOK */}
       <section className="book" id="book">
         <Float src="tripod-bags.jpg" side="l" shape={2} />
-        <div className="head rv"><div><p className="no">10 · Booking</p><h2>Work with <em className="gold">me.</em></h2></div><p>Choose a date and send me your request. I reply by email to confirm your collaboration spot.</p></div>
-        <Availability onPick={pickDay} />
+        <div className="head rv"><div><p className="no">10 · Booking</p><h2>Work with <em className="gold">me.</em></h2></div><p>Pick an open day and your time (Paris time), then send your details below. Your spot goes straight into my calendar.</p></div>
+        <Booking onPick={pickDay} onMessage={messageMe} taken={taken} />
       </section>
 
       {/* CONTACT */}
@@ -518,10 +633,10 @@ export default function Home() {
             <label>Email address<input required type="email" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} autoComplete="email" /></label>
             <label>Brand or company<input required value={f.brand} onChange={(e) => setF({ ...f, brand: e.target.value })} autoComplete="organization" /></label>
             <label>Project type<select value={f.type} onChange={(e) => setF({ ...f, type: e.target.value })}>{projectTypes.map((t) => <option key={t}>{t}</option>)}</select></label>
-            <label>Preferred date<input value={f.date} onChange={(e) => setF({ ...f, date: e.target.value })} placeholder="Pick a day in the calendar or write one" /></label>
+            <label>{picked && f.date === picked.label ? "Your booked time" : "Preferred date"}<input value={f.date} onChange={(e) => setF({ ...f, date: e.target.value })} placeholder="Pick a day in the calendar or write one" /></label>
             <label>Project details<textarea required rows={5} value={f.details} onChange={(e) => setF({ ...f, details: e.target.value })} placeholder="Product, goal, timeline, usage rights…" /></label>
-            <button className="btn gold-btn" type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending…" : "Send enquiry"}</button>
-            {status === "sent" && <p className="fmsg ok" role="status">Thank you! Your inquiry was sent. I reply within 48 hours.</p>}
+            <button className="btn gold-btn" type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending…" : picked && f.date === picked.label ? "Book this time" : "Send enquiry"}</button>
+            {status === "sent" && <p className="fmsg ok" role="status">{booked === "yes" ? "Booked! Your time is in my calendar and I'll confirm by email." : booked === "taken" ? "Thank you! That time was just taken, so I'll email you a new one." : "Thank you! Your inquiry was sent. I reply within 48 hours."}</p>}
             {status === "error" && <p className="fmsg err" role="alert">Sorry, it didn’t go through. Please email me directly at <a href={`mailto:${email}`}>{email}</a>.</p>}
           </form>
         </div>
