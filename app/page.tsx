@@ -151,13 +151,18 @@ const quotes: { q: string; by: string }[] = [
 ];
 const projectTypes = ["UGC video", "Reel or carousel", "Product demo or unboxing", "Hotel or travel", "Photos", "Not sure yet"];
 
-/* Sends the inquiry straight to the inbox through FormSubmit (free, no account).
-   The very first message triggers an "Activate form" email to this address: click it once. */
+/* Sends the inquiry straight to the inbox.
+   1) If NEXT_PUBLIC_WEB3FORMS_KEY is set (Vercel > Settings > Environment Variables), it uses Web3Forms: no activation email needed.
+   2) Otherwise it uses FormSubmit, which needs ONE click on its "Activate form" email after the first test message. */
+const W3F_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY;
 async function sendInquiry(fields: Record<string, string>, subject: string) {
-  const r = await fetch(`https://formsubmit.co/ajax/${email}`, {
+  const useW3F = !!W3F_KEY;
+  const r = await fetch(useW3F ? "https://api.web3forms.com/submit" : `https://formsubmit.co/ajax/${email}`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Accept: "application/json" },
-    body: JSON.stringify({ ...fields, _subject: subject, _replyto: fields["Email"], _template: "table", _captcha: "false" }),
+    body: JSON.stringify(useW3F
+      ? { access_key: W3F_KEY, subject, from_name: "Maarch27 website", replyto: fields["Email"], ...fields }
+      : { ...fields, _subject: subject, _replyto: fields["Email"], _template: "table", _captcha: "false" }),
   });
   const j = await r.json().catch(() => ({}));
   if (!r.ok || String(j.success) !== "true") throw new Error(j.message || "Could not send");
@@ -209,20 +214,41 @@ function Shapes() {
   );
 }
 
-function Availability({ onPick }: { onPick: (day: string) => void }) {
-  const [days, setDays] = useState<{ w: string; d: string; booked: boolean; today: boolean; full: string }[]>([]);
+/* Calendar: next 14 days, 3-4 days "booked" at random (the same for every visitor on a given day),
+   and 2-3 call slots per open day between 12:00 and 16:00 France time. */
+const HOURS = ["12:00", "13:00", "14:00", "15:00", "16:00"];
+function hashOf(str: string) { let h = 2166136261; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+type Day = { w: string; d: string; full: string; booked: boolean; slots: string[] };
+function Availability({ onPick }: { onPick: (when: string) => void }) {
+  const [days, setDays] = useState<Day[]>([]);
+  const [open, setOpen] = useState<number | null>(null);
   useEffect(() => {
-    setDays(Array.from({ length: 14 }, (_, i) => {
-      const x = new Date(); x.setDate(x.getDate() + i);
-      return { w: x.toLocaleDateString("en-GB", { weekday: "short" }), d: x.toLocaleDateString("en-GB", { day: "numeric", month: "short" }), booked: i < 7, today: i === 0, full: x.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" }) };
-    }));
+    const list = Array.from({ length: 14 }, (_, i) => {
+      const x = new Date(); x.setDate(x.getDate() + i + 1);
+      const key = x.toISOString().slice(0, 10);
+      const h = hashOf(key);
+      const slots = HOURS.map((t) => ({ t, k: hashOf(key + t) })).sort((p, q) => p.k - q.k).slice(0, 2 + (h % 2)).map((o) => o.t).sort();
+      return { key, h, w: x.toLocaleDateString("en-GB", { weekday: "short" }), d: x.toLocaleDateString("en-GB", { day: "numeric", month: "short" }), full: x.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" }), slots };
+    });
+    const nBooked = 3 + (hashOf(list[0].key) % 2);
+    const bookedKeys = new Set([...list].sort((p, q) => hashOf("b" + p.key) - hashOf("b" + q.key)).slice(0, nBooked).map((o) => o.key));
+    setDays(list.map((o) => ({ w: o.w, d: o.d, full: o.full, booked: bookedKeys.has(o.key), slots: o.slots })));
   }, []);
+  const day = open !== null ? days[open] : null;
   return (
-    <div className="avail" aria-label="Availability">
-      {days.map((x) => x.booked
-        ? <div className="slot booked" key={x.full} aria-label={`${x.full}, booked`}><span>{x.today ? "Today" : x.w}</span><b>{x.d}</b><i>Booked</i></div>
-        : <button type="button" className="slot open" key={x.full} onClick={() => onPick(x.full)} aria-label={`Request ${x.full}`}><span>{x.w}</span><b>{x.d}</b><i>Request</i></button>)}
-    </div>
+    <>
+      <div className="avail" aria-label="Availability">
+        {days.map((x, i) => x.booked
+          ? <div className="slot booked" key={x.full} aria-label={`${x.full}, booked`}><span>{x.w}</span><b>{x.d}</b><i>Booked</i></div>
+          : <button type="button" className={`slot open${open === i ? " on" : ""}`} key={x.full} onClick={() => setOpen(i)} aria-label={`Choose a time on ${x.full}`}><span>{x.w}</span><b>{x.d}</b><i>{x.slots.length} times</i></button>)}
+      </div>
+      {day && (
+        <div className="times" role="group" aria-label={`Times on ${day.full}`}>
+          <p>{day.full} · call times in <b>France time</b></p>
+          <div>{day.slots.map((t) => <button type="button" key={t} onClick={() => onPick(`${day.full}, ${t} (France time)`)}>{t}</button>)}</div>
+        </div>
+      )}
+    </>
   );
 }
 
@@ -503,7 +529,7 @@ export default function Home() {
       {/* BOOK */}
       <section className="book" id="book">
         <Float src="tripod-bags.jpg" side="l" shape={2} />
-        <div className="head rv"><div><p className="no">10 · Booking</p><h2>Work with <em className="gold">me.</em></h2></div><p>Choose a date and send me your request. I reply by email to confirm your collaboration spot.</p></div>
+        <div className="head rv"><div><p className="no">10 · Booking</p><h2>Work with <em className="gold">me.</em></h2></div><p>Pick a day and a time (12:00 to 16:00, France time) for a short call about your collaboration, then send me your request. I confirm by email.</p></div>
         <Availability onPick={pickDay} />
       </section>
 
@@ -520,7 +546,7 @@ export default function Home() {
             <label>Email address<input required type="email" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} autoComplete="email" /></label>
             <label>Brand or company<input required value={f.brand} onChange={(e) => setF({ ...f, brand: e.target.value })} autoComplete="organization" /></label>
             <label>Project type<select value={f.type} onChange={(e) => setF({ ...f, type: e.target.value })}>{projectTypes.map((t) => <option key={t}>{t}</option>)}</select></label>
-            <label>Preferred date<input value={f.date} onChange={(e) => setF({ ...f, date: e.target.value })} placeholder="Pick a day in the calendar or write one" /></label>
+            <label>Preferred date<input value={f.date} onChange={(e) => setF({ ...f, date: e.target.value })} placeholder="Pick a day and time in the calendar above" /></label>
             <label>Project details<textarea required rows={5} value={f.details} onChange={(e) => setF({ ...f, details: e.target.value })} placeholder="Product, goal, timeline, usage rights…" /></label>
             <button className="btn gold-btn" type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending…" : "Send enquiry"}</button>
             {status === "sent" && <p className="fmsg ok" role="status">Thank you! Your inquiry was sent. I reply within 48 hours.</p>}
