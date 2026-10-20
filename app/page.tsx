@@ -253,6 +253,7 @@ export default function Home() {
   const [noShot, setNoShot] = useState<Record<string, true>>({});
   const [f, setF] = useState({ name: "", email: "", brand: "", type: projectTypes[0], date: "", details: "" });
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [errMsg, setErrMsg] = useState("");
 
   useEffect(() => {
     let live = true;
@@ -303,7 +304,8 @@ export default function Home() {
       );
       setStatus("sent");
       setF({ name: "", email: "", brand: "", type: projectTypes[0], date: "", details: "" });
-    } catch {
+    } catch (err) {
+      setErrMsg(err instanceof Error ? err.message : "");
       setStatus("error");
     }
   };
@@ -522,7 +524,13 @@ export default function Home() {
             <label>Project details<textarea required rows={5} value={f.details} onChange={(e) => setF({ ...f, details: e.target.value })} placeholder="Product, goal, timeline, usage rights…" /></label>
             <button className="btn gold-btn" type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending…" : "Send enquiry"}</button>
             {status === "sent" && <p className="fmsg ok" role="status">Thank you! Your inquiry was sent. I reply within 48 hours.</p>}
-            {status === "error" && <p className="fmsg err" role="alert">Sorry, it didn’t go through. Please email me directly at <a href={`mailto:${email}`}>{email}</a>.</p>}
+            {status === "error" && (
+              <p className="fmsg err" role="alert">
+                Sorry, it didn’t go through{errMsg ? ` (${errMsg})` : ""}. You can{" "}
+                <a href={`mailto:${email}?subject=${encodeURIComponent("Collaboration inquiry: " + f.brand)}&body=${encodeURIComponent(`Name: ${f.name}\nEmail: ${f.email}\nBrand: ${f.brand}\nProject type: ${f.type}\nPreferred date: ${f.date || "Flexible"}\n\n${f.details}`)}`}>open it in your email app</a>{" "}
+                or write to <a href={`mailto:${email}`}>{email}</a>.
+              </p>
+            )}
           </form>
         </div>
       </section>
