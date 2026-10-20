@@ -39,7 +39,7 @@ FormSubmit emails an "Activate Form" button to that address: click it once.
 
 ## Inquiry form (emails to your Gmail)
 - Default: FormSubmit. After the first test message, open the "Activate form" email in Gmail (check Spam) and click it once.
-- Recommended, no activation: get a free key at https://web3forms.com (enter your email, the key arrives by mail), then in Vercel > Project > Settings > Environment Variables add `NEXT_PUBLIC_WEB3FORMS_KEY` = your key, and Redeploy.
+- Active: the Web3Forms key is already in `app/page.tsx` (`W3F_KEY`), so no activation is needed. To change it, edit that line or set `NEXT_PUBLIC_WEB3FORMS_KEY` in Vercel.
 
 ## Calendar
 In `app/page.tsx`, function `Availability`: `HOURS` = call times (12:00 to 16:00 France time), 3 to 4 days are booked at random, 2 to 3 times per open day.

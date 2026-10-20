@@ -154,7 +154,7 @@ const projectTypes = ["UGC video", "Reel or carousel", "Product demo or unboxing
 /* Sends the inquiry straight to the inbox.
    1) If NEXT_PUBLIC_WEB3FORMS_KEY is set (Vercel > Settings > Environment Variables), it uses Web3Forms: no activation email needed.
    2) Otherwise it uses FormSubmit, which needs ONE click on its "Activate form" email after the first test message. */
-const W3F_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY;
+const W3F_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY || "5fd584e8-b8e0-4500-8acc-31be9e47547a"; // public key, safe in the page
 async function sendInquiry(fields: Record<string, string>, subject: string) {
   const useW3F = !!W3F_KEY;
   const r = await fetch(useW3F ? "https://api.web3forms.com/submit" : `https://formsubmit.co/ajax/${email}`, {
