@@ -345,3 +345,11 @@ form button[disabled]{opacity:.6;cursor:wait}
 .fmsg.err{background:rgba(255,255,255,.08);color:#fbf1de;border:1px solid rgba(251,241,222,.35)}
 .fmsg a{text-decoration:underline}
 .slot.open{cursor:pointer;font:inherit}
+
+/* time picker under the calendar */
+.slot.open.on{background:var(--bur);border-color:var(--bur)}.slot.open.on *{color:var(--gold-l)}
+.times{margin-top:22px;padding:20px 22px;border:1px solid var(--gold-l);border-radius:26px 8px 26px 8px;background:rgba(255,255,255,.7);display:flex;flex-wrap:wrap;align-items:center;gap:14px 24px}
+.times p{margin:0;font-size:.95rem;color:var(--bur-d)}
+.times div{display:flex;flex-wrap:wrap;gap:10px}
+.times button{font:inherit;cursor:pointer;padding:10px 22px;border-radius:40px;border:1px solid var(--gold);background:#fff;color:var(--bur-d);letter-spacing:.08em;transition:.3s}
+.times button:hover{background:var(--bur);color:var(--gold-l)}
