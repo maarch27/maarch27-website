@@ -214,41 +214,89 @@ function Shapes() {
   );
 }
 
-/* Calendar: next 14 days, 3-4 days "booked" at random (the same for every visitor on a given day),
-   and 2-3 call slots per open day between 12:00 and 16:00 France time. */
-const HOURS = ["12:00", "13:00", "14:00", "15:00", "16:00"];
+/* ---------------------------------------------------------------------
+   BOOKING CALENDAR (edit these few lines to change the rules)
+   --------------------------------------------------------------------- */
+const CALL_PRICE = "€100";                 // price of one 1-hour call
+const CALL_HOURS = [14, 15, 16];           // call start times, France time (add 18, 19... later if you like)
+const CALL_DAYS = [2, 3, 4];               // Tuesday, Wednesday, Thursday (0 = Sunday ... 6 = Saturday)
+const NOTICE_HOURS = 24;                   // must be booked at least 24h before the call
+const PAY_LINK = "";                       // paste your Stripe / PayPal payment link here (https://...)
+const MONTHS_AHEAD = 2;                    // how many months forward people can browse
 function hashOf(str: string) { let h = 2166136261; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
-type Day = { w: string; d: string; full: string; booked: boolean; slots: string[] };
+const pad = (n: number) => String(n).padStart(2, "0");
+const keyOf = (y: number, m: number, d: number) => `${y}-${pad(m + 1)}-${pad(d)}`;
+/* "now" as seen in France, as plain numbers */
+function parisNow() {
+  const p = new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Paris", year: "numeric", month: "numeric", day: "numeric", hour: "numeric", minute: "numeric", hour12: false }).formatToParts(new Date());
+  const g = (t: string) => Number(p.find((x) => x.type === t)?.value);
+  return new Date(g("year"), g("month") - 1, g("day"), g("hour") % 24, g("minute"));
+}
+/* Which of the 3 call times look already taken on a given day (same for every visitor). */
+function takenHours(y: number, m: number, d: number) {
+  const k = keyOf(y, m, d);
+  const week = Math.floor(new Date(y, m, d).getTime() / 604800000);
+  if (hashOf("wk" + week + "a") % 3 === 0 && new Date(y, m, d).getDay() === CALL_DAYS[hashOf("wk" + week) % CALL_DAYS.length]) return CALL_HOURS; // one fully booked day in some weeks
+  if (hashOf("wk" + week + "b") % 2 === 0 && new Date(y, m, d).getDay() === CALL_DAYS[(hashOf("wk" + week) + 1) % CALL_DAYS.length]) return CALL_HOURS; // second one in other weeks
+  const n = hashOf(k) % 3;                       // 0 to 2 times taken, always leaves one free
+  return [...CALL_HOURS].sort((p, q) => hashOf(k + p) - hashOf(k + q)).slice(0, n);
+}
+const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const WEEK_HEAD = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
 function Availability({ onPick }: { onPick: (when: string) => void }) {
-  const [days, setDays] = useState<Day[]>([]);
-  const [open, setOpen] = useState<number | null>(null);
-  useEffect(() => {
-    const list = Array.from({ length: 14 }, (_, i) => {
-      const x = new Date(); x.setDate(x.getDate() + i + 1);
-      const key = x.toISOString().slice(0, 10);
-      const h = hashOf(key);
-      const slots = HOURS.map((t) => ({ t, k: hashOf(key + t) })).sort((p, q) => p.k - q.k).slice(0, 2 + (h % 2)).map((o) => o.t).sort();
-      return { key, h, w: x.toLocaleDateString("en-GB", { weekday: "short" }), d: x.toLocaleDateString("en-GB", { day: "numeric", month: "short" }), full: x.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" }), slots };
-    });
-    const nBooked = 3 + (hashOf(list[0].key) % 2);
-    const bookedKeys = new Set([...list].sort((p, q) => hashOf("b" + p.key) - hashOf("b" + q.key)).slice(0, nBooked).map((o) => o.key));
-    setDays(list.map((o) => ({ w: o.w, d: o.d, full: o.full, booked: bookedKeys.has(o.key), slots: o.slots })));
-  }, []);
-  const day = open !== null ? days[open] : null;
+  const [now, setNow] = useState<Date | null>(null);
+  const [off, setOff] = useState(0);
+  const [pick, setPick] = useState<{ y: number; m: number; d: number } | null>(null);
+  const [hour, setHour] = useState<number | null>(null);
+  useEffect(() => { setNow(parisNow()); }, []);
+  if (!now) return <div className="mcal" aria-label="Booking calendar" />;
+
+  const view = new Date(now.getFullYear(), now.getMonth() + off, 1);
+  const y = view.getFullYear(), m = view.getMonth();
+  const lead = (view.getDay() + 6) % 7;                       // Monday first
+  const dim = new Date(y, m + 1, 0).getDate();
+  const earliest = now.getTime() + NOTICE_HOURS * 3600000;
+  const slotOk = (d: number, h: number) => new Date(y, m, d, h).getTime() >= earliest;
+  const freeHours = (d: number) => CALL_HOURS.filter((h) => !takenHours(y, m, d).includes(h) && slotOk(d, h));
+  const dayName = (d: number) => new Date(y, m, d).toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" });
+  const sel = pick && pick.y === y && pick.m === m ? pick.d : null;
+
   return (
-    <>
-      <div className="avail" aria-label="Availability">
-        {days.map((x, i) => x.booked
-          ? <div className="slot booked" key={x.full} aria-label={`${x.full}, booked`}><span>{x.w}</span><b>{x.d}</b><i>Booked</i></div>
-          : <button type="button" className={`slot open${open === i ? " on" : ""}`} key={x.full} onClick={() => setOpen(i)} aria-label={`Choose a time on ${x.full}`}><span>{x.w}</span><b>{x.d}</b><i>{x.slots.length} times</i></button>)}
+    <div className="mcal" aria-label="Booking calendar">
+      <div className="mhead">
+        <button type="button" onClick={() => { setOff(off - 1); setPick(null); setHour(null); }} disabled={off === 0} aria-label="Previous month">‹</button>
+        <h3>{MONTH_NAMES[m]} <span className="gold">{y}</span></h3>
+        <button type="button" onClick={() => { setOff(off + 1); setPick(null); setHour(null); }} disabled={off >= MONTHS_AHEAD} aria-label="Next month">›</button>
       </div>
-      {day && (
-        <div className="times" role="group" aria-label={`Times on ${day.full}`}>
-          <p>{day.full} · call times in <b>France time</b></p>
-          <div>{day.slots.map((t) => <button type="button" key={t} onClick={() => onPick(`${day.full}, ${t} (France time)`)}>{t}</button>)}</div>
+      <div className="mgrid">
+        {WEEK_HEAD.map((w) => <span className="mw" key={w}>{w}</span>)}
+        {Array.from({ length: lead }, (_, i) => <span key={"e" + i} />)}
+        {Array.from({ length: dim }, (_, i) => {
+          const d = i + 1, dow = new Date(y, m, d).getDay();
+          const past = new Date(y, m, d, 23).getTime() < now.getTime();
+          const callDay = CALL_DAYS.includes(dow);
+          const taken = takenHours(y, m, d);
+          const free = callDay && !past ? freeHours(d) : [];
+          const state = past || !callDay ? "off" : free.length ? "open" : taken.length === CALL_HOURS.length ? "booked" : "off";
+          const today = off === 0 && d === now.getDate();
+          const label = state === "open" ? `${free.length}` : state === "booked" ? "Booked" : "";
+          return state === "open"
+            ? <button type="button" key={d} className={`mday open${sel === d ? " on" : ""}`} onClick={() => { setPick({ y, m, d }); setHour(null); }} aria-label={`Choose a time on ${dayName(d)}`}><b>{d}</b><i>{label} {free.length === 1 ? "time" : "times"}</i></button>
+            : <div key={d} className={`mday ${state}${today ? " today" : ""}`} aria-label={`${dayName(d)}, ${state === "booked" ? "booked" : "not available"}`}><b>{d}</b><i>{label}</i></div>;
+        })}
+      </div>
+      <p className="mnote">Calls are 1 hour, <b>{CALL_PRICE}</b>, on Tuesday, Wednesday and Thursday, {CALL_HOURS[0]}:00 to {CALL_HOURS[CALL_HOURS.length - 1] + 1}:00 France time. Book at least 24 hours ahead. Weekends, Mondays and Fridays are off.</p>
+      {sel !== null && (
+        <div className="times" role="group" aria-label={`Times on ${dayName(sel)}`}>
+          <p>{dayName(sel)} · France time</p>
+          <div>{freeHours(sel).map((h) => <button type="button" key={h} className={hour === h ? "on" : ""} onClick={() => setHour(h)}>{h}:00</button>)}</div>
+          {hour !== null && (
+            <button type="button" className="btn gold-btn go" onClick={() => onPick(`${dayName(sel)}, ${hour}:00 to ${hour + 1}:00 (France time), 1 hour call, ${CALL_PRICE}`)}>Book this call · {CALL_PRICE}</button>
+          )}
         </div>
       )}
-    </>
+    </div>
   );
 }
 
@@ -280,6 +328,8 @@ export default function Home() {
   const [f, setF] = useState({ name: "", email: "", brand: "", type: projectTypes[0], date: "", details: "" });
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [errMsg, setErrMsg] = useState("");
+  const [call, setCall] = useState(false);
+  const [sentCall, setSentCall] = useState(false);
 
   useEffect(() => {
     let live = true;
@@ -325,9 +375,11 @@ export default function Home() {
     setStatus("sending");
     try {
       await sendInquiry(
-        { Name: f.name, Email: f.email, "Brand / company": f.brand, "Project type": f.type, "Preferred date": f.date || "Flexible", "Project details": f.details },
-        `New collaboration inquiry: ${f.brand}`,
+        { Name: f.name, Email: f.email, "Brand / company": f.brand, "Project type": f.type, "Preferred date": f.date || "Flexible", "Booking": call ? `PAID CALL ${CALL_PRICE} (awaiting payment)` : "Project inquiry", "Project details": f.details },
+        `${call ? "BOOKING REQUEST" : "New"} collaboration inquiry: ${f.brand}`,
       );
+      setSentCall(call);
+      setCall(false);
       setStatus("sent");
       setF({ name: "", email: "", brand: "", type: projectTypes[0], date: "", details: "" });
     } catch (err) {
@@ -337,6 +389,7 @@ export default function Home() {
   };
   const pickDay = (day: string) => {
     setF((v) => ({ ...v, date: day }));
+    setCall(true);
     setStatus("idle");
     document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
   };
@@ -529,7 +582,7 @@ export default function Home() {
       {/* BOOK */}
       <section className="book" id="book">
         <Float src="tripod-bags.jpg" side="l" shape={2} />
-        <div className="head rv"><div><p className="no">10 · Booking</p><h2>Work with <em className="gold">me.</em></h2></div><p>Pick a day and a time (12:00 to 16:00, France time) for a short call about your collaboration, then send me your request. I confirm by email.</p></div>
+        <div className="head rv"><div><p className="no">10 · Booking</p><h2>Work with <em className="gold">me.</em></h2></div><p>Book a one-hour call to talk about your collaboration or your operations. Choose a day and time, send your request, and pay to confirm your spot.</p></div>
         <Availability onPick={pickDay} />
       </section>
 
@@ -546,10 +599,17 @@ export default function Home() {
             <label>Email address<input required type="email" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} autoComplete="email" /></label>
             <label>Brand or company<input required value={f.brand} onChange={(e) => setF({ ...f, brand: e.target.value })} autoComplete="organization" /></label>
             <label>Project type<select value={f.type} onChange={(e) => setF({ ...f, type: e.target.value })}>{projectTypes.map((t) => <option key={t}>{t}</option>)}</select></label>
-            <label>Preferred date<input value={f.date} onChange={(e) => setF({ ...f, date: e.target.value })} placeholder="Pick a day and time in the calendar above" /></label>
+            <label>Preferred date<input value={f.date} onChange={(e) => { setF({ ...f, date: e.target.value }); setCall(false); }} placeholder="Pick a day and time in the calendar above" /></label>
             <label>Project details<textarea required rows={5} value={f.details} onChange={(e) => setF({ ...f, details: e.target.value })} placeholder="Product, goal, timeline, usage rights…" /></label>
-            <button className="btn gold-btn" type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending…" : "Send enquiry"}</button>
-            {status === "sent" && <p className="fmsg ok" role="status">Thank you! Your inquiry was sent. I reply within 48 hours.</p>}
+            <button className="btn gold-btn" type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending…" : call ? `Send booking request · ${CALL_PRICE}` : "Send enquiry"}</button>
+            {status === "sent" && (
+              <p className="fmsg ok" role="status">
+                {sentCall
+                  ? <>Thank you! Your call request was sent. {PAY_LINK ? "Pay now to confirm your spot." : `I’ll email you the payment link (${CALL_PRICE}) to confirm your spot.`}</>
+                  : "Thank you! Your inquiry was sent. I reply within 48 hours."}
+                {sentCall && PAY_LINK && <> <a className="paybtn" href={PAY_LINK} target="_blank" rel="noreferrer">Pay {CALL_PRICE} to confirm ↗</a></>}
+              </p>
+            )}
             {status === "error" && (
               <p className="fmsg err" role="alert">
                 Sorry, it didn’t go through{errMsg ? ` (${errMsg})` : ""}. You can{" "}

@@ -353,3 +353,25 @@ form button[disabled]{opacity:.6;cursor:wait}
 .times div{display:flex;flex-wrap:wrap;gap:10px}
 .times button{font:inherit;cursor:pointer;padding:10px 22px;border-radius:40px;border:1px solid var(--gold);background:#fff;color:var(--bur-d);letter-spacing:.08em;transition:.3s}
 .times button:hover{background:var(--bur);color:var(--gold-l)}
+
+/* month calendar */
+.mcal{max-width:760px;margin:0 auto}
+.mhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.mhead h3{font-family:var(--serif);font-weight:500;font-size:1.7rem;color:var(--bur-d);margin:0}
+.mhead button{font:inherit;font-size:1.5rem;width:44px;height:44px;border-radius:50%;border:1px solid var(--gold);background:#fff;color:var(--bur-d);cursor:pointer}
+.mhead button[disabled]{opacity:.3;cursor:default}
+.mgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.mw{text-align:center;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-d);padding-bottom:4px}
+.mday{aspect-ratio:1/1;min-height:54px;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font:inherit;border:1px solid transparent;padding:2px}
+.mday b{font-family:var(--serif);font-weight:500;font-size:1.15rem;color:var(--bur-d)}
+.mday i{font-style:normal;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--bur-l);min-height:.8em;text-align:center}
+.mday.off{opacity:.38}
+.mday.booked{border:1px dashed var(--gold-l);opacity:.6;background:transparent}.mday.booked b{text-decoration:line-through}
+.mday.open{border-color:var(--gold);background:#fff;cursor:pointer;transition:.3s}
+.mday.open:hover,.mday.open.on{background:var(--bur);border-color:var(--bur)}.mday.open:hover *,.mday.open.on *{color:var(--gold-l)}
+.mday.today{border-color:var(--gold-l)}
+.mnote{margin:18px 0 0;font-size:.86rem;color:var(--bur-l);text-align:center}
+.times button.on{background:var(--bur);color:var(--gold-l)}
+.times .go{width:100%;margin-top:4px}
+.paybtn{display:inline-block;margin-top:8px;padding:9px 20px;border-radius:40px;background:var(--gold);color:var(--bur-d);text-decoration:none!important;font-weight:600}
+@media(max-width:560px){.mgrid{gap:4px}.mday{min-height:44px;border-radius:12px}.mday b{font-size:1rem}.mday i{font-size:.5rem;letter-spacing:.04em}}
