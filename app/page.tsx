@@ -141,11 +141,6 @@ const services: [string, string, string][] = [
 ];
 const steps = [["Brief", "You share the product, goal and timeline."], ["Concept", "I send the idea, hook and script for approval."], ["Create", "I set up, film, edit and voice it myself."], ["Deliver", "Final cuts and variations, ready to post or run as ads."]];
 
-const rates: [string, string, string][] = [
-  ["Single Reel", "from 2,500 USD", "One Instagram Reel: concept, filming and edit."],
-  ["Campaign package", "7,000 to 10,000 USD", "A full campaign across several pieces of content."],
-  ["Add-ons", "quoted per project", "Stories, TikTok, usage rights and whitelisting."],
-];
 const faq: [string, string][] = [
   ["Do you accept gifted or affiliate-only collaborations?", "I only work on paid partnerships. Every collaboration includes a fee agreed before we start."],
   ["What does a collaboration include?", "Concept, hook and script for your approval, then filming, editing and voice-over by me, delivered ready to post or run as an ad."],
@@ -576,9 +571,6 @@ export default function Home() {
       <section className="services" id="services">
         <Float src="watch-hand.jpg" side="r" shape={1} />
         <div className="head rv"><div><p className="no">08 · Services</p><h2>The atelier <em className="gold">of content.</em></h2></div><p>Tell me your goal, I shape the format.</p></div>
-        <div className="rates">{rates.map(([t, p, d]) => (
-          <div className="rate rv" key={t}><span>{t}</span><b className="gold">{p}</b><p>{d}</p></div>
-        ))}</div>
         <ul>{services.map(([t, , inc], i) => (
           <li key={t} className="rv"><span className="n gold">{String(i + 1).padStart(2, "0")}</span><h3>{t}</h3><p><small>{inc}</small></p>
             <a href={`mailto:${email}?subject=${encodeURIComponent("Enquiry: " + t)}`} aria-label={`Ask about ${t}`}>Ask about this ↗</a></li>
