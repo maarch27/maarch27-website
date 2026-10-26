@@ -161,8 +161,8 @@ async function sendInquiry(fields: Record<string, string>, subject: string) {
     method: "POST",
     headers: { "Content-Type": "application/json", Accept: "application/json" },
     body: JSON.stringify(useW3F
-      ? { access_key: W3F_KEY, subject, from_name: "Maarch27 website", replyto: fields["Email"], ...fields }
-      : { ...fields, _subject: subject, _replyto: fields["Email"], _template: "table", _captcha: "false" }),
+      ? { access_key: W3F_KEY, subject, from_name: "Maarch27 website", replyto: fields["email"], ...fields }
+      : { ...fields, _subject: subject, _replyto: fields["email"], _template: "table", _captcha: "false" }),
   });
   const j = await r.json().catch(() => ({}));
   if (!r.ok || String(j.success) !== "true") throw new Error(j.message || "Could not send");
@@ -325,7 +325,7 @@ export default function Home() {
     setStatus("sending");
     try {
       await sendInquiry(
-        { Name: f.name, Email: f.email, "Brand / company": f.brand, "Project type": f.type, "Preferred date": f.date || "Flexible", "Project details": f.details },
+        { Name: f.name, email: f.email, "Brand / company": f.brand, "Project type": f.type, "Preferred date": f.date || "Flexible", "Project details": f.details },
         `New collaboration inquiry: ${f.brand}`,
       );
       setStatus("sent");
