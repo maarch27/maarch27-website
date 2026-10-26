@@ -151,17 +151,21 @@ const quotes: { q: string; by: string }[] = [
 ];
 const projectTypes = ["UGC video", "Reel or carousel", "Product demo or unboxing", "Hotel or travel", "Photos", "Not sure yet"];
 
-/* The form opens the visitor's own email app with everything filled in,
-   so the message comes from their real address and you can simply hit Reply. */
-function mailBody(fields: Record<string, string>) {
-  return Object.entries(fields).map(([k, v]) => `${k}: ${v}`).join("\n");
-}
-function mailLinks(to: string, subject: string, fields: Record<string, string>) {
-  const su = encodeURIComponent(subject), body = encodeURIComponent(mailBody(fields));
-  return {
-    app: `mailto:${to}?subject=${su}&body=${body}`,
-    gmail: `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(to)}&su=${su}&body=${body}`,
-  };
+/* Sends the inquiry straight to the inbox.
+   1) If NEXT_PUBLIC_WEB3FORMS_KEY is set (Vercel > Settings > Environment Variables), it uses Web3Forms: no activation email needed.
+   2) Otherwise it uses FormSubmit, which needs ONE click on its "Activate form" email after the first test message. */
+const W3F_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY;
+async function sendInquiry(fields: Record<string, string>, subject: string) {
+  const useW3F = !!W3F_KEY;
+  const r = await fetch(useW3F ? "https://api.web3forms.com/submit" : `https://formsubmit.co/ajax/${email}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify(useW3F
+      ? { access_key: W3F_KEY, subject, from_name: "Maarch27 website", replyto: fields["Email"], ...fields }
+      : { ...fields, _subject: subject, _replyto: fields["Email"], _template: "table", _captcha: "false" }),
+  });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok || String(j.success) !== "true") throw new Error(j.message || "Could not send");
 }
 
 /* =====================================================================
@@ -275,6 +279,7 @@ export default function Home() {
   const [noShot, setNoShot] = useState<Record<string, true>>({});
   const [f, setF] = useState({ name: "", email: "", brand: "", type: projectTypes[0], date: "", details: "" });
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [errMsg, setErrMsg] = useState("");
 
   useEffect(() => {
     let live = true;
@@ -314,12 +319,21 @@ export default function Home() {
   const cur = stageItems[Math.min(sel, stageItems.length - 1)];
   const switchF = (c: Cat) => { setFcat(c); setSel(0); setPlaying(false); };
 
-  const inquiry = () => mailLinks(email, `New collaboration inquiry: ${f.brand}`,
-    { Name: f.name, Email: f.email, "Brand / company": f.brand, "Project type": f.type, "Preferred date": f.date || "Flexible", "Project details": f.details });
-  const send = (e: React.SyntheticEvent) => {
+  const send = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    window.location.href = inquiry().app;
-    setStatus("sent");
+    if (status === "sending") return;
+    setStatus("sending");
+    try {
+      await sendInquiry(
+        { Name: f.name, Email: f.email, "Brand / company": f.brand, "Project type": f.type, "Preferred date": f.date || "Flexible", "Project details": f.details },
+        `New collaboration inquiry: ${f.brand}`,
+      );
+      setStatus("sent");
+      setF({ name: "", email: "", brand: "", type: projectTypes[0], date: "", details: "" });
+    } catch (err) {
+      setErrMsg(err instanceof Error ? err.message : "");
+      setStatus("error");
+    }
   };
   const pickDay = (day: string) => {
     setF((v) => ({ ...v, date: day }));
@@ -534,11 +548,13 @@ export default function Home() {
             <label>Project type<select value={f.type} onChange={(e) => setF({ ...f, type: e.target.value })}>{projectTypes.map((t) => <option key={t}>{t}</option>)}</select></label>
             <label>Preferred date<input value={f.date} onChange={(e) => setF({ ...f, date: e.target.value })} placeholder="Pick a day and time in the calendar above" /></label>
             <label>Project details<textarea required rows={5} value={f.details} onChange={(e) => setF({ ...f, details: e.target.value })} placeholder="Product, goal, timeline, usage rights…" /></label>
-            <button className="btn gold-btn" type="submit">Send enquiry</button>
-            {status === "sent" && (
-              <p className="fmsg ok" role="status">
-                Your email app just opened with everything filled in. Press send there and I&apos;ll reply within 48 hours. Nothing opened?{" "}
-                <a href={inquiry().gmail} target="_blank" rel="noreferrer">Send it with Gmail</a> or write to <a href={`mailto:${email}`}>{email}</a>.
+            <button className="btn gold-btn" type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending…" : "Send enquiry"}</button>
+            {status === "sent" && <p className="fmsg ok" role="status">Thank you! Your inquiry was sent. I reply within 48 hours.</p>}
+            {status === "error" && (
+              <p className="fmsg err" role="alert">
+                Sorry, it didn’t go through{errMsg ? ` (${errMsg})` : ""}. You can{" "}
+                <a href={`mailto:${email}?subject=${encodeURIComponent("Collaboration inquiry: " + f.brand)}&body=${encodeURIComponent(`Name: ${f.name}\nEmail: ${f.email}\nBrand: ${f.brand}\nProject type: ${f.type}\nPreferred date: ${f.date || "Flexible"}\n\n${f.details}`)}`}>open it in your email app</a>{" "}
+                or write to <a href={`mailto:${email}`}>{email}</a>.
               </p>
             )}
           </form>
