@@ -77,10 +77,10 @@ const coverPool: Record<Cat, string[]> = {
 // "More about me": edit these lines freely, they are only text.
 const meIntro = "Behind every video there is a real person, and brands tell me that is exactly why it works.";
 const meFacets: [string, string][] = [
-  ["Between two worlds", "I split my life between the USA and France and travel often, so my content carries both: the polish of Paris and the ease of everyday life."],
-  ["Hands-on, start to finish", "I plan, style, film, edit and voice every piece myself in my own studio with professional light and camera, so nothing gets lost between the idea and the final film."],
-  ["Genuine over perfect", "I only make content that feels like a real recommendation from a friend with great taste, never a stiff ad. That is what keeps people watching and buying."],
-  ["Easy to work with", "Clear briefs, quick replies, honest ideas and delivery on time. Brands come back because the process feels as good as the result."],
+  ["Between two worlds", "Between the USA and France: Paris polish, everyday ease."],
+  ["Hands-on, start to finish", "Idea to final film, all done by me in my own studio."],
+  ["Genuine over perfect", "A friend’s recommendation, never a stiff ad."],
+  ["Easy to work with", "Quick replies, honest ideas, on-time delivery."],
 ];
 // Known cover matches (reel id -> photo of that exact video). Add more as you confirm them.
 const reelCover: Record<string, string> = { "Dc1Z3PEx-yz": "IMG_1701.JPG", "DV_nhb5CP56": "IMG_5214.jpg" };
@@ -151,8 +151,6 @@ const faq: [string, string][] = [
   ["What does a collaboration include?", "Concept, hook and script for your approval, then filming, editing and voice-over by me, delivered ready to post or run as an ad."],
   ["Can we use the content in our ads?", "Yes. Usage rights, whitelisting and Spark Ads are available as add-ons, priced by duration and channels."],
   ["How do I send the product?", "Once we agree on the brief and fee, I send you the shipping details by email."],
-  ["How fast can you deliver?", "It depends on the brief and the number of pieces. Tell me your launch date and I will confirm the timeline before we start."],
-  ["How do we start?", "Pick a day in the calendar below and send the form, or email me directly. I reply within 48 hours."],
 ];
 
 // Words from real messages brands sent me (Instagram DMs and emails)
@@ -228,41 +226,59 @@ function Shapes() {
   );
 }
 
-/* Calendar: next 14 days, 3-4 days "booked" at random (the same for every visitor on a given day),
-   and 2-3 call slots per open day between 12:00 and 16:00 France time. */
+/* Calendar: the next 14 days, 3-4 days "booked" at random (the same for every visitor on a given day),
+   and 2-3 call slots per open day between 12:00 and 16:00 France time.
+   Shown as a booking card: the chosen date big on the left, days and times on the right. */
 const HOURS = ["12:00", "13:00", "14:00", "15:00", "16:00"];
 function hashOf(str: string) { let h = 2166136261; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
-type Day = { w: string; d: string; full: string; booked: boolean; slots: string[] };
+type Day = { w: string; n: string; m: string; full: string; booked: boolean; slots: string[] };
 function Availability({ onPick }: { onPick: (when: string) => void }) {
   const [days, setDays] = useState<Day[]>([]);
-  const [open, setOpen] = useState<number | null>(null);
+  const [open, setOpen] = useState(0);
+  const [time, setTime] = useState("");
   useEffect(() => {
     const list = Array.from({ length: 14 }, (_, i) => {
       const x = new Date(); x.setDate(x.getDate() + i + 1);
       const key = x.toISOString().slice(0, 10);
       const h = hashOf(key);
       const slots = HOURS.map((t) => ({ t, k: hashOf(key + t) })).sort((p, q) => p.k - q.k).slice(0, 2 + (h % 2)).map((o) => o.t).sort();
-      return { key, h, w: x.toLocaleDateString("en-GB", { weekday: "short" }), d: x.toLocaleDateString("en-GB", { day: "numeric", month: "short" }), full: x.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" }), slots };
+      return { key, w: x.toLocaleDateString("en-GB", { weekday: "short" }), n: String(x.getDate()), m: x.toLocaleDateString("en-GB", { month: "short" }), full: x.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" }), slots };
     });
     const nBooked = 3 + (hashOf(list[0].key) % 2);
     const bookedKeys = new Set([...list].sort((p, q) => hashOf("b" + p.key) - hashOf("b" + q.key)).slice(0, nBooked).map((o) => o.key));
-    setDays(list.map((o) => ({ w: o.w, d: o.d, full: o.full, booked: bookedKeys.has(o.key), slots: o.slots })));
+    const ds = list.map((o) => ({ w: o.w, n: o.n, m: o.m, full: o.full, booked: bookedKeys.has(o.key), slots: o.slots }));
+    setDays(ds);
+    setOpen(Math.max(0, ds.findIndex((d) => !d.booked)));
   }, []);
-  const day = open !== null ? days[open] : null;
+  const day = days[open];
+  if (!day) return null;
+  const [wd, ...rest] = day.full.split(" ");
   return (
-    <>
-      <div className="avail" aria-label="Availability">
-        {days.map((x, i) => x.booked
-          ? <div className="slot booked" key={x.full} aria-label={`${x.full}, booked`}><span>{x.w}</span><b>{x.d}</b><i>Booked</i></div>
-          : <button type="button" className={`slot open${open === i ? " on" : ""}`} key={x.full} onClick={() => setOpen(i)} aria-label={`Choose a time on ${x.full}`}><span>{x.w}</span><b>{x.d}</b><i>{x.slots.length} times</i></button>)}
+    <div className="bk rv">
+      <div className="bk-date" aria-live="polite">
+        <span>{wd}</span>
+        <b key={day.full}>{day.n}</b>
+        <em>{rest.slice(1).join(" ")}</em>
+        <small>30 min call · France time</small>
       </div>
-      {day && (
-        <div className="times" role="group" aria-label={`Times on ${day.full}`}>
-          <p>{day.full} · call times in <b>France time</b></p>
-          <div>{day.slots.map((t) => <button type="button" key={t} onClick={() => onPick(`${day.full}, ${t} (France time)`)}>{t}</button>)}</div>
+      <div className="bk-pick">
+        <p className="bk-label">Choose a day</p>
+        <div className="bk-days">
+          {days.map((x, i) => (
+            <button type="button" key={x.full} disabled={x.booked} className={`bk-d${i === open ? " on" : ""}`} onClick={() => { setOpen(i); setTime(""); }} aria-label={x.booked ? `${x.full}, booked` : `Choose ${x.full}`} aria-pressed={i === open}>
+              <span>{x.w}</span><b>{x.n}</b><i>{x.booked ? "booked" : x.m}</i>
+            </button>
+          ))}
         </div>
-      )}
-    </>
+        <p className="bk-label">Choose a time</p>
+        <div className="bk-times" key={day.full}>
+          {day.slots.map((t) => (
+            <button type="button" key={t} className={time === t ? "on" : ""} onClick={() => { setTime(t); onPick(`${day.full}, ${t} (France time)`); }}>{t}</button>
+          ))}
+        </div>
+        {time && <p className="bk-ok">Added to your request below ✦</p>}
+      </div>
+    </div>
   );
 }
 
@@ -433,8 +449,7 @@ export default function Home() {
         <div className="rv">
           <p className="no">01 · About me</p>
           <h2>A lifestyle creator who turns real moments into <em className="gold">campaigns that perform.</em></h2>
-          <p>I’m Mariam, a creator and graphic designer based between the USA and France. For 4+ years I’ve made lifestyle content for beauty, skincare, fashion, travel, tech and everyday brands, from fast-growing startups to international names.</p>
-          <p>I don’t just film a product. I plan the strategy, set up the scene in my own studio or out in real life, write the hook, film, edit and voice it myself. Every video is built to feel genuine, because that’s what makes people watch, trust and buy.</p>
+          <p>I’m Mariam, creator and graphic designer. For 4+ years I’ve planned, filmed, edited and voiced lifestyle content for beauty, fashion, travel and tech brands, all myself.</p>
           <ul className="facts">{facts.map(([v, l]) => <li key={l}><b className="gold">{v}</b><span>{l}</span></li>)}</ul>
           <ul className="tags">{skills.map((s) => <li key={s}>{s}</li>)}</ul>
         </div>
@@ -460,7 +475,7 @@ export default function Home() {
       {/* WHY ME */}
       <section className="why" id="why">
         <Float src="cerave.jpg" side="r" shape={1} />
-        <div className="head rv"><div><p className="no">03 · Why me</p><h2>Why <em className="gold">me?</em></h2></div><p>Because content that feels real performs better.</p></div>
+        <div className="head rv"><div><p className="no">03 · Why me</p><h2>Why <em className="gold">me?</em></h2></div><p>Real content performs better.</p></div>
         <ol className="reasons">{why.map((w, i) => (
           <li key={w.t} className="rv">
             <span className="num gold">0{i + 1}</span>
@@ -488,7 +503,7 @@ export default function Home() {
       {/* RECEIPTS */}
       <section className="proof" id="proof">
         <Float src="clarins.jpg" side="l" shape={3} />
-        <div className="head rv"><div><p className="no">04 · Proof</p><h2>Proof, <em className="gold">not promises.</em></h2></div><p>My real profiles and the words brands have sent me after working together.</p></div>
+        <div className="head rv"><div><p className="no">04 · Proof</p><h2>Proof, <em className="gold">not promises.</em></h2></div><p>Real words from real brands.</p></div>
         <div className="proof-top rv">
           <div className="plats">
             {[{ n: "Instagram", s: "/stats/instagram.jpg", c: "153K followers" }, { n: "TikTok", s: "/stats/tiktok.jpg", c: "Fashion · Beauty · Lifestyle" }].map((p) => !noShot[p.n] && (
@@ -515,7 +530,7 @@ export default function Home() {
 
       {/* PICK A WORLD */}
       <section className="worlds" id="worlds">
-        <div className="head rv"><div><p className="no">05 · Campaigns</p><h2>Pick a world. <em className="gold">Press play.</em></h2></div><p>Choose a category and press play on a real campaign from my Instagram.</p></div>
+        <div className="head rv"><div><p className="no">05 · Campaigns</p><h2>Pick a world. <em className="gold">Press play.</em></h2></div><p>Pick a category, press play.</p></div>
         <div className="chips" role="tablist">{cats.map((c) => <button key={c} role="tab" aria-selected={cat === c} className={cat === c ? "on" : ""} onClick={() => setCat(c)}>{c}</button>)}</div>
         <div className="palette"><div>{palettes[cat].c.map((c) => <i key={c} style={{ background: c }} title={c} />)}</div><p>{cat} palette: {palettes[cat].note}</p></div>
         <div className="mosaic" key={cat}>
@@ -527,7 +542,7 @@ export default function Home() {
 
       {/* MY CREATIVE WORK */}
       <section className="work" id="work">
-        <div className="head rv"><div><p className="no">06 · Portfolio</p><h2>My creative <em className="gold">work.</em></h2></div><p>More of the content I create, from beauty rituals to city days. Hover to pause, tap a photo to see it larger.</p></div>
+        <div className="head rv"><div><p className="no">06 · Portfolio</p><h2>My creative <em className="gold">work.</em></h2></div><p>Tap any photo to open it.</p></div>
         <div className="film rv" aria-label="Portfolio photos">
           {[0, 1].map((row) => {
             const list = gallery.filter((_, i) => i % 2 === row);
@@ -548,7 +563,7 @@ export default function Home() {
       {/* BRANDS */}
       <section className="trusted">
         <Float src="shoes-italo.jpg" side="l" shape={4} />
-        <div className="head rv"><div><p className="no">07 · Brands</p><h2>Worked with <em className="gold">500+ brands.</em></h2></div><p>A few of the names I’ve created for, from global beauty houses to new launches.</p></div>
+        <div className="head rv"><div><p className="no">07 · Brands</p><h2>Worked with <em className="gold">500+ brands.</em></h2></div><p>From global houses to new launches.</p></div>
         <ul className="logos">{brands.map(([name, file], i) => (
           <li key={file} className="rv">
             <div className={`badge sh-${shapeCycle[i % 4]}`}><div className={`badge-in sh-${shapeCycle[i % 4]}`}><Img src={`/brands/${file}.png`} alt={name} /></div></div>
@@ -560,12 +575,12 @@ export default function Home() {
       {/* SERVICES */}
       <section className="services" id="services">
         <Float src="watch-hand.jpg" side="r" shape={1} />
-        <div className="head rv"><div><p className="no">08 · Services</p><h2>The atelier <em className="gold">of content.</em></h2></div><p>A bespoke offering for beauty, fashion, tech and lifestyle brands. Packages depend on scope and usage rights, so tell me the goal and I’ll shape the format and quote.</p></div>
+        <div className="head rv"><div><p className="no">08 · Services</p><h2>The atelier <em className="gold">of content.</em></h2></div><p>Tell me your goal, I shape the format.</p></div>
         <div className="rates">{rates.map(([t, p, d]) => (
           <div className="rate rv" key={t}><span>{t}</span><b className="gold">{p}</b><p>{d}</p></div>
         ))}</div>
-        <ul>{services.map(([t, d, inc], i) => (
-          <li key={t} className="rv"><span className="n gold">{String(i + 1).padStart(2, "0")}</span><h3>{t}</h3><p>{d}<small>{inc}</small></p>
+        <ul>{services.map(([t, , inc], i) => (
+          <li key={t} className="rv"><span className="n gold">{String(i + 1).padStart(2, "0")}</span><h3>{t}</h3><p><small>{inc}</small></p>
             <a href={`mailto:${email}?subject=${encodeURIComponent("Enquiry: " + t)}`} aria-label={`Ask about ${t}`}>Ask about this ↗</a></li>
         ))}</ul>
         <div className="faq">
@@ -577,7 +592,7 @@ export default function Home() {
       {/* BOOK */}
       <section className="book" id="book">
         <Float src="tripod-bags.jpg" side="l" shape={2} />
-        <div className="head rv"><div><p className="no">09 · Booking</p><h2>Work with <em className="gold">me.</em></h2></div><p>Pick a day and a time (12:00 to 16:00, France time) for a short call about your collaboration, then send me your request. I confirm by email.</p></div>
+        <div className="head rv"><div><p className="no">09 · Booking</p><h2>Work with <em className="gold">me.</em></h2></div><p>Pick a day and a time for a short call. I confirm by email.</p></div>
         <Availability onPick={pickDay} />
       </section>
 
