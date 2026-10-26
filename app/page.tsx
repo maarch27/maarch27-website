@@ -141,6 +141,20 @@ const services: [string, string, string][] = [
 ];
 const steps = [["Brief", "You share the product, goal and timeline."], ["Concept", "I send the idea, hook and script for approval."], ["Create", "I set up, film, edit and voice it myself."], ["Deliver", "Final cuts and variations, ready to post or run as ads."]];
 
+const rates: [string, string, string][] = [
+  ["Single Reel", "from 2,500 USD", "One Instagram Reel: concept, filming and edit."],
+  ["Campaign package", "7,000 to 10,000 USD", "A full campaign across several pieces of content."],
+  ["Add-ons", "quoted per project", "Stories, TikTok, usage rights and whitelisting."],
+];
+const faq: [string, string][] = [
+  ["Do you accept gifted or affiliate-only collaborations?", "I only work on paid partnerships. Every collaboration includes a fee agreed before we start."],
+  ["What does a collaboration include?", "Concept, hook and script for your approval, then filming, editing and voice-over by me, delivered ready to post or run as an ad."],
+  ["Can we use the content in our ads?", "Yes. Usage rights, whitelisting and Spark Ads are available as add-ons, priced by duration and channels."],
+  ["How do I send the product?", "Once we agree on the brief and fee, I send you the shipping details by email."],
+  ["How fast can you deliver?", "It depends on the brief and the number of pieces. Tell me your launch date and I will confirm the timeline before we start."],
+  ["How do we start?", "Pick a day in the calendar below and send the form, or email me directly. I reply within 48 hours."],
+];
+
 // Words from real messages brands sent me (Instagram DMs and emails)
 const quotes: { q: string; by: string }[] = [
   { q: "The content you created was excellent and helped increase our sales even more.", by: "Gloss Room" },
@@ -322,6 +336,21 @@ export default function Home() {
     return () => { io?.disconnect(); mo.disconnect(); removeEventListener("scroll", onScroll); cancelAnimationFrame(raf); };
   }, []);
 
+  // hero numbers count up once
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const els = Array.from(document.querySelectorAll<HTMLElement>("[data-count]"));
+    const t0 = performance.now() + 700;
+    let raf = 0;
+    const tick = (t: number) => {
+      const k = Math.min(1, Math.max(0, (t - t0) / 1600)), e = 1 - Math.pow(1 - k, 3);
+      els.forEach((el) => { el.textContent = Math.round(Number(el.dataset.count) * e) + (el.dataset.suffix ?? ""); });
+      if (k < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
   const step = (d: number) => setLb((s) => (s ? { ...s, i: (s.i + d + s.items.length) % s.items.length } : s));
   useEffect(() => {
     const k = (e: KeyboardEvent) => {
@@ -384,8 +413,8 @@ export default function Home() {
           <div className="actions"><a className="btn" href="#book">Work with me</a><a className="btn line" href="#worlds">See my work</a></div>
         </div>
         <div className="hero-img"><Img src={P(HERO)} alt="Mariam, UGC creator" pos={HERO_POS} eager /></div>
-        <div className="chip a"><b className="gold">153K</b><span>Instagram followers</span></div>
-        <div className="chip b"><b className="gold">500+</b><span>brands trusted me</span></div>
+        <div className="chip a"><b className="gold" data-count="153" data-suffix="K">153K</b><span>Instagram followers</span></div>
+        <div className="chip b"><b className="gold" data-count="500" data-suffix="+">500+</b><span>brands trusted me</span></div>
       </section>
 
       <div className="marquee" aria-label="Brands I have worked with">
@@ -498,12 +527,22 @@ export default function Home() {
 
       {/* MY CREATIVE WORK */}
       <section className="work" id="work">
-        <div className="head rv"><div><p className="no">06 · Portfolio</p><h2>My creative <em className="gold">work.</em></h2></div><p>More of the content I create, from beauty rituals to city days. Tap a photo to see it larger.</p></div>
-        <div className="gal">{gallery.map((n) => (
-          <button key={n} className="g rv" onClick={() => openPhotos(gallery, n)} aria-label={`Open ${n}`}>
-            <Img src={P(n)} alt="Mariam portfolio photo" onFail={() => setBad((s) => ({ ...s, [n]: true }))} onLoad={(e) => { const im = e.currentTarget; im.parentElement?.setAttribute("data-o", im.naturalHeight / im.naturalWidth > 1.3 ? "tall" : "wide"); }} />
-          </button>
-        ))}</div>
+        <div className="head rv"><div><p className="no">06 · Portfolio</p><h2>My creative <em className="gold">work.</em></h2></div><p>More of the content I create, from beauty rituals to city days. Hover to pause, tap a photo to see it larger.</p></div>
+        <div className="film rv" aria-label="Portfolio photos">
+          {[0, 1].map((row) => {
+            const list = gallery.filter((_, i) => i % 2 === row);
+            return (
+              <div className={`film-row${row ? " back" : ""}`} key={row}>
+                {[...list, ...list].map((n, i) => (
+                  <button key={n + i} className="g" onClick={() => openPhotos(gallery, n)} aria-label={`Open ${n}`} tabIndex={i < list.length ? 0 : -1} aria-hidden={i >= list.length || undefined}>
+                    <Img src={P(n)} alt="Mariam portfolio photo" onFail={() => setBad((s) => ({ ...s, [n]: true }))} />
+                  </button>
+                ))}
+              </div>
+            );
+          })}
+        </div>
+        <div className="film-more rv"><button className="btn line" onClick={() => gallery[0] && openPhotos(gallery, gallery[0])}>See all {gallery.length} photos</button></div>
       </section>
 
       {/* BRANDS */}
@@ -522,10 +561,17 @@ export default function Home() {
       <section className="services" id="services">
         <Float src="watch-hand.jpg" side="r" shape={1} />
         <div className="head rv"><div><p className="no">08 · Services</p><h2>The atelier <em className="gold">of content.</em></h2></div><p>A bespoke offering for beauty, fashion, tech and lifestyle brands. Packages depend on scope and usage rights, so tell me the goal and I’ll shape the format and quote.</p></div>
+        <div className="rates">{rates.map(([t, p, d]) => (
+          <div className="rate rv" key={t}><span>{t}</span><b className="gold">{p}</b><p>{d}</p></div>
+        ))}</div>
         <ul>{services.map(([t, d, inc], i) => (
           <li key={t} className="rv"><span className="n gold">{String(i + 1).padStart(2, "0")}</span><h3>{t}</h3><p>{d}<small>{inc}</small></p>
             <a href={`mailto:${email}?subject=${encodeURIComponent("Enquiry: " + t)}`} aria-label={`Ask about ${t}`}>Ask about this ↗</a></li>
         ))}</ul>
+        <div className="faq">
+          <h3 className="rv">Good to <em className="gold">know.</em></h3>
+          {faq.map(([q, an]) => <details className="rv" key={q}><summary>{q}</summary><p>{an}</p></details>)}
+        </div>
       </section>
 
       {/* BOOK */}
