@@ -28,7 +28,7 @@ const HERO4 = ["paris-bag-1.jpg", "paris-bag-2.jpg", "paris-bag-3.jpg", "paris-b
 const ABOUT = ["facial-gua-sha.jpg", "glasses-selfie.jpg", "autumn-bench.jpg", "street-brown.jpg"];
 
 // Every photo is used in exactly one place on the site, so nothing repeats.
-// Pick a world (per category) and Featured films (per category) take the photos below.
+// Pick a world (per category) takes the photos below.
 // Everything else in public/image (including any photo you add later) goes to "My creative work".
 type Cat = "Beauty" | "Fashion" | "Tech" | "Lifestyle" | "Travel";
 const cats: Cat[] = ["Beauty", "Fashion", "Tech", "Lifestyle"];
@@ -36,7 +36,7 @@ const KNOWN = ["IMG_1434.JPG","IMG_1701.JPG","IMG_2092.JPG","IMG_2319.jpg","IMG_
 // Photos placed on purpose in other sections (so they are NOT repeated in My creative work)
 const ME_PHOTO = "IMG_5216.JPG";
 const WHYNOT = ["dossier-lying.jpg", "camera-orange.jpg"];
-const FLOATS = ["watch-hand.jpg", "shoes-italo.jpg", "clarins.jpg", "tripod-bags.jpg", "cerave.jpg", "mirror-room.jpg"];
+const FLOATS = ["watch-hand.jpg", "shoes-italo.jpg", "clarins.jpg", "tripod-bags.jpg", "cerave.jpg"];
 const SKIP = ["autumn-bench-wide.jpg", "mask-blue-towel.jpg", "IMG_1434.JPG", "IMG_4560.JPG"]; // near-duplicates and tight crops
 const USED = new Set<string>([HERO, ...HERO4, ...ABOUT, ME_PHOTO, ...WHYNOT, ...FLOATS, ...SKIP]);
 // My creative work: every other photo, each shown once. This order mixes tall and wide shots.
@@ -270,9 +270,6 @@ function ReelCover({ r }: { r: Reel }) {
 export default function Home() {
   const [files, setFiles] = useState<string[] | null>(null);
   const [cat, setCat] = useState<Cat>("Beauty");
-  const [fcat, setFcat] = useState<Cat>("Beauty");
-  const [sel, setSel] = useState(0);
-  const [playing, setPlaying] = useState(false);
   const [lb, setLb] = useState<null | { items: string[]; i: number }>(null);
   const [reel, setReel] = useState<null | Reel>(null);
   const [bad, setBad] = useState<Record<string, true>>({});
@@ -287,14 +284,42 @@ export default function Home() {
     return () => { live = false; };
   }, []);
 
-  // soft reveal on scroll
+  // soft reveal on scroll: items in the same row arrive one after another,
+  // photos added later (gallery) are picked up too, floating photos drift with the scroll
   useEffect(() => {
-    document.documentElement.classList.add("js");
-    const els = Array.from(document.querySelectorAll(".rv"));
-    if (!("IntersectionObserver" in window)) { els.forEach((e) => e.classList.add("in")); return; }
-    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: 0.12 });
-    els.forEach((e) => io.observe(e));
-    return () => io.disconnect();
+    const root = document.documentElement;
+    root.classList.add("js");
+    const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const seen = new WeakSet<Element>();
+    const io = "IntersectionObserver" in window
+      ? new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io?.unobserve(e.target); } }), { threshold: 0.12, rootMargin: "0px 0px -6% 0px" })
+      : null;
+    const watch = () => document.querySelectorAll(".rv").forEach((el) => {
+      if (seen.has(el)) return;
+      seen.add(el);
+      const sibs = el.parentElement ? Array.from(el.parentElement.children).filter((c) => c.classList.contains("rv")) : [];
+      (el as HTMLElement).style.setProperty("--d", `${Math.min(sibs.indexOf(el), 6) * 0.09}s`);
+      if (io) io.observe(el); else el.classList.add("in");
+    });
+    watch();
+    const mo = new MutationObserver(watch);
+    mo.observe(document.body, { childList: true, subtree: true });
+    let raf = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const max = root.scrollHeight - innerHeight;
+        root.style.setProperty("--prog", String(max > 0 ? scrollY / max : 0));
+        if (still) return;
+        document.querySelectorAll<HTMLElement>(".fl").forEach((f) => {
+          const r = f.getBoundingClientRect();
+          f.style.setProperty("--py", `${((r.top + r.height / 2 - innerHeight / 2) * -0.08).toFixed(1)}px`);
+        });
+      });
+    };
+    onScroll();
+    addEventListener("scroll", onScroll, { passive: true });
+    return () => { io?.disconnect(); mo.disconnect(); removeEventListener("scroll", onScroll); cancelAnimationFrame(raf); };
   }, []);
 
   const step = (d: number) => setLb((s) => (s ? { ...s, i: (s.i + d + s.items.length) % s.items.length } : s));
@@ -315,9 +340,6 @@ export default function Home() {
   const openPhotos = (list: string[], name: string) => setLb({ items: list.map(P), i: Math.max(0, list.indexOf(name)) });
 
   const world = reels.filter((r) => r.cat === cat);
-  const stageItems = reels.filter((r) => r.cat === fcat).slice(0, 3);
-  const cur = stageItems[Math.min(sel, stageItems.length - 1)];
-  const switchF = (c: Cat) => { setFcat(c); setSel(0); setPlaying(false); };
 
   const send = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -350,6 +372,7 @@ export default function Home() {
         <a className="pill" href="#book">Book me</a>
       </header>
 
+      <div className="prog" aria-hidden="true" />
       {/* HERO */}
       <section className="hero" id="home">
         <div className="hero-copy">
@@ -473,32 +496,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FEATURED FILMS */}
-      <section className="films">
-        <Float src="mirror-room.jpg" side="r" shape={2} />
-        <div className="head rv"><div><p className="no">06 · Films</p><h2>Featured <em className="gold">films.</em></h2></div><p>A closer look at selected films. Pick one from the list and press play.</p></div>
-        <div className="chips" role="tablist">{cats.map((c) => <button key={c} role="tab" aria-selected={fcat === c} className={fcat === c ? "on" : ""} onClick={() => switchF(c)}>{c}</button>)}</div>
-        <div className="cinema" key={fcat}>
-          <div className="stage">
-            {cur && (playing ? <iframe src={`${igUrl(cur)}embed`} title={cur.title} allowFullScreen />
-              : <button className="stagebtn" onClick={() => setPlaying(true)} aria-label={`Play ${cur.title}`}><ReelCover r={cur} /><span className="play big" aria-hidden="true">▶</span></button>)}
-          </div>
-          <ol className="playlist">
-            {stageItems.map((r, i) => (
-              <li key={r.id}><button className={i === sel ? "on" : ""} onClick={() => { setSel(i); setPlaying(false); }}>
-                <span className="th"><Img src={P(coverOf(r))} alt="" /><Img src={`/reels/${r.id}.jpg`} alt="" /></span>
-                <span className="tt"><b>{r.title}</b><small>{r.tag ?? "Reel"} · {fcat}</small></span>
-              </button></li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
       {/* MY CREATIVE WORK */}
       <section className="work" id="work">
-        <div className="head rv"><div><p className="no">07 · Portfolio</p><h2>My creative <em className="gold">work.</em></h2></div><p>More of the content I create, from beauty rituals to city days. Tap a photo to see it larger.</p></div>
+        <div className="head rv"><div><p className="no">06 · Portfolio</p><h2>My creative <em className="gold">work.</em></h2></div><p>More of the content I create, from beauty rituals to city days. Tap a photo to see it larger.</p></div>
         <div className="gal">{gallery.map((n) => (
-          <button key={n} className="g" onClick={() => openPhotos(gallery, n)} aria-label={`Open ${n}`}>
+          <button key={n} className="g rv" onClick={() => openPhotos(gallery, n)} aria-label={`Open ${n}`}>
             <Img src={P(n)} alt="Mariam portfolio photo" onFail={() => setBad((s) => ({ ...s, [n]: true }))} onLoad={(e) => { const im = e.currentTarget; im.parentElement?.setAttribute("data-o", im.naturalHeight / im.naturalWidth > 1.3 ? "tall" : "wide"); }} />
           </button>
         ))}</div>
@@ -507,7 +509,7 @@ export default function Home() {
       {/* BRANDS */}
       <section className="trusted">
         <Float src="shoes-italo.jpg" side="l" shape={4} />
-        <div className="head rv"><div><p className="no">08 · Brands</p><h2>Worked with <em className="gold">500+ brands.</em></h2></div><p>A few of the names I’ve created for, from global beauty houses to new launches.</p></div>
+        <div className="head rv"><div><p className="no">07 · Brands</p><h2>Worked with <em className="gold">500+ brands.</em></h2></div><p>A few of the names I’ve created for, from global beauty houses to new launches.</p></div>
         <ul className="logos">{brands.map(([name, file], i) => (
           <li key={file} className="rv">
             <div className={`badge sh-${shapeCycle[i % 4]}`}><div className={`badge-in sh-${shapeCycle[i % 4]}`}><Img src={`/brands/${file}.png`} alt={name} /></div></div>
@@ -519,7 +521,7 @@ export default function Home() {
       {/* SERVICES */}
       <section className="services" id="services">
         <Float src="watch-hand.jpg" side="r" shape={1} />
-        <div className="head rv"><div><p className="no">09 · Services</p><h2>The atelier <em className="gold">of content.</em></h2></div><p>A bespoke offering for beauty, fashion, tech and lifestyle brands. Packages depend on scope and usage rights, so tell me the goal and I’ll shape the format and quote.</p></div>
+        <div className="head rv"><div><p className="no">08 · Services</p><h2>The atelier <em className="gold">of content.</em></h2></div><p>A bespoke offering for beauty, fashion, tech and lifestyle brands. Packages depend on scope and usage rights, so tell me the goal and I’ll shape the format and quote.</p></div>
         <ul>{services.map(([t, d, inc], i) => (
           <li key={t} className="rv"><span className="n gold">{String(i + 1).padStart(2, "0")}</span><h3>{t}</h3><p>{d}<small>{inc}</small></p>
             <a href={`mailto:${email}?subject=${encodeURIComponent("Enquiry: " + t)}`} aria-label={`Ask about ${t}`}>Ask about this ↗</a></li>
@@ -529,14 +531,14 @@ export default function Home() {
       {/* BOOK */}
       <section className="book" id="book">
         <Float src="tripod-bags.jpg" side="l" shape={2} />
-        <div className="head rv"><div><p className="no">10 · Booking</p><h2>Work with <em className="gold">me.</em></h2></div><p>Pick a day and a time (12:00 to 16:00, France time) for a short call about your collaboration, then send me your request. I confirm by email.</p></div>
+        <div className="head rv"><div><p className="no">09 · Booking</p><h2>Work with <em className="gold">me.</em></h2></div><p>Pick a day and a time (12:00 to 16:00, France time) for a short call about your collaboration, then send me your request. I confirm by email.</p></div>
         <Availability onPick={pickDay} />
       </section>
 
       {/* CONTACT */}
       <section className="contact" id="contact">
         <div className="cwrap">
-          <div><p className="no">11 · Business inquiries</p><h2>Let’s create something <em className="gold">unforgettable.</em></h2>
+          <div><p className="no">10 · Business inquiries</p><h2>Let’s create something <em className="gold">unforgettable.</em></h2>
             <p>Share the product, the goal and the timeline. Tell me about your brand and I’ll take it from there.</p>
             <a className="mail" href={`mailto:${email}`}>{email}</a>
             <ul className="soc">{social.map((s) => <li key={s.name}><a href={s.url} target={s.icon === "mail" ? undefined : "_blank"} rel="noreferrer" aria-label={s.name}><Icon name={s.icon} /><span>{s.name}</span></a></li>)}</ul>
